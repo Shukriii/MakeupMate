@@ -9,7 +9,6 @@ import SwiftUI
 
 //ContentView - name of data structure
 //: View - behaviour of strucutre is a View, and its functionality.
-// made changes
 
 struct ContentView: View {
     var body: some View { //body is name of veriable, some View is the type of body
