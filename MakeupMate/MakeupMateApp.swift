@@ -11,7 +11,7 @@ import SwiftUI
 struct MakeupMateApp: App {
     var body: some Scene {
         WindowGroup {
-            WalkthroughView()
+            InventoryView()
         }
     }
 }
