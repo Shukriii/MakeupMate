@@ -37,7 +37,7 @@ struct LoginView: View {
                 
                 //Picker
                 VStack (spacing: 16){
-                    Picker(selection: $isLoginMode,  label: Text("Picker here")){
+                    Picker(selection: $isLoginMode,  label: Text("Picker")){
                         Text("Login")
                             .tag(true)
                         Text("Create Account")
