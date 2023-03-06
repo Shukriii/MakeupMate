@@ -15,15 +15,14 @@ struct WalkthroughView: View {
     var body: some View {
         
         if currentPage > totalPages {
-            LoginView ()
+            InventoryView()
+            //LoginView (didCompleteLoginProcess: {})
         }
         else {
             Walkthrough()
         }
     }
 }
-
-// Homepage seen after walkthrough -- NEEDS TO BE login / sign up
 
 
 // Walkthrough
@@ -41,12 +40,12 @@ struct Walkthrough: View {
             }
             
             if currentPage == 2 {
-            ScreenView(image: "image2", title: "Step 2", detail: "Add your wishlist!", bgColor: Color("Colour3"))
+            ScreenView(image: "image2", title: "Step 2", detail: "Add your makeup inventory and wishlist", bgColor: Color("Colour3"))
                     .transition(.scale)
             }
             
             if currentPage == 3 {
-            ScreenView(image: "image3", title: "Step 3", detail: "Enjoy MakeupMate", bgColor: Color("Colour4"))
+            ScreenView(image: "image3", title: "Step 3", detail: "Enjoy MakeupMate features!", bgColor: Color("Colour4"))
                     .transition(.scale)
             }
             
@@ -97,7 +96,9 @@ struct Walkthrough: View {
 //Connects content previewer
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        WalkthroughView()
+        Group {
+            WalkthroughView()
+        }
     }
 }
 

@@ -8,28 +8,28 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-struct ChatUser {
-    let uid, email: String
-}
-
 // observable object is used to fetch the user
 class InventoryViewModel: ObservableObject {
     
     @Published var errorMessage = ""
-    @Published var chatUser: ChatUser? //optional
+    @Published var chatUser: ChatUser?
     
     init(){
+        /* uncomment later, this is functionality to sign in after logging out
+        DispatchQueue.main.async {
+            self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
+        }*/
+        
         fetchCurrentUser()
     }
-
-    private func fetchCurrentUser(){
-        //fetchs the users id from sign using auth
+    
+    //fetchs the users id from sign using auth
+    func fetchCurrentUser(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid
         else {
             self.errorMessage = "Could not find firebase uid"
             return }
         
-        //self.errorMessage = "\(uid)"
         //fetching the user from firestore users collection
         FirebaseManager.shared.firestore.collection("users").document(uid).getDocument { snapshot, error in
             if let error = error {
@@ -41,18 +41,16 @@ class InventoryViewModel: ObservableObject {
             guard let data = snapshot?.data() else {
                 self.errorMessage = "No data found"
                 return }
-            //print(data)
-            //self.errorMessage = "Data: \(data.description)"
             
-            //decoding the properties
-            let uid = data["uid"] as? String ?? ""
-            let email = data["email"] as? String ?? ""
-            
-            self.chatUser = ChatUser(uid: uid, email: email)
-            
-            //self.errorMessage = chatUser.email
-            
+            self.chatUser = .init(data: data)
         }
+    }
+    
+    @Published var isUserCurrentlyLoggedOut = false
+    
+    func handleSignOut() {
+        isUserCurrentlyLoggedOut.toggle()
+        try? FirebaseManager.shared.auth.signOut()
     }
 }
 
@@ -66,6 +64,7 @@ struct InventoryView: View {
         NavigationView {
             VStack {
                 
+                //delete later on, for testing purposes
                 Text ("Current User ID: \(vm.chatUser?.email ?? "")")
 
                 topNavigationBar
@@ -91,18 +90,27 @@ struct InventoryView: View {
             Button{
                 shouldShowLogOutOptions.toggle()
             } label: {
-                Image(systemName: "person") // change icon
+                Image(systemName: "person")
                     .font(.system(size: 30))
                     .foregroundColor(Color("Colour5"))
             }
         }
         .padding()
+        //pop up when person is clicked
         .actionSheet(isPresented: $shouldShowLogOutOptions) {
             .init(title: Text ("Settings"),
                   message: Text("Are you sure you want to sign out?"),
                   buttons: [.destructive(Text("Sign Out"), action: {
-                    print("handle sign out")}),
+                    print("handle sign out")
+                vm.handleSignOut()
+            }),
                             .cancel()])
+        }
+        .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut, onDismiss: nil){
+            LoginView(didCompleteLoginProcess: {
+                self.vm.isUserCurrentlyLoggedOut = false
+                self.vm.fetchCurrentUser()
+            })
         }
     }
     
@@ -148,11 +156,10 @@ struct InventoryView: View {
     // new product button
     private var newProductButton: some View {
         Button {
-            
         }
         label: {
             
-        HStack {
+            HStack() {
             Spacer()
             Text ("New Product")
                 .font(.system(size: 16, weight: .bold))
@@ -163,7 +170,7 @@ struct InventoryView: View {
             //.background(Color.purple)
             .background(Color("Colour5"))
             .cornerRadius(32)
-            .padding(.horizontal, 100) // needs to moved right
+            .padding(.horizontal, 100)
         }
     }
 }

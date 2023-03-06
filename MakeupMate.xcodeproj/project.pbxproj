@@ -22,6 +22,7 @@
 		A68A30E1299E757F00E01C84 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */; };
 		A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */; };
 		A6A8E9D629B5097E0082B1D7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A6A8E9D529B5097E0082B1D7 /* SDWebImageSwiftUI */; };
+		A6A8E9D829B655730082B1D7 /* ChatUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D729B655730082B1D7 /* ChatUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 		A631EAC9299E7DB900D9E1DD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
+		A6A8E9D729B655730082B1D7 /* ChatUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,9 +114,10 @@
 			children = (
 				A614CB982992863A005087C9 /* MakeupMateApp.swift */,
 				A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */,
-				A614CB9A2992863A005087C9 /* WalkthroughView.swift */,
+				A6A8E9D729B655730082B1D7 /* ChatUser.swift */,
 				A614CB9C29928640005087C9 /* Assets.xcassets */,
 				A614CB9E29928640005087C9 /* Preview Content */,
+				A614CB9A2992863A005087C9 /* WalkthroughView.swift */,
 				A631EAC9299E7DB900D9E1DD /* LoginView.swift */,
 				A61D710529B3789B0082258E /* InventoryView.swift */,
 				A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */,
@@ -288,6 +291,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A6A8E9D829B655730082B1D7 /* ChatUser.swift in Sources */,
 				A614CB9B2992863A005087C9 /* WalkthroughView.swift in Sources */,
 				A61D710629B3789B0082258E /* InventoryView.swift in Sources */,
 				A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */,
