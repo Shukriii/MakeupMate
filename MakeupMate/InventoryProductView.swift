@@ -17,11 +17,14 @@ struct InventoryProductView: View {
     @State private var expiryDate = Date.now
     @State private var note = ""
     
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
             VStack {
-                topNavigationBar
+
+                
+                //topNavigationBar
                 
                 ScrollView{
                     VStack {
@@ -127,19 +130,9 @@ struct InventoryProductView: View {
                         .padding(12)
 
                         HStack{
-                            Button{
-                                print("returns back to inventory view")
-                            } label: {
-                                Image(systemName: "trash")
-                                    .font(.system(size: 30))
-                                    .foregroundColor(.red)
-                            }
-                            
-                            Spacer()
-                                .frame(width: 90)
                             
                             Button{
-                                
+                                storeProduct()
                             } label: {
                                 Image(systemName: "checkmark.circle")
                                     .font(.system(size: 30))
@@ -149,24 +142,54 @@ struct InventoryProductView: View {
                     }
                 }
             }
+            .navigationTitle("Inventory Product")
             .navigationViewStyle(StackNavigationViewStyle())
-            .navigationBarHidden(true)
+            //CANCEL BUTTON
+            .toolbar{
+                ToolbarItemGroup(placement: .navigationBarLeading){
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+  
+                    } label: {
+                        Text ("Cancel").foregroundColor(.blue)
+                    }
+                }
+            }
         }
         
     }
+    
+    @State var statusMessage = ""
+    
+    private func storeProduct(){
+        // set the uid to the uid of the user logged in
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        //database setup
+        let document = FirebaseManager.shared.firestore.collection("products")
+            .document(uid)
+            .collection("inventory")
+            .document()
+        
+        //dictionary of data to be stored
+        let productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
+        
+        document.setData(productData) { error in
+            if let error = error {
+                print(error)
+                self.statusMessage = "Failed to save product into Firestore: \(error)"
+                return
+                
+            }
+            print ("success")
+            
+        }
+    }
 }
 
-private var topNavigationBar: some View {
-    HStack{
-        Text("Inventory Product")
-            .font(.system(size: 24, weight: .bold))
-        Spacer()
-    }
-    .padding()
-}
 
 struct InventoryProductView_Previews: PreviewProvider {
     static var previews: some View {
-        InventoryProductView()
+        InventoryView()
     }
 }

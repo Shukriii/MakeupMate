@@ -15,10 +15,10 @@ class InventoryViewModel: ObservableObject {
     @Published var chatUser: ChatUser?
     
     init(){
-        /* uncomment later, this is functionality to sign in after logging out
+        //uncomment later, this is functionality to sign in after logging out
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-        }*/
+        }
         
         fetchCurrentUser()
     }
@@ -153,26 +153,30 @@ struct InventoryView: View {
         }
     }
     
+    @State var shouldShowAddProductScreen = false
     // new product button
     private var newProductButton: some View {
         Button {
+            shouldShowAddProductScreen.toggle()
         }
         label: {
-            
             HStack() {
-            Spacer()
-            Text ("New Product")
-                .font(.system(size: 16, weight: .bold))
-            Spacer()
-        }
-        .foregroundColor(.white)
-        .padding(.vertical)
-            //.background(Color.purple)
-            .background(Color("Colour5"))
-            .cornerRadius(32)
-            .padding(.horizontal, 100)
+                Spacer()
+                Text ("New Product")
+                    .font(.system(size: 16, weight: .bold))
+                Spacer()
+            }
+            .foregroundColor(.white)
+            .padding(.vertical)
+                //.background(Color.purple)
+                .background(Color("Colour5"))
+                .cornerRadius(32)
+                .padding(.horizontal, 100)
+        }.fullScreenCover(isPresented: $shouldShowAddProductScreen){
+            InventoryProductView()
         }
     }
+    
 }
 
 
