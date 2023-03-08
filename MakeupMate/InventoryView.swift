@@ -5,22 +5,49 @@
 //  Created by Shukri  Ahmed on 04/03/2023.
 //
 
+// INVENTORY VIEW
+// DISPLAYS ALL INVENTORY ITEMS THAT BELONG TO USER
+
 import SwiftUI
 import SDWebImageSwiftUI
 
-// observable object is used to fetch the user
+// CLASS WHICH FETCHES CURRENT USER AND PRODUCTS
 class InventoryViewModel: ObservableObject {
     
     @Published var errorMessage = ""
+    @Published var errorMessage2 = ""
     @Published var chatUser: ChatUser?
+    @Published var inventoryProducts: InventoryProducts?
+    @Published var products = [InventoryProducts]()
     
     init(){
-        //uncomment later, this is functionality to sign in after logging out
+        /*uncomment later, this is functionality to sign in after logging out
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-        }
+        }*/
         
         fetchCurrentUser()
+        fetchAllInventoryProducts()
+    }
+    
+    private func fetchAllInventoryProducts() {
+        FirebaseManager.shared.firestore.collection("products").getDocuments { documentsSnapshot,
+            error in
+            if let error = error {
+                self.errorMessage2 = "Failed to fetch inventory product: \(error)"
+                print("Failed to fetch inventory product: \(error)")
+                return
+            }
+            
+            documentsSnapshot?.documents.forEach({ snapshot in
+                let data = snapshot.data()
+                print("data")
+                self.products.append(.init(data: data))
+                
+            })
+            self.errorMessage2 = "Fetched products successfully"
+        }
+        
     }
     
     //fetchs the users id from sign using auth
@@ -78,7 +105,7 @@ struct InventoryView: View {
         }
     }
     
-    // top navigation bar
+    // TOP NAVIGATION BAR
     private var topNavigationBar: some View {
         HStack{
             
@@ -86,7 +113,7 @@ struct InventoryView: View {
                 .font(.system(size: 24, weight: .bold))
             Spacer()
             
-            // settings icon button
+            // profile icon button
             Button{
                 shouldShowLogOutOptions.toggle()
             } label: {
@@ -114,11 +141,15 @@ struct InventoryView: View {
         }
     }
     
-    // listing of products
+    // LISTING OF PRODUCTS
     private var productListView: some View {
         ScrollView {
-            //show 10 products need to change later
-            ForEach(0..<10, id: \.self) {num in
+            
+            Text(vm.errorMessage2)
+            //show 10 products need to change later 0..<10
+            //ForEach(vm.products) { product in
+            ForEach(0..<10) { product in
+                //Text(product.uid)
                 VStack{
                     HStack {
                         //Photo for product
@@ -136,6 +167,7 @@ struct InventoryView: View {
 
                         Spacer ()
                         
+                        // EDIT BUTTON
                         Button{
                             
                         } label: {
@@ -154,7 +186,8 @@ struct InventoryView: View {
     }
     
     @State var shouldShowAddProductScreen = false
-    // new product button
+    
+    //NEW PRODUCT BUTTON
     private var newProductButton: some View {
         Button {
             shouldShowAddProductScreen.toggle()
@@ -173,7 +206,7 @@ struct InventoryView: View {
                 .cornerRadius(32)
                 .padding(.horizontal, 100)
         }.fullScreenCover(isPresented: $shouldShowAddProductScreen){
-            InventoryProductView()
+            AddInventoryProductView()
         }
     }
     

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct InventoryProductView: View {
+struct AddInventoryProductView: View {
     
     @State private var name = ""
     @State private var brand = ""
@@ -16,6 +16,7 @@ struct InventoryProductView: View {
     @State private var stock = ""
     @State private var expiryDate = Date.now
     @State private var note = ""
+    
     
     @Environment(\.presentationMode) var presentationMode
     
