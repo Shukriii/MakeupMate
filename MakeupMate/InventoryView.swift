@@ -11,41 +11,86 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
+struct FirebaseConstants {
+    static let uid = "uid"
+    static let name = "name"
+    static let brand = "brand"
+    static let category = "category"
+    static let shade = "shade"
+    static let stock = "stock"
+    static let expiryDate = "expiryDate"
+    static let note = "note"
+}
+
+struct ProductDetails: Identifiable {
+    
+    var id: String { documentID }
+    
+    let documentID: String
+    
+    let uid, name, brand, category, shade, stock, expiryDate, note: String
+    
+    init(documentID: String, data: [String: Any]){
+        self.documentID = documentID
+        self.uid = data[FirebaseConstants.uid] as? String ?? ""
+        self.name = data[FirebaseConstants.name] as? String ?? ""
+        self.brand = data[FirebaseConstants.brand] as? String ?? ""
+        self.category = data[FirebaseConstants.category] as? String ?? ""
+        self.shade = data[FirebaseConstants.shade] as? String ?? ""
+        self.stock = data[FirebaseConstants.stock] as? String ?? ""
+        self.expiryDate = data[FirebaseConstants.expiryDate] as? String ?? ""
+        self.note = data[FirebaseConstants.note] as? String ?? ""
+    }
+}
+
 // CLASS WHICH FETCHES CURRENT USER AND PRODUCTS
 class InventoryViewModel: ObservableObject {
     
     @Published var errorMessage = ""
-    @Published var errorMessage2 = ""
     @Published var chatUser: ChatUser?
-    @Published var inventoryProducts: InventoryProducts?
-    @Published var products = [InventoryProducts]()
+    //@Published var inventoryProducts: InventoryProducts?
+    @Published var products = [ProductDetails]()
     
     init(){
-        /*uncomment later, this is functionality to sign in after logging out
+        //uncomment later, this is functionality to sign in after logging out
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-        }*/
+        }
         
         fetchCurrentUser()
         fetchAllInventoryProducts()
     }
     
     private func fetchAllInventoryProducts() {
-        FirebaseManager.shared.firestore.collection("products").getDocuments { documentsSnapshot,
-            error in
-            if let error = error {
-                self.errorMessage2 = "Failed to fetch inventory product: \(error)"
-                print("Failed to fetch inventory product: \(error)")
-                return
-            }
-            
-            documentsSnapshot?.documents.forEach({ snapshot in
-                let data = snapshot.data()
-                print("data")
-                self.products.append(.init(data: data))
+        
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return } //fetch uid
+        
+        FirebaseManager.shared.firestore
+            .collection("products")
+            .document(uid)
+            .collection("inventory")
+            .order(by: "name") //Need to order using category then product name
+            .addSnapshotListener{ querySnapshot, error in
+                if let error = error {
+                    self.errorMessage = "Failed to fetch inventory product: \(error)"
+                    print("Failed to fetch inventory product: \(error)")
+                    return
+                }
                 
-            })
-            self.errorMessage2 = "Fetched products successfully"
+                querySnapshot?.documentChanges.forEach( { change in
+                    if change.type == .added {
+                        let data = change.document.data()
+                        self.products.append(.init(documentID: change.document.documentID, data: data))
+                    }
+                })
+                
+                /*
+                querySnapshot?.documents.forEach({ queryDocumentSnapshot in
+                    let data = queryDocumentSnapshot.data()
+                    let docID = queryDocumentSnapshot.documentID
+                    self.products.append(.init(documentID: docID, data: data))
+            }) */
+            self.errorMessage = "Fetched products successfully"
         }
         
     }
@@ -144,11 +189,13 @@ struct InventoryView: View {
     // LISTING OF PRODUCTS
     private var productListView: some View {
         ScrollView {
-            
-            Text(vm.errorMessage2)
-            //show 10 products need to change later 0..<10
-            //ForEach(vm.products) { product in
-            ForEach(0..<10) { product in
+            /*
+            ForEach(vm.products) { product in
+                Text(product.name)
+                
+            } */
+            // when catgroies are added do for each stuff here
+            ForEach(vm.products) { product in
                 //Text(product.uid)
                 VStack{
                     HStack {
@@ -158,11 +205,11 @@ struct InventoryView: View {
                         //WebImage(url: URL(string: )).resizeable()
                         
                         VStack (alignment: .leading){
-                            Text("Product Name")
+                            Text(product.name)
                                 .font(.system(size: 17, weight: .semibold))
-                            Text("Product Shade")
+                            Text(product.shade)
                                 .foregroundColor(Color(.lightGray))
-                            Text("Product Brand")
+                            Text(product.brand)
                         }
 
                         Spacer ()
