@@ -25,7 +25,8 @@ struct LoginView: View {
                     Picker(selection: $isLoginMode,  label: Text("Picker")){
                         Text("Login")
                             .tag(true)
-                        Text("Create Account")
+                            
+                        Text("Sign Up")
                             .tag(false)
                     }.pickerStyle(SegmentedPickerStyle())
                     
@@ -42,21 +43,24 @@ struct LoginView: View {
                         .autocapitalization(.none)
                         SecureField("Password", text: $password)
                     }
-                    .padding(12)
-                    .background(Color.white)
-                    
+                    .padding(15)
+                    .background(Color(red: 0.914, green: 0.914, blue: 0.914))
+                    .cornerRadius(10)
+ 
                     // button to login or create account
                     Button {
                         handleAction ()
                     } label: {
                         HStack{
                             Spacer()
-                            Text(isLoginMode ? "Log In" : "Create Account")
+                            Text(isLoginMode ? "Log In" : "Sign Up")
                                 .foregroundColor(.white)
                                 .padding(.vertical, 10)
-                                .font(.system(size: 16, weight: .semibold))
+                                .font(.system(size: 16, weight: .bold))
                             Spacer()
-                        }.background(Color.blue)
+                        }.background(Color("Colour5"))
+                         .cornerRadius(32)
+                        
                     }
                     
                     // message that is displayed once buttton is clicked
@@ -67,8 +71,9 @@ struct LoginView: View {
                 .padding()
                 
             }
-            .navigationTitle(isLoginMode ? "Log In" : "Create Account")
-            .background(Color("Colour4").cornerRadius(10).ignoresSafeArea())
+            .navigationTitle(isLoginMode ? "Log In" : "Sign Up")
+            .background(Color.white)
+            
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

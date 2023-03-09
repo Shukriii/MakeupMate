@@ -48,6 +48,7 @@ class InventoryViewModel: ObservableObject {
     
     @Published var errorMessage = ""
     @Published var chatUser: ChatUser?
+    //@Published var loggedInUser: CurrentUser?
     //@Published var inventoryProducts: InventoryProducts?
     @Published var products = [ProductDetails]()
     
@@ -115,6 +116,7 @@ class InventoryViewModel: ObservableObject {
                 return }
             
             self.chatUser = .init(data: data)
+            //self.loggedInUser = .init(data: data)
         }
     }
     

@@ -23,10 +23,6 @@ struct AddInventoryProductView: View {
     var body: some View {
         NavigationView {
             VStack {
-
-                
-                //topNavigationBar
-                
                 ScrollView{
                     VStack {
                         HStack{
@@ -119,7 +115,7 @@ struct AddInventoryProductView: View {
                                     Text("Note")
                                         .font(.subheadline)
                                         .foregroundColor(.purple)
-                                        .multilineTextAlignment(.leading)
+                                        .multilineTextAlignment(.center)
                                 }
                                 TextField("Note", text: $note)
                             }
@@ -183,8 +179,8 @@ struct AddInventoryProductView: View {
                 
             }
             print ("success")
-            
         }
+        presentationMode.wrappedValue.dismiss()
     }
 }
 

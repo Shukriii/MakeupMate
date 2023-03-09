@@ -8,8 +8,7 @@
 import Foundation
 import Firebase
 
-// to stop preview crashing, the Firebase config is placed into a class
-// used to access Firebase
+//Used to access Firebase
 class FirebaseManager: NSObject {
     
     let auth: Auth
