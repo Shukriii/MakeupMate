@@ -5,12 +5,25 @@
 //  Created by Shukri  Ahmed on 04/03/2023.
 //
 
-// INVENTORY VIEW
-// DISPLAYS ALL INVENTORY ITEMS THAT BELONG TO USER
+/* Once the walkthrough is complete this is the next view displayed.
+   If the user is not logged in, a fullScreenCover of LoginView will appear (line 189)
+ 
+   This view let users:
+        - See all the products in their inventory
+        - Log out (calls LoginView)
+        - Add an inventory product (calls AddInventoryProductView)
+   This code was inspired by the following tutorials
+   Creating inventory view: https://www.youtube.com/watch?v=pPsKTTd55xI&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=6&ab_channel=LetsBuildThatApp
+   To fetch the current user from Firestore: https://www.youtube.com/watch?v=yHngqpFpVZU&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=7&ab_channel=LetsBuildThatApp
+   Log in and log out: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
+   Fetch inventory products from Firestore: https://www.youtube.com/watch?v=G0AyApE2w1c&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=13&ab_channel=LetsBuildThatApp
+ */
+
 
 import SwiftUI
 import SDWebImageSwiftUI
 
+// Creating constants which ProductDetails uses
 struct FirebaseConstants {
     static let uid = "uid"
     static let name = "name"
@@ -22,6 +35,7 @@ struct FirebaseConstants {
     static let note = "note"
 }
 
+// Decodes the data retrieved from Firestore and places them into variables
 struct ProductDetails: Identifiable {
     
     var id: String { documentID }
@@ -43,17 +57,19 @@ struct ProductDetails: Identifiable {
     }
 }
 
-// CLASS WHICH FETCHES CURRENT USER AND PRODUCTS
+// Class with 3 functions
+// fetchCurrentUser() - fetchs the current user
+// fetchAllInventoryProducts() - fetchs the inventory products of the current user
+// handleSignOut() - Uses firebase Auth to sign current user out
 class InventoryViewModel: ObservableObject {
     
     @Published var errorMessage = ""
     @Published var chatUser: ChatUser?
-    //@Published var loggedInUser: CurrentUser?
-    //@Published var inventoryProducts: InventoryProducts?
     @Published var products = [ProductDetails]()
+    @Published var isUserCurrentlyLoggedOut = false
     
     init(){
-        //uncomment later, this is functionality to sign in after logging out
+        // If the user is logged out set the uid to nil,
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
         }
@@ -62,48 +78,15 @@ class InventoryViewModel: ObservableObject {
         fetchAllInventoryProducts()
     }
     
-    private func fetchAllInventoryProducts() {
-        
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return } //fetch uid
-        
-        FirebaseManager.shared.firestore
-            .collection("products")
-            .document(uid)
-            .collection("inventory")
-            .order(by: "name") //Need to order using category then product name
-            .addSnapshotListener{ querySnapshot, error in
-                if let error = error {
-                    self.errorMessage = "Failed to fetch inventory product: \(error)"
-                    print("Failed to fetch inventory product: \(error)")
-                    return
-                }
-                
-                querySnapshot?.documentChanges.forEach( { change in
-                    if change.type == .added {
-                        let data = change.document.data()
-                        self.products.append(.init(documentID: change.document.documentID, data: data))
-                    }
-                })
-                
-                /*
-                querySnapshot?.documents.forEach({ queryDocumentSnapshot in
-                    let data = queryDocumentSnapshot.data()
-                    let docID = queryDocumentSnapshot.documentID
-                    self.products.append(.init(documentID: docID, data: data))
-            }) */
-            self.errorMessage = "Fetched products successfully"
-        }
-        
-    }
-    
-    //fetchs the users id from sign using auth
+    // Fetchs the currents users id
     func fetchCurrentUser(){
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid
-        else {
-            self.errorMessage = "Could not find firebase uid"
+        // Retrives the uid from Firebase Auth and places into uid
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            self.errorMessage = "fetchCurrentUser(): Could not find firebase uid"
+            print("fetchCurrentUser(): Could not find firebase uid")
             return }
         
-        //fetching the user from firestore users collection
+        // Finds the uid in Firebase Firestore
         FirebaseManager.shared.firestore.collection("users").document(uid).getDocument { snapshot, error in
             if let error = error {
                 self.errorMessage = "Failed to fetch current user: \(error)"
@@ -113,18 +96,49 @@ class InventoryViewModel: ObservableObject {
             
             guard let data = snapshot?.data() else {
                 self.errorMessage = "No data found"
+                print("No data found")
                 return }
             
+            // places the data in the current user
             self.chatUser = .init(data: data)
-            //self.loggedInUser = .init(data: data)
         }
     }
     
-    @Published var isUserCurrentlyLoggedOut = false
+    func fetchAllInventoryProducts() {
+        
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
+            self.errorMessage = "fetchAllInventoryProducts(): Could not find firebase uid"
+            print ("fetchAllInventoryProducts(): Could not find firebase uid")
+            return }
+        
+        FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory")
+            .order(by: "name") //Need to order using category then product name
+            .addSnapshotListener{ querySnapshot, error in
+                if let error = error {
+                    self.errorMessage = "Failed to fetch inventory product: \(error)"
+                    print("Failed to fetch inventory product: \(error)")
+                    return
+                }
+                
+                // adds products to view when they are added
+                querySnapshot?.documentChanges.forEach( { change in
+                    if change.type == .added {
+                        let data = change.document.data()
+                        self.products.append(.init(documentID: change.document.documentID, data: data))
+                    }
+                })
+                
+            self.errorMessage = "Fetched products successfully"
+            print (self.errorMessage)
+                
+        }
+        
+    }
     
     func handleSignOut() {
         isUserCurrentlyLoggedOut.toggle()
         try? FirebaseManager.shared.auth.signOut()
+        print("Current user has been signed out")
     }
 }
 
@@ -152,7 +166,7 @@ struct InventoryView: View {
         }
     }
     
-    // TOP NAVIGATION BAR
+    // Includes pop up to log out
     private var topNavigationBar: some View {
         HStack{
             
@@ -160,7 +174,7 @@ struct InventoryView: View {
                 .font(.system(size: 24, weight: .bold))
             Spacer()
             
-            // profile icon button
+            // Profile icon button, which allows users to log out
             Button{
                 shouldShowLogOutOptions.toggle()
             } label: {
@@ -170,12 +184,10 @@ struct InventoryView: View {
             }
         }
         .padding()
-        //pop up when person is clicked
         .actionSheet(isPresented: $shouldShowLogOutOptions) {
             .init(title: Text ("Settings"),
                   message: Text("Are you sure you want to sign out?"),
                   buttons: [.destructive(Text("Sign Out"), action: {
-                    print("handle sign out")
                 vm.handleSignOut()
             }),
                             .cancel()])
@@ -184,6 +196,8 @@ struct InventoryView: View {
             LoginView(didCompleteLoginProcess: {
                 self.vm.isUserCurrentlyLoggedOut = false
                 self.vm.fetchCurrentUser()
+                // TODO: add function to clear inventory products before fetching them again
+                self.vm.fetchAllInventoryProducts()
             })
         }
     }
@@ -191,17 +205,11 @@ struct InventoryView: View {
     // LISTING OF PRODUCTS
     private var productListView: some View {
         ScrollView {
-            /*
+            // TODO: when categroies are added, edit how items are displayed - Main Product
             ForEach(vm.products) { product in
-                Text(product.name)
-                
-            } */
-            // when catgroies are added do for each stuff here
-            ForEach(vm.products) { product in
-                //Text(product.uid)
                 VStack{
                     HStack {
-                        //Photo for product
+                        // TODO: add photo for product
                         Image(systemName: "photo").font(.system(size:30))
                         // Video 6, 25 minutes
                         //WebImage(url: URL(string: )).resizeable()
@@ -216,7 +224,7 @@ struct InventoryView: View {
 
                         Spacer ()
                         
-                        // EDIT BUTTON
+                        // TODO: add edit button functionality
                         Button{
                             
                         } label: {
@@ -250,7 +258,6 @@ struct InventoryView: View {
             }
             .foregroundColor(.white)
             .padding(.vertical)
-                //.background(Color.purple)
                 .background(Color("Colour5"))
                 .cornerRadius(32)
                 .padding(.horizontal, 100)
