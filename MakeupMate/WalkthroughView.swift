@@ -1,13 +1,22 @@
 //
-//  ContentView.swift
+//  WalkthroughView.swift
 //  MakeupMate
 //
 //  Created by Shukri  Ahmed on 07/02/2023.
 //
+//
+
+/*
+ This file is a walkthrough that provides the users with instructions on how to use the app.
+ It is only displayed when the app is first downloaded.
+ I reused the code from this video: https://www.youtube.com/watch?v=HVAMShhJOUo&ab_channel=Kavsoft
+ Replaced the tutorial code with my own images, information and colour scheme
+ */
+
 
 import SwiftUI
 
-
+// Once walkthrough is complete redirects to InventoryView
 struct WalkthroughView: View {
     
     @AppStorage("currentPage") var currentPage = 1
@@ -24,8 +33,9 @@ struct WalkthroughView: View {
     }
 }
 
+var totalPages = 3
 
-// Walkthrough
+// Class that provides ScreenView with parameters for each view
 struct Walkthrough: View {
     
     @AppStorage("currentPage") var currentPage = 1
@@ -35,17 +45,17 @@ struct Walkthrough: View {
         ZStack {
             
             if currentPage == 1 {
-            ScreenView(image: "image1", title: "Step 1", detail: "Create an account", bgColor: Color("Colour1"))
+                ScreenView(image: "image1", title: "Step 1", detail: "Create an account", bgColor: Color(red: 0.744, green: 0.502, blue: 0.552, opacity: 0.473))
                     .transition(.scale)
             }
             
             if currentPage == 2 {
-            ScreenView(image: "image2", title: "Step 2", detail: "Add your makeup inventory and wishlist", bgColor: Color("Colour3"))
+                ScreenView(image: "image2", title: "Step 2", detail: "Add your makeup inventory and wish list", bgColor: Color(red: 0.998, green: 0.703, blue: 0.637, opacity: 0.592))
                     .transition(.scale)
             }
             
             if currentPage == 3 {
-            ScreenView(image: "image3", title: "Step 3", detail: "Enjoy MakeupMate features!", bgColor: Color("Colour4"))
+                ScreenView(image: "image3", title: "Step 3", detail: "Enjoy MakeupMate features!", bgColor: Color(red: 0.997, green: 0.803, blue: 0.699, opacity: 0.601))
                     .transition(.scale)
             }
             
@@ -53,7 +63,6 @@ struct Walkthrough: View {
         .overlay(
             
             Button (action: {
-                //to change views
                 withAnimation(.easeInOut){
                     
                     if currentPage <= totalPages{
@@ -68,7 +77,7 @@ struct Walkthrough: View {
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(.black)
                     .frame(width: 60, height: 100, alignment: .center)
-                    .background(Color.white)
+                    .background(Color(red: 0.213, green: 0.279, blue: 0.824, opacity: 0.525))
                     .clipShape(Circle())
                 
                 // For circular slider
@@ -79,7 +88,7 @@ struct Walkthrough: View {
                                 
                             Circle()
                                 .trim(from: 0, to: CGFloat(currentPage) / CGFloat(totalPages))
-                                .stroke(Color.white, lineWidth: 4)
+                                .stroke(Color(red: 0.213, green: 0.279, blue: 0.824, opacity: 0.525), lineWidth: 4)
                                 .rotationEffect(.init(degrees: -90))
                         }
                         .padding(-15)
@@ -92,17 +101,7 @@ struct Walkthrough: View {
     }
 }
 
-
-//Connects content previewer
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            WalkthroughView()
-        }
-    }
-}
-
-// Screen View function
+// The design of each view
 struct ScreenView: View {
     
     var image: String
@@ -167,7 +166,8 @@ struct ScreenView: View {
                 .padding(.top)
             
             Text(detail)
-                .fontWeight(.semibold)
+                .font(.system(size: 20, weight: .semibold))
+                //.fontWeight(.bold)
                 .foregroundColor(Color.black)
                 .kerning(1.3)
                 .multilineTextAlignment(.center)
@@ -178,4 +178,11 @@ struct ScreenView: View {
     }
 }
 
-var totalPages = 3
+//Connects content previewer
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            WalkthroughView()
+        }
+    }
+}
