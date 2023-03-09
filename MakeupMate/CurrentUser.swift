@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ChatUser {
+struct CurrentUser {
     let uid, email: String
     
     //decoding the properties

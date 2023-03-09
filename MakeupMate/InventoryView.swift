@@ -64,7 +64,7 @@ struct ProductDetails: Identifiable {
 class InventoryViewModel: ObservableObject {
     
     @Published var errorMessage = ""
-    @Published var chatUser: ChatUser?
+    @Published var currentUser: CurrentUser?
     @Published var products = [ProductDetails]()
     @Published var isUserCurrentlyLoggedOut = false
     
@@ -100,7 +100,7 @@ class InventoryViewModel: ObservableObject {
                 return }
             
             // places the data in the current user
-            self.chatUser = .init(data: data)
+            self.currentUser = .init(data: data)
         }
     }
     
@@ -153,7 +153,7 @@ struct InventoryView: View {
             VStack {
                 
                 //delete later on, for testing purposes
-                Text ("Current User ID: \(vm.chatUser?.email ?? "")")
+                Text ("Current User ID: \(vm.currentUser?.email ?? "")")
 
                 topNavigationBar
                 
