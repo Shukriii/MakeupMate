@@ -26,6 +26,7 @@ import SDWebImageSwiftUI
 // Creating constants which ProductDetails uses
 struct FirebaseConstants {
     static let uid = "uid"
+    static let image = "image"
     static let name = "name"
     static let brand = "brand"
     static let category = "category"
@@ -42,11 +43,12 @@ struct ProductDetails: Identifiable {
     
     let documentID: String
     
-    let uid, name, brand, category, shade, stock, expiryDate, note: String
+    let uid, image, name, brand, category, shade, stock, expiryDate, note: String
     
     init(documentID: String, data: [String: Any]){
         self.documentID = documentID
         self.uid = data[FirebaseConstants.uid] as? String ?? ""
+        self.image = data[FirebaseConstants.image] as? String ?? ""
         self.name = data[FirebaseConstants.name] as? String ?? ""
         self.brand = data[FirebaseConstants.brand] as? String ?? ""
         self.category = data[FirebaseConstants.category] as? String ?? ""
@@ -70,9 +72,10 @@ class InventoryViewModel: ObservableObject {
     
     init(){
         // If the user is logged out set the uid to nil,
+        
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-        }
+        } 
         
         fetchCurrentUser()
         fetchAllInventoryProducts()
@@ -140,6 +143,11 @@ class InventoryViewModel: ObservableObject {
         try? FirebaseManager.shared.auth.signOut()
         print("Current user has been signed out")
     }
+    
+    func removeInventoryProduct(){
+        self.products = []
+        print("Previous products removed from view")
+    }
 }
 
 struct InventoryView: View {
@@ -196,7 +204,7 @@ struct InventoryView: View {
             LoginView(didCompleteLoginProcess: {
                 self.vm.isUserCurrentlyLoggedOut = false
                 self.vm.fetchCurrentUser()
-                // TODO: add function to clear inventory products before fetching them again
+                self.vm.removeInventoryProduct()
                 self.vm.fetchAllInventoryProducts()
             })
         }
@@ -210,7 +218,18 @@ struct InventoryView: View {
                 VStack{
                     HStack {
                         // TODO: add photo for product
-                        Image(systemName: "photo").font(.system(size:30))
+                        if !product.image.isEmpty {
+                            WebImage(url: URL(string: product.image))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 70, height: 70)
+                                .clipped()
+                        } else {
+                            Image(systemName: "photo").font(.system(size:30))
+                        }
+                        
+                        //Image(product.image).font(.system(size:30))
+                        //
                         // Video 6, 25 minutes
                         //WebImage(url: URL(string: )).resizeable()
                         

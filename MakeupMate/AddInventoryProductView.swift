@@ -12,10 +12,12 @@
   Floating label for text boxes: https://www.youtube.com/watch?v=Sg0rfYL3utI&t=649s&ab_channel=PeterFriese
   Adding a DatePicker (Calendar): https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-date-picker-and-read-values-from-it
   Storing product into Firestore: https://www.youtube.com/watch?v=dA_Ve-9gizQ&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=12&ab_channel=LetsBuildThatApp
+  Storing image to Firebase Storage: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
  */
 
-
+import Firebase
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct AddInventoryProductView: View {
     
@@ -29,14 +31,32 @@ struct AddInventoryProductView: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @State var shouldShowImagePicker = false
+    @State var image: UIImage?
+    
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView{
                     VStack {
                         HStack{
-                        //TODO: Add photo
-                            Image(systemName: "photo").font(.system(size:120))
+            
+                            //IMAGE
+                            Button {
+                                shouldShowImagePicker.toggle()
+                            } label: {
+                                VStack {
+                                    if let image = self.image {
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .frame(width: 180, height: 180)
+                                            .scaledToFill()
+
+                                    } else {
+                                        Image(systemName: "photo").font(.system(size:120))
+                                    }
+                                }
+                            }
                         }
                         
                         Spacer()
@@ -140,7 +160,8 @@ struct AddInventoryProductView: View {
 
                         HStack{
                             Button{
-                                storeProduct()
+                                uploadImageToStorage()
+                                //self.storeProduct(imageProfileUrl: URL)
                             } label: {
                                 Image(systemName: "checkmark.circle")
                                     .font(.system(size: 30))
@@ -163,14 +184,47 @@ struct AddInventoryProductView: View {
                     }
                 }
             }
+            .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil){
+                ImagePicker(image: $image)
+            }
         }
         
     }
     
     @State var statusMessage = ""
     
+    // Uploads image to firebase Storage
+    private func uploadImageToStorage() {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        //path of image is the users uid
+        let reference = FirebaseManager.shared.storage.reference(withPath: uid)
+        guard let imageData = self.image?.jpegData(compressionQuality: 0.5) else { return }
+        
+        // upload data to Storage
+        reference.putData(imageData, metadata: nil) { metadata, err in
+            if let err = err {
+                self.statusMessage = "Failed to push image to Storage: \(err)"
+                return
+            }
+            
+            reference.downloadURL { url, err in
+                if let err = err {
+                    self.statusMessage = "Failed to retrieve downloadURL: \(err)"
+                    return
+                }
+                
+                self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
+                //print(url?.absoluteString)
+                
+                guard let url = url else { return }
+                self.storeProduct(imageProfileUrl: url)
+            }
+        }
+    }
+    
     // Retireves uid from Firebase Auth, then uses it to create collection in Firestore
-    private func storeProduct(){
+    // stores all the products details into Firestore
+    private func storeProduct(imageProfileUrl: URL){
         // set the uid to the uid of the user logged in
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
@@ -180,7 +234,7 @@ struct AddInventoryProductView: View {
             .document()
         
         //dictionary of data to be stored
-        let productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
+        let productData = ["uid": uid, "name": self.name, "image": imageProfileUrl.absoluteString, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
         
         document.setData(productData) { error in
             if let error = error {
