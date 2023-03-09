@@ -5,6 +5,15 @@
 //  Created by Shukri  Ahmed on 16/02/2023.
 //
 
+/*
+  LoginView is called once user logs out
+ 
+  Code has been resued from following tutorials -
+  Login View: https://www.youtube.com/watch?v=aVO4EVGvQcw&ab_channel=LetsBuildThatApp
+  Setting up Firebase Auth and creating user: https://www.youtube.com/watch?v=xXjYGamyREs&t=612s&ab_channel=LetsBuildThatApp
+  Saving user into Firebase Firestore: https://www.youtube.com/watch?v=VtwFwDJvU8w&t=6s&ab_channel=LetsBuildThatApp
+ */
+
 import SwiftUI
 import Firebase
 
@@ -20,7 +29,6 @@ struct LoginView: View {
         NavigationView{
             ScrollView{
                 
-                //Picker
                 VStack (spacing: 16){
                     Picker(selection: $isLoginMode,  label: Text("Picker")){
                         Text("Login")
@@ -108,7 +116,7 @@ struct LoginView: View {
     
     @State var loginStatusMessage = ""
     
-    // firebase code to check if sign up is valid 
+    // creates an account using Firebase Auth
     private func createNewAccount(){
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password){ result, err in
             if let err = err {
@@ -121,7 +129,7 @@ struct LoginView: View {
             self.loginStatusMessage = "Successfully created user: \(result?.user.uid ?? "")" }
     }
     
-    // when an account is created this stores the users email and id
+    // Stores users details Firebase Firestore
     private func storeUserInformation(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         
