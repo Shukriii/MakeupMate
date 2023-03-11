@@ -6,7 +6,7 @@
 //
 
 /*
- Reused code from tutorial: 
+ Reused code from tutorial: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
  */
 
 import Foundation

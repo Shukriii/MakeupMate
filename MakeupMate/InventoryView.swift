@@ -72,10 +72,10 @@ class InventoryViewModel: ObservableObject {
     
     init(){
         // If the user is logged out set the uid to nil,
-        
+        /*
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-        } 
+        } */
         
         fetchCurrentUser()
         fetchAllInventoryProducts()
@@ -150,6 +150,79 @@ class InventoryViewModel: ObservableObject {
     }
 }
 
+struct EditInventoryProductView: View {
+    
+    let productID: String
+    
+    @ObservedObject private var vm = InventoryViewModel()
+    
+    var body: some View {
+        VStack {
+            
+            Text("hello")
+            Text(productID)
+        }
+        .onAppear {
+            // Load the product details from Firestore
+            vm.fetchAllInventoryProducts()
+        }
+    }
+}
+
+// --------------------------------------------------------------------------------------------------------------------------
+struct ProductRow: View {
+    
+    let product: ProductDetails
+    
+    var body: some View {
+        VStack {
+            HStack {
+                if !product.image.isEmpty {
+                    WebImage(url: URL(string: product.image))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 70, height: 70)
+                        .clipped()
+                } else {
+                    Image(systemName: "photo").font(.system(size:30))
+                }
+
+                VStack (alignment: .leading){
+                    Text(product.name)
+                        .font(.system(size: 17, weight: .semibold))
+                    Text(product.shade)
+                        .foregroundColor(Color(.lightGray))
+                    Text(product.brand)
+                    Text(product.id)
+                    
+                    NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
+                        Text("Edit") }
+                Spacer()
+                }
+                Divider().padding(.vertical, 2)
+            }.padding(.horizontal)
+        }.padding(.bottom, 50)
+        
+    }
+        
+}
+        
+        /*
+        VStack (alignment: .leading) {
+            Text(product.name)
+                .font(.system(size: 17, weight: .semibold))
+            Text(product.shade)
+                .foregroundColor(Color(.lightGray))
+            Text(product.brand)
+            
+            // Navigate to EditInventoryProductView with the product ID
+            NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
+                Text("Edit")
+            }
+        } */
+
+
+// --------------------------------------------------------------------------------------------------------------------------
 struct InventoryView: View {
     
     @State var shouldShowLogOutOptions = false
@@ -212,11 +285,23 @@ struct InventoryView: View {
     
     // LISTING OF PRODUCTS
     private var productListView: some View {
+        
+        ScrollView {
+            ForEach(vm.products) { product in
+                ProductRow(product: product)
+                }
+        }
+    }
+        
+        /*
         ScrollView {
             // TODO: when categroies are added, edit how items are displayed - Main Product
+            
             ForEach(vm.products) { product in
                 VStack{
                     HStack {
+                        
+                        /
                         // TODO: add photo for product
                         if !product.image.isEmpty {
                             WebImage(url: URL(string: product.image))
@@ -239,18 +324,19 @@ struct InventoryView: View {
                             Text(product.shade)
                                 .foregroundColor(Color(.lightGray))
                             Text(product.brand)
+                            Text(product.id)
                         }
 
                         Spacer ()
                         
                         // TODO: add edit button functionality
                         Button{
-                            
+                            shouldShowEditProductScreen.toggle()
                         } label: {
                             Image(systemName: "square.and.pencil") // change icon
                                 .font(.system(size: 20))
                                 .foregroundColor(Color(.label))
-                        }
+                        }.fullScreenCover(isPresented: $shouldShowEditProductScreen) { EditInventoryProductView(productId: $product.id) }
                         
                     }
                     Divider()
@@ -259,7 +345,9 @@ struct InventoryView: View {
             }.padding(.bottom, 50)
    
         }
-    }
+    } */
+    
+    @State var shouldShowEditProductScreen = false
     
     @State var shouldShowAddProductScreen = false
     
