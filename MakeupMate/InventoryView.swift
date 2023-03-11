@@ -149,6 +149,7 @@ class InventoryViewModel: ObservableObject {
         print("Previous products removed from view")
     }
 }
+// --------------------------------------------------------------------------------------------------------------------------
 
 struct EditInventoryProductView: View {
     
@@ -168,59 +169,6 @@ struct EditInventoryProductView: View {
         }
     }
 }
-
-// --------------------------------------------------------------------------------------------------------------------------
-struct ProductRow: View {
-    
-    let product: ProductDetails
-    
-    var body: some View {
-        VStack {
-            HStack {
-                if !product.image.isEmpty {
-                    WebImage(url: URL(string: product.image))
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 70, height: 70)
-                        .clipped()
-                } else {
-                    Image(systemName: "photo").font(.system(size:30))
-                }
-
-                VStack (alignment: .leading){
-                    Text(product.name)
-                        .font(.system(size: 17, weight: .semibold))
-                    Text(product.shade)
-                        .foregroundColor(Color(.lightGray))
-                    Text(product.brand)
-                    Text(product.id)
-                    
-                    NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
-                        Text("Edit") }
-                Spacer()
-                }
-                Divider().padding(.vertical, 2)
-            }.padding(.horizontal)
-        }.padding(.bottom, 50)
-        
-    }
-        
-}
-        
-        /*
-        VStack (alignment: .leading) {
-            Text(product.name)
-                .font(.system(size: 17, weight: .semibold))
-            Text(product.shade)
-                .foregroundColor(Color(.lightGray))
-            Text(product.brand)
-            
-            // Navigate to EditInventoryProductView with the product ID
-            NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
-                Text("Edit")
-            }
-        } */
-
 
 // --------------------------------------------------------------------------------------------------------------------------
 struct InventoryView: View {
@@ -289,63 +237,9 @@ struct InventoryView: View {
         ScrollView {
             ForEach(vm.products) { product in
                 ProductRow(product: product)
-                }
+                }.padding(.bottom, 50)
         }
     }
-        
-        /*
-        ScrollView {
-            // TODO: when categroies are added, edit how items are displayed - Main Product
-            
-            ForEach(vm.products) { product in
-                VStack{
-                    HStack {
-                        
-                        /
-                        // TODO: add photo for product
-                        if !product.image.isEmpty {
-                            WebImage(url: URL(string: product.image))
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 70, height: 70)
-                                .clipped()
-                        } else {
-                            Image(systemName: "photo").font(.system(size:30))
-                        }
-                        
-                        //Image(product.image).font(.system(size:30))
-                        //
-                        // Video 6, 25 minutes
-                        //WebImage(url: URL(string: )).resizeable()
-                        
-                        VStack (alignment: .leading){
-                            Text(product.name)
-                                .font(.system(size: 17, weight: .semibold))
-                            Text(product.shade)
-                                .foregroundColor(Color(.lightGray))
-                            Text(product.brand)
-                            Text(product.id)
-                        }
-
-                        Spacer ()
-                        
-                        // TODO: add edit button functionality
-                        Button{
-                            shouldShowEditProductScreen.toggle()
-                        } label: {
-                            Image(systemName: "square.and.pencil") // change icon
-                                .font(.system(size: 20))
-                                .foregroundColor(Color(.label))
-                        }.fullScreenCover(isPresented: $shouldShowEditProductScreen) { EditInventoryProductView(productId: $product.id) }
-                        
-                    }
-                    Divider()
-                        .padding(.vertical, 2)
-                }.padding(.horizontal)
-            }.padding(.bottom, 50)
-   
-        }
-    } */
     
     @State var shouldShowEditProductScreen = false
     
@@ -375,6 +269,48 @@ struct InventoryView: View {
     
 }
 
+struct ProductRow: View {
+    
+    let product: ProductDetails
+    
+    var body: some View {
+        VStack {
+            HStack {
+                
+                if !product.image.isEmpty {
+                    WebImage(url: URL(string: product.image))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 70, height: 70)
+                        .clipped()
+                } else {
+                    Image(systemName: "photo").font(.system(size:30))
+                }
+
+                VStack (alignment: .leading){
+                    Text(product.name)
+                        .font(.system(size: 18, weight: .semibold))
+                    Text(product.shade)
+                        .foregroundColor(Color(.lightGray))
+                    Text(product.brand)
+                    //Text(product.id)
+                }
+                
+                Spacer ()
+                    
+                NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
+                    //Text("Edit")
+                    Image(systemName: "square.and.pencil") // change icon
+                        .font(.system(size: 20))
+                        .foregroundColor(Color(.label)) }
+                }
+            
+                Divider()
+                    .padding(.vertical, 2)
+            
+        }.padding(.horizontal)
+    }
+}
 
 struct InventoryView_Previews: PreviewProvider {
     static var previews: some View {

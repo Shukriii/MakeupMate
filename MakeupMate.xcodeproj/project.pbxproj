@@ -19,7 +19,6 @@
 		A631EACF299FB54700D9E1DD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A631EACE299FB54700D9E1DD /* FirebaseAuth */; };
 		A631EAD1299FB54700D9E1DD /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A631EAD0299FB54700D9E1DD /* FirebaseFirestore */; };
 		A631EAD3299FB54700D9E1DD /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = A631EAD2299FB54700D9E1DD /* FirebaseStorage */; };
-		A63D455429BCAB8C00DF9FE0 /* EditInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63D455329BCAB8C00DF9FE0 /* EditInventoryProductView.swift */; };
 		A68A30E1299E757F00E01C84 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */; };
 		A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A2134829BA3B1D007B3625 /* ImagePicker.swift */; };
 		A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */; };
@@ -58,7 +57,6 @@
 		A614CBB529928640005087C9 /* MakeupMateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A61D710529B3789B0082258E /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		A631EAC9299E7DB900D9E1DD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		A63D455329BCAB8C00DF9FE0 /* EditInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryProductView.swift; sourceTree = "<group>"; };
 		A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A6A2134829BA3B1D007B3625 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
@@ -128,7 +126,6 @@
 				A631EAC9299E7DB900D9E1DD /* LoginView.swift */,
 				A61D710529B3789B0082258E /* InventoryView.swift */,
 				A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */,
-				A63D455329BCAB8C00DF9FE0 /* EditInventoryProductView.swift */,
 				A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */,
 			);
 			path = MakeupMate;
@@ -301,7 +298,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A6A8E9D829B655730082B1D7 /* CurrentUser.swift in Sources */,
-				A63D455429BCAB8C00DF9FE0 /* EditInventoryProductView.swift in Sources */,
 				A614CB9B2992863A005087C9 /* WalkthroughView.swift in Sources */,
 				A61D710629B3789B0082258E /* InventoryView.swift in Sources */,
 				A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */,
