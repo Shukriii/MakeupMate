@@ -23,41 +23,6 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-// Creating constants which ProductDetails uses
-struct FirebaseConstants {
-    static let uid = "uid"
-    static let image = "image"
-    static let name = "name"
-    static let brand = "brand"
-    static let category = "category"
-    static let shade = "shade"
-    static let stock = "stock"
-    static let expiryDate = "expiryDate"
-    static let note = "note"
-}
-
-// Decodes the data retrieved from Firestore and places them into variables
-struct ProductDetails: Identifiable {
-    
-    var id: String { documentID }
-    
-    let documentID: String
-    
-    let uid, image, name, brand, category, shade, stock, expiryDate, note: String
-    
-    init(documentID: String, data: [String: Any]){
-        self.documentID = documentID
-        self.uid = data[FirebaseConstants.uid] as? String ?? ""
-        self.image = data[FirebaseConstants.image] as? String ?? ""
-        self.name = data[FirebaseConstants.name] as? String ?? ""
-        self.brand = data[FirebaseConstants.brand] as? String ?? ""
-        self.category = data[FirebaseConstants.category] as? String ?? ""
-        self.shade = data[FirebaseConstants.shade] as? String ?? ""
-        self.stock = data[FirebaseConstants.stock] as? String ?? ""
-        self.expiryDate = data[FirebaseConstants.expiryDate] as? String ?? ""
-        self.note = data[FirebaseConstants.note] as? String ?? ""
-    }
-}
 
 // Class with 3 functions
 // fetchCurrentUser() - fetchs the current user
@@ -73,9 +38,9 @@ class InventoryViewModel: ObservableObject {
     init(){
         // If the user is logged out set the uid to nil,
         /*
-        DispatchQueue.main.async {
-            self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-        } */
+         DispatchQueue.main.async {
+         self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
+         } */
         
         fetchCurrentUser()
         fetchAllInventoryProducts()
@@ -131,10 +96,10 @@ class InventoryViewModel: ObservableObject {
                     }
                 })
                 
-            self.errorMessage = "Fetched products successfully"
-            print (self.errorMessage)
+                self.errorMessage = "Fetched products successfully"
+                print (self.errorMessage)
                 
-        }
+            }
         
     }
     
@@ -149,28 +114,7 @@ class InventoryViewModel: ObservableObject {
         print("Previous products removed from view")
     }
 }
-// --------------------------------------------------------------------------------------------------------------------------
 
-struct EditInventoryProductView: View {
-    
-    let productID: String
-    
-    @ObservedObject private var vm = InventoryViewModel()
-    
-    var body: some View {
-        VStack {
-            
-            Text("hello")
-            Text(productID)
-        }
-        .onAppear {
-            // Load the product details from Firestore
-            vm.fetchAllInventoryProducts()
-        }
-    }
-}
-
-// --------------------------------------------------------------------------------------------------------------------------
 struct InventoryView: View {
     
     @State var shouldShowLogOutOptions = false
@@ -183,11 +127,11 @@ struct InventoryView: View {
                 
                 //delete later on, for testing purposes
                 Text ("Current User ID: \(vm.currentUser?.email ?? "")")
-
+                
                 topNavigationBar
                 
                 productListView
-    
+                
             }
             .overlay(
                 newProductButton, alignment: .bottom)
@@ -237,11 +181,9 @@ struct InventoryView: View {
         ScrollView {
             ForEach(vm.products) { product in
                 ProductRow(product: product)
-                }.padding(.bottom, 50)
+            }.padding(.bottom, 50)
         }
     }
-    
-    @State var shouldShowEditProductScreen = false
     
     @State var shouldShowAddProductScreen = false
     
@@ -250,21 +192,21 @@ struct InventoryView: View {
         Button {
             shouldShowAddProductScreen.toggle()
         }
-        label: {
-            HStack() {
-                Spacer()
-                Text ("New Product")
-                    .font(.system(size: 16, weight: .bold))
-                Spacer()
-            }
-            .foregroundColor(.white)
-            .padding(.vertical)
-                .background(Color("Colour5"))
-                .cornerRadius(32)
-                .padding(.horizontal, 100)
-        }.fullScreenCover(isPresented: $shouldShowAddProductScreen){
-            AddInventoryProductView()
+    label: {
+        HStack() {
+            Spacer()
+            Text ("New Product")
+                .font(.system(size: 16, weight: .bold))
+            Spacer()
         }
+        .foregroundColor(.white)
+        .padding(.vertical)
+        .background(Color("Colour5"))
+        .cornerRadius(32)
+        .padding(.horizontal, 100)
+    }.fullScreenCover(isPresented: $shouldShowAddProductScreen){
+        AddInventoryProductView()
+    }
     }
     
 }
@@ -286,7 +228,7 @@ struct ProductRow: View {
                 } else {
                     Image(systemName: "photo").font(.system(size:30))
                 }
-
+                
                 VStack (alignment: .leading){
                     Text(product.name)
                         .font(.system(size: 18, weight: .semibold))
@@ -297,16 +239,16 @@ struct ProductRow: View {
                 }
                 
                 Spacer ()
-                    
-                NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
+                
+                NavigationLink(destination: EditInventoryProductView(productID: product.id, productName: product.name, productBrand: product.brand, productCategory: product.category, productShade: product.shade, productStock: product.stock, productNote: product.note, productImage: product.image)) {
                     //Text("Edit")
                     Image(systemName: "square.and.pencil") // change icon
                         .font(.system(size: 20))
-                        .foregroundColor(Color(.label)) }
-                }
+                    .foregroundColor(Color(.label)) }
+            }
             
-                Divider()
-                    .padding(.vertical, 2)
+            Divider()
+                .padding(.vertical, 2)
             
         }.padding(.horizontal)
     }
