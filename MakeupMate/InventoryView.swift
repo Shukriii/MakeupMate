@@ -37,10 +37,9 @@ class InventoryViewModel: ObservableObject {
     
     init(){
         // If the user is logged out set the uid to nil,
-        /*
          DispatchQueue.main.async {
          self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-         } */
+         }
         
         fetchCurrentUser()
         fetchAllInventoryProducts()
@@ -175,13 +174,14 @@ struct InventoryView: View {
         }
     }
     
-    // LISTING OF PRODUCTS
+    //LISTING OF PRODUCTS
     private var productListView: some View {
-        
         ScrollView {
+            // TODO: when categroies are added, edit how items are displayed - Main Product
             ForEach(vm.products) { product in
                 ProductRow(product: product)
             }.padding(.bottom, 50)
+            
         }
     }
     
@@ -216,7 +216,7 @@ struct ProductRow: View {
     let product: ProductDetails
     
     var body: some View {
-        VStack {
+        VStack{
             HStack {
                 
                 if !product.image.isEmpty {
@@ -228,32 +228,44 @@ struct ProductRow: View {
                 } else {
                     Image(systemName: "photo").font(.system(size:30))
                 }
-                
+
                 VStack (alignment: .leading){
                     Text(product.name)
-                        .font(.system(size: 18, weight: .semibold))
+                        .font(.system(size: 17, weight: .semibold))
                     Text(product.shade)
                         .foregroundColor(Color(.lightGray))
                     Text(product.brand)
-                    //Text(product.id)
                 }
-                
                 Spacer ()
                 
-                NavigationLink(destination: EditInventoryProductView(productID: product.id, productName: product.name, productBrand: product.brand, productCategory: product.category, productShade: product.shade, productStock: product.stock, productNote: product.note, productImage: product.image)) {
+                NavigationLink(destination: EditView(productID: product.id, productName: product.name, productBrand: product.brand, productShade: product.shade, productStock: product.stock, productNote: product.note)) {
                     //Text("Edit")
                     Image(systemName: "square.and.pencil") // change icon
                         .font(.system(size: 20))
                     .foregroundColor(Color(.label)) }
+                
+                /*
+                NavigationLink(destination: EditInventoryProductView(productID: product.id, productName: product.name, productBrand: product.brand, productShade: product.shade, productStock: product.stock, productNote: product.note, productImage: product.image)) {
+                    //Text("Edit")
+                    Image(systemName: "square.and.pencil") // change icon
+                        .font(.system(size: 20))
+                    .foregroundColor(Color(.label)) }
+                
+                // TODO: add edit button functionality
+                Button{
+                    
+                } label: {
+                    Image(systemName: "square.and.pencil") // change icon
+                        .font(.system(size: 20))
+                        .foregroundColor(Color(.label))
+                } */
+                
             }
-            
             Divider()
                 .padding(.vertical, 2)
-            
         }.padding(.horizontal)
     }
 }
-
 struct InventoryView_Previews: PreviewProvider {
     static var previews: some View {
         Group {

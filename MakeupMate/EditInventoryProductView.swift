@@ -8,15 +8,14 @@
 import SwiftUI
 
 struct EditInventoryProductView: View {
+    // left out category and expiry date
+    let productID, productName, productBrand, productShade, productStock,  productNote, productImage: String
     
-    let productID, productName, productBrand, productCategory, productShade, productStock,  productNote, productImage: String
     
     @State private var name = ""
     @State private var brand = ""
-    @State private var category = ""
     @State private var shade = ""
     @State private var stock = ""
-    //@State private var expiryDate = Date.now
     @State private var note = ""
     @State private var image = ""
     
@@ -25,20 +24,20 @@ struct EditInventoryProductView: View {
     
     @ObservedObject private var vm = InventoryViewModel()
     
-    init(productID: String, productName: String, productBrand: String, productCategory: String, productShade: String, productStock: String, productNote: String, productImage: String) {
+    init(productID: String, productName: String, productBrand: String, productShade: String, productStock: String, productNote: String, productImage: String) {
            self.productID = productID
            self.productName = productName
            self.productBrand = productBrand
-           self.productCategory = productCategory
            self.productShade = productShade
            self.productStock = productStock
-           
            self.productNote = productNote
            self.productImage = productImage
            
            _name = State(initialValue: productName)
            _brand = State(initialValue: productBrand)
            _shade = State(initialValue: productShade)
+           _stock = State(initialValue: productStock)
+           _note = State(initialValue: productNote)
        }
     
     var body: some View {
@@ -47,7 +46,8 @@ struct EditInventoryProductView: View {
                 ScrollView {
                     VStack {
                         HStack {
-                            //IMAGE
+                            
+                            /*IMAGE
                             Button {
                                 shouldShowImagePicker.toggle()
                             } label: {
@@ -69,14 +69,13 @@ struct EditInventoryProductView: View {
                         .onAppear {
                             // Load the product details from Firestore
                             vm.fetchAllInventoryProducts()
-                            updateImage() // load the stored image
+                            updateImage() // load the stored image */
                         }
                         
                         Spacer ()
                         
                         VStack (spacing: 16){
                             Text(productID)
-                                
                             //NAME
                             VStack (alignment: .leading) {
                                 if !productName.isEmpty {
@@ -109,21 +108,7 @@ struct EditInventoryProductView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
-                            //just a botton with label
-                            Button {
-                                print("category view appears")
-                            } label:  {
-                                HStack {
-                                    Text("Category")
-                                    Spacer()
-                                    Image(systemName: "chevron.right.circle")
-                                }
-                                .padding(15)
-                                    
-                            }
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
-                            
+                            //SHADE
                             VStack (alignment: .leading) {
                                 if !productShade.isEmpty {
                                     Text("Shade")
@@ -139,6 +124,7 @@ struct EditInventoryProductView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             /*
+                            //STOCK
                             VStack (alignment: .leading) {
                                 if !productStock.isEmpty {
                                     Text("Stock")
@@ -154,14 +140,7 @@ struct EditInventoryProductView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
-                            //EXPIRY DATE
-                            //TODO: Let no date be an option
-                            VStack {
-                                DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
-                                    Text("Expiry Date")
-                                }
-                            }
-                            
+                            //NOTE
                             VStack (alignment: .leading) {
                                 if !productNote.isEmpty {
                                     Text("Note")
@@ -178,18 +157,61 @@ struct EditInventoryProductView: View {
                             .padding(15)
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5) */
-                            
+                        
                         }
                         .onAppear {
                             // Load the product details from Firestore
-                            vm.fetchAllInventoryProducts()
+                            fetchProduct()
                         }
                         .padding(12)
                         
+                        HStack{
+                             Button{
+                                 print("returns back to inventory view")
+                             } label: {
+                                 Image(systemName: "trash")
+                                     .font(.system(size: 30))
+                                     .foregroundColor(.red)
+                             }
+
+                             Spacer()
+                                 .frame(width: 90)
+
+                             Button{
+
+                             } label: {
+                                 Image(systemName: "checkmark.circle")
+                                     .font(.system(size: 30))
+                                     .foregroundColor(Color("Colour5"))
+                             }
+                        }
                     }
                 }
             }
         }
+    }
+    
+    private func fetchProduct() {
+        // uid of user logged in
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        // id of product
+        let id = self.productID
+        
+        // to find in Firestore
+        FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory").document(id).getDocument {
+            snapshot, error in
+                if let error = error {
+                    print("Failed to fetch current user:", error)
+                    return }
+            
+            guard let data = snapshot?.data() else {
+                print("No data found")
+                return }
+            
+            print(data)
+        }
+        
     }
     
     private func updateImage() {
@@ -207,4 +229,10 @@ struct EditInventoryProductView: View {
     }
 }
 
-
+struct EditInventoryProductView_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            InventoryView()
+        }
+    }
+}

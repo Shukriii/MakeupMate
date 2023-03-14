@@ -40,7 +40,6 @@ struct AddInventoryProductView: View {
                 ScrollView{
                     VStack {
                         HStack{
-            
                             //IMAGE
                             Button {
                                 shouldShowImagePicker.toggle()
@@ -199,7 +198,7 @@ struct AddInventoryProductView: View {
         //path of image is the users uid
         let reference = FirebaseManager.shared.storage.reference(withPath: uid)
         guard let imageData = self.image?.jpegData(compressionQuality: 0.5) else { return }
-        
+
         // upload data to Storage
         reference.putData(imageData, metadata: nil) { metadata, err in
             if let err = err {
