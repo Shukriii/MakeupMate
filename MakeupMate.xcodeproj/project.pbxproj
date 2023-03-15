@@ -28,6 +28,7 @@
 		A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */; };
 		A6A8E9D829B655730082B1D7 /* CurrentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D729B655730082B1D7 /* CurrentUser.swift */; };
 		A6A8E9DA29B75D380082B1D7 /* AddInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */; };
+		A6BF475829C2028E001940A7 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BF475729C2028E001940A7 /* NavigationBar.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		A6A8E9D729B655730082B1D7 /* CurrentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUser.swift; sourceTree = "<group>"; };
 		A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInventoryProductView.swift; sourceTree = "<group>"; };
+		A6BF475729C2028E001940A7 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +137,7 @@
 				A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */,
 				A63685D229BD20B1008C17B9 /* EditInventoryProductView.swift */,
 				A67D601729C08037003EEBB7 /* EditView.swift */,
+				A6BF475729C2028E001940A7 /* NavigationBar.swift */,
 				A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */,
 			);
 			path = MakeupMate;
@@ -317,6 +320,7 @@
 				A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */,
 				A631EACA299E7DB900D9E1DD /* LoginView.swift in Sources */,
 				A614CB992992863A005087C9 /* MakeupMateApp.swift in Sources */,
+				A6BF475829C2028E001940A7 /* NavigationBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

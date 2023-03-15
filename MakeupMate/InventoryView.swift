@@ -36,10 +36,10 @@ class InventoryViewModel: ObservableObject {
     @Published var isUserCurrentlyLoggedOut = false
     
     init(){
-        // If the user is logged out set the uid to nil,
+        /* If the user is logged out set the uid to nil,
          DispatchQueue.main.async {
          self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil
-         }
+         } */
         
         fetchCurrentUser()
         fetchAllInventoryProducts()
@@ -87,12 +87,20 @@ class InventoryViewModel: ObservableObject {
                     return
                 }
                 
-                // adds products to view when they are added
+                // changes product view
                 querySnapshot?.documentChanges.forEach( { change in
                     if change.type == .added {
                         let data = change.document.data()
                         self.products.append(.init(documentID: change.document.documentID, data: data))
                     }
+                    //if product is deleted
+                    if change.type == .removed {
+                        if let index = self.products.firstIndex(where: { $0.documentID == change.document.documentID }) {
+                            self.products.remove(at: index)
+                        }
+                    }
+                    
+                
                 })
                 
                 self.errorMessage = "Fetched products successfully"
@@ -238,7 +246,7 @@ struct ProductRow: View {
                 }
                 Spacer ()
                 
-                NavigationLink(destination: EditView(productID: product.id, productName: product.name, productBrand: product.brand, productShade: product.shade, productStock: product.stock, productNote: product.note)) {
+                NavigationLink(destination: EditView(productID: product.id, productImage: product.image)) {
                     //Text("Edit")
                     Image(systemName: "square.and.pencil") // change icon
                         .font(.system(size: 20))
@@ -249,16 +257,7 @@ struct ProductRow: View {
                     //Text("Edit")
                     Image(systemName: "square.and.pencil") // change icon
                         .font(.system(size: 20))
-                    .foregroundColor(Color(.label)) }
-                
-                // TODO: add edit button functionality
-                Button{
-                    
-                } label: {
-                    Image(systemName: "square.and.pencil") // change icon
-                        .font(.system(size: 20))
-                        .foregroundColor(Color(.label))
-                } */
+                    .foregroundColor(Color(.label)) } */
                 
             }
             Divider()
