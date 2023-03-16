@@ -41,7 +41,8 @@ struct EditView: View {
             ScrollView {
                 VStack {
                     HStack {
-                        /*
+                        
+                        // Shows picture! But does not change
                         Button {
                             shouldShowImagePicker.toggle()
                         } label: { if let product = product {
@@ -55,12 +56,12 @@ struct EditView: View {
                                 let storageImage = product.image
                                 
                             } else {
-                                Image(systemName: "photo").font(.system(size:30))
+                                Image(systemName: "photo").font(.system(size:120))
                             }
                         }
-                        } */
+                        }
                         
-                        
+                        /*
                         Button {
                             shouldShowImagePicker.toggle()
                         } label: {
@@ -78,7 +79,7 @@ struct EditView: View {
                                 }
                             }
                             }
-                        }
+                        }*/
                         
                     }.sheet(isPresented: $shouldShowImagePicker, onDismiss: updateImage) {
                         ImagePicker(image: $storageImage)
@@ -144,10 +145,12 @@ struct EditView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
-                            Text(product.stock)
-                            Text(product.note)
+                            let stock = product.stock
+                            Text(stock)
+                            let note = product.note
+                            Text(note)
                             
-                            /* //STOCK
+                            /*STOCK
                             VStack (alignment: .leading) {
                                 if !product.stock.isEmpty {
                                     Text("Stock")
@@ -203,6 +206,7 @@ struct EditView: View {
                              .frame(width: 90)
 
                          Button{
+                             updateProduct()
                              
                          } label: {
                              Image(systemName: "checkmark.circle")
@@ -272,6 +276,31 @@ struct EditView: View {
         
         presentationMode.wrappedValue.dismiss()
         //NavigationLink(destination: InventoryView(), isActive: $showInventoryView)
+    }
+    
+    private func updateProduct() {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        let id = self.productID
+        
+        let productData = ["uid": uid, "name": name, "image": productImage, "brand": brand, "shade": shade, "stock": stock, "note": note] as [String : Any]
+
+        
+        let document = FirebaseManager.shared.firestore.collection("products")
+            .document(uid)
+            .collection("inventory")
+            .document(id)
+            
+            document.setData(productData) { error in
+                if let error = error {
+                    print("Failed to save product into Firestore: \(error)")
+                    return
+                } else {
+                    print("product updated")
+                    self.showInventoryView = true
+                }
+            }
+        presentationMode.wrappedValue.dismiss()
     }
     
 }

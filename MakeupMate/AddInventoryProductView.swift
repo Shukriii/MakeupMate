@@ -192,38 +192,42 @@ struct AddInventoryProductView: View {
     
     @State var statusMessage = ""
     
-    // Uploads image to firebase Storage
     private func uploadImageToStorage() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        //path of image is the users uid
+        // path of image is the user's uid
         let reference = FirebaseManager.shared.storage.reference(withPath: uid)
-        guard let imageData = self.image?.jpegData(compressionQuality: 0.5) else { return }
-
-        // upload data to Storage
-        reference.putData(imageData, metadata: nil) { metadata, err in
-            if let err = err {
-                self.statusMessage = "Failed to push image to Storage: \(err)"
-                return
-            }
-            
-            reference.downloadURL { url, err in
+        
+        if let imageData = self.image?.jpegData(compressionQuality: 0.5) {
+            print("in if")
+            // upload data to Storage if an image is selected
+            reference.putData(imageData, metadata: nil) { metadata, err in
                 if let err = err {
-                    self.statusMessage = "Failed to retrieve downloadURL: \(err)"
+                    self.statusMessage = "Error uploading image: \(err)"
                     return
                 }
                 
-                self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
-                //print(url?.absoluteString)
-                
-                guard let url = url else { return }
-                self.storeProduct(imageProfileUrl: url)
+                reference.downloadURL { url, err in
+                    if let err = err {
+                        self.statusMessage = "Failed to retrieve downloadURL: \(err)"
+                        return
+                    }
+                    
+                    self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
+                    //print(url?.absoluteString)
+                    
+                    guard let url = url else { return }
+                    self.storeProduct(imageProfileUrl: url)
+                }
             }
+        } else {
+            storeProduct(imageProfileUrl: nil)
+            print("No url")
         }
     }
     
     // Retireves uid from Firebase Auth, then uses it to create collection in Firestore
     // stores all the products details into Firestore
-    private func storeProduct(imageProfileUrl: URL){
+    private func storeProduct(imageProfileUrl: URL?){
         // set the uid to the uid of the user logged in
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
@@ -233,7 +237,12 @@ struct AddInventoryProductView: View {
             .document()
         
         //dictionary of data to be stored
-        let productData = ["uid": uid, "name": self.name, "image": imageProfileUrl.absoluteString, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
+        var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
+        
+        // Check if image URL is nil and update the dictionary accordingly
+        if let imageProfileUrl = imageProfileUrl {
+            productData["image"] = imageProfileUrl.absoluteString
+        }
         
         document.setData(productData) { error in
             if let error = error {

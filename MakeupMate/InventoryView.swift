@@ -100,7 +100,12 @@ class InventoryViewModel: ObservableObject {
                         }
                     }
                     
-                
+                    if change.type == .modified {
+                        if let index = self.products.firstIndex(where: { $0.documentID == change.document.documentID }) {
+                            let data = change.document.data()
+                            self.products[index] = .init(documentID:change.document.documentID, data: data)
+                            }
+                        }
                 })
                 
                 self.errorMessage = "Fetched products successfully"
