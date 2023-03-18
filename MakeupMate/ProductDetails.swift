@@ -5,6 +5,9 @@
 //  Created by Shukri  Ahmed on 11/03/2023.
 //
 
+/*
+ This struct decodes the dictionary of product data, and places them into variable to they can be easily accessed
+ */
 import Foundation
 
 // Creating constants which ProductDetails uses
@@ -20,14 +23,13 @@ struct FirebaseConstants {
     static let note = "note"
 }
 
-// Decodes the data retrieved from Firestore and places them into variables
 struct ProductDetails: Identifiable {
     
     var id: String { documentID }
     
     let documentID: String
     
-    let uid, image, name, brand, category, shade, stock, expiryDate, note: String
+    var uid, image, name, brand, category, shade, stock, expiryDate, note: String
     
     init(documentID: String, data: [String: Any]){
         self.documentID = documentID

@@ -5,6 +5,12 @@
 //  Created by Shukri  Ahmed on 06/03/2023.
 //
 
+/*
+ This struct decodes a dictionary of data, and places them into variable to they can be easily accessed
+ 
+ This code was reused from tutorial: https://www.youtube.com/watch?v=yHngqpFpVZU&t=1136s&ab_channel=LetsBuildThatApp
+ */
+
 import Foundation
 
 struct CurrentUser {

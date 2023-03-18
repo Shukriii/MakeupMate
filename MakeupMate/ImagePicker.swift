@@ -6,6 +6,9 @@
 //
 
 /*
+ Uses UIImagePickerController view controller to allow the user to select an image from their photo library
+ and implements a Coordinator class to handle image selection and cancellation events.
+ 
  Reused code from tutorial: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
  */
 
@@ -47,7 +50,5 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
-        
     }
-    
 }
