@@ -12,11 +12,12 @@
         - See all the products in their inventory
         - Log out (calls LoginView)
         - Add an inventory product (calls AddInventoryProductView)
-   This code was inspired by the following tutorials
-   Creating inventory view: https://www.youtube.com/watch?v=pPsKTTd55xI&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=6&ab_channel=LetsBuildThatApp
-   To fetch the current user from Firestore: https://www.youtube.com/watch?v=yHngqpFpVZU&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=7&ab_channel=LetsBuildThatApp
-   Log in and log out: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
-   Fetch inventory products from Firestore: https://www.youtube.com/watch?v=G0AyApE2w1c&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=13&ab_channel=LetsBuildThatApp
+ 
+   No code has been copied directly, the code has been adapted from the following tutorials
+   Video 1 - Creating inventory view: https://www.youtube.com/watch?v=pPsKTTd55xI&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=6&ab_channel=LetsBuildThatApp
+   Video 2 - To fetch the current user from Firestore: https://www.youtube.com/watch?v=yHngqpFpVZU&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=7&ab_channel=LetsBuildThatApp
+   Video 3 - Log in and log out: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
+   Video 4 - Fetch inventory products from Firestore: https://www.youtube.com/watch?v=G0AyApE2w1c&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=13&ab_channel=LetsBuildThatApp
  */
 
 
@@ -24,10 +25,11 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 
-// Class with 3 functions
+// Class with 4 functions
 // fetchCurrentUser() - fetchs the current user
 // fetchAllInventoryProducts() - fetchs the inventory products of the current user
 // handleSignOut() - Uses firebase Auth to sign current user out
+// removeInventoryProduct() - Removes inventory products from the view
 class InventoryViewModel: ObservableObject {
     
     @Published var errorMessage = ""
@@ -45,7 +47,8 @@ class InventoryViewModel: ObservableObject {
         fetchAllInventoryProducts()
     }
     
-    // Fetchs the currents users id
+    // Fetchs the currents users uid, and decodes the data from Firestore and places into currentUser
+    // Adapted from Video 2
     func fetchCurrentUser(){
         // Retrives the uid from Firebase Auth and places into uid
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
@@ -53,7 +56,7 @@ class InventoryViewModel: ObservableObject {
             print("fetchCurrentUser(): Could not find firebase uid")
             return }
         
-        // Finds the uid in Firebase Firestore
+        // Finds the uid in Firebase Firestore, then finds the document with its uid
         FirebaseManager.shared.firestore.collection("users").document(uid).getDocument { snapshot, error in
             if let error = error {
                 self.errorMessage = "Failed to fetch current user: \(error)"
@@ -66,13 +69,13 @@ class InventoryViewModel: ObservableObject {
                 print("No data found")
                 return }
             
-            // places the data in the current user
+            // places the data from the document into currenUser
             self.currentUser = .init(data: data)
         }
     }
     
+    // 
     func fetchAllInventoryProducts() {
-        
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             self.errorMessage = "fetchAllInventoryProducts(): Could not find firebase uid"
             print ("fetchAllInventoryProducts(): Could not find firebase uid")
@@ -87,8 +90,9 @@ class InventoryViewModel: ObservableObject {
                     return
                 }
                 
-                // changes product view
+                // The snapshot listener querySnapshot listens for changes
                 querySnapshot?.documentChanges.forEach( { change in
+                    // if a product is added
                     if change.type == .added {
                         let data = change.document.data()
                         self.products.append(.init(documentID: change.document.documentID, data: data))
@@ -99,7 +103,7 @@ class InventoryViewModel: ObservableObject {
                             self.products.remove(at: index)
                         }
                     }
-                    
+                    // if a product is modified
                     if change.type == .modified {
                         if let index = self.products.firstIndex(where: { $0.documentID == change.document.documentID }) {
                             let data = change.document.data()
@@ -107,26 +111,26 @@ class InventoryViewModel: ObservableObject {
                             }
                         }
                 })
-                
                 self.errorMessage = "Fetched products successfully"
                 print (self.errorMessage)
-                
             }
-        
     }
     
+    // Adapted from Video 3
     func handleSignOut() {
         isUserCurrentlyLoggedOut.toggle()
         try? FirebaseManager.shared.auth.signOut()
         print("Current user has been signed out")
     }
     
+    // Is called after a user logs out to clear the Inventory
     func removeInventoryProduct(){
         self.products = []
         print("Previous products removed from view")
     }
 }
 
+// This struct calls topNavigationBar and productListView to populate the VStack, and has a button to add a new product. The variable vm calls the class InventoryViewModel, it has an overlay that adds a new product
 struct InventoryView: View {
     
     @State var shouldShowLogOutOptions = false
@@ -151,7 +155,8 @@ struct InventoryView: View {
         }
     }
     
-    // Includes pop up to log out
+    // Displays title of view and a button to logout, it also uses the boolean isUserCurrentlyLoggedOut to check wether the user is logged in. If not it uses the closure didCompleteLoginProcess to all the functions to populate the view.
+    // Adapted from Video 1
     private var topNavigationBar: some View {
         HStack{
             
@@ -169,6 +174,7 @@ struct InventoryView: View {
             }
         }
         .padding()
+        // Adapted from Video 3
         .actionSheet(isPresented: $shouldShowLogOutOptions) {
             .init(title: Text ("Settings"),
                   message: Text("Are you sure you want to sign out?"),
@@ -187,7 +193,7 @@ struct InventoryView: View {
         }
     }
     
-    //LISTING OF PRODUCTS
+    // Using vm it counts the number of products stored in Firestore and using a ForEach displays the product using ProductRow
     private var productListView: some View {
         ScrollView {
             // TODO: when categroies are added, edit how items are displayed - Main Product
@@ -200,7 +206,7 @@ struct InventoryView: View {
     
     @State var shouldShowAddProductScreen = false
     
-    //NEW PRODUCT BUTTON
+    //This function is called by the overlay and displays a button to allow users to add a product. A full screen over is presented that calls AddInventoryProductView()
     private var newProductButton: some View {
         Button {
             shouldShowAddProductScreen.toggle()
@@ -216,14 +222,14 @@ struct InventoryView: View {
         .padding(.vertical)
         .background(Color("Colour5"))
         .cornerRadius(32)
-        .padding(.horizontal, 100)
+        .padding(.horizontal, 120)
     }.fullScreenCover(isPresented: $shouldShowAddProductScreen){
         AddInventoryProductView()
     }
     }
-    
 }
 
+// This struct is passed a product which is a list, and using the ProductDetails struct it uses a variable to access the data. Is displays the product image, along with product name, shade and brand if avaliable. It has an Edit icon which redirects the user to EditView
 struct ProductRow: View {
     
     let product: ProductDetails
@@ -252,7 +258,6 @@ struct ProductRow: View {
                 Spacer ()
                 
                 NavigationLink(destination: EditView(productID: product.id, productImage: product.image)) {
-                    //Text("Edit")
                     Image(systemName: "square.and.pencil") // change icon
                         .font(.system(size: 20))
                     .foregroundColor(Color(.label)) }
