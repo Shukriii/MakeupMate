@@ -9,14 +9,16 @@
 /*
  This file is a walkthrough that provides the users with instructions on how to use the app.
  It is only displayed when the app is first downloaded.
+ 
  I reused the code from this video: https://www.youtube.com/watch?v=HVAMShhJOUo&ab_channel=Kavsoft
+ 
  Replaced the tutorial code with my own images, information and colour scheme
  */
 
 
 import SwiftUI
 
-// Once walkthrough is complete redirects to InventoryView
+// Once walkthrough is complete redirects to NavigationBar
 struct WalkthroughView: View {
     
     @AppStorage("currentPage") var currentPage = 1
@@ -42,7 +44,7 @@ struct Walkthrough: View {
     @AppStorage("currentPage") var currentPage = 1
     
     var body: some View{
-        //for slide animation
+        
         ZStack {
             
             if currentPage == 1 {

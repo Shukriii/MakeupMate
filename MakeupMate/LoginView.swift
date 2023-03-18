@@ -6,7 +6,7 @@
 //
 
 /*
-  LoginView is called once user logs out
+  LoginView is called by InventoryView once the user logs out, using the closure didCompleteLoginProcess. 
  
   Code has been resued from following tutorials -
   Login View: https://www.youtube.com/watch?v=aVO4EVGvQcw&ab_channel=LetsBuildThatApp
@@ -25,15 +25,15 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     
+    // Creates the UI of LoginView, a picker is used to switch from Login to Sign Up
     var body: some View {
         NavigationView{
             ScrollView{
-                
                 VStack (spacing: 16){
+                    
                     Picker(selection: $isLoginMode,  label: Text("Picker")){
                         Text("Login")
                             .tag(true)
-                            
                         Text("Sign Up")
                             .tag(false)
                     }.pickerStyle(SegmentedPickerStyle())
@@ -44,7 +44,7 @@ struct LoginView: View {
                         .aspectRatio(contentMode: .fit)
                         .padding()
                     
-                    // Text boxes for email and password
+                    // TextField for email and password
                     Group {
                         TextField("Email", text: $email)
                         .keyboardType(.emailAddress)
@@ -55,13 +55,13 @@ struct LoginView: View {
                     .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                     .cornerRadius(10)
  
-                    // button to login or create account
+                    // Button which functionality depends on isLoginMode boolean
                     Button {
                         handleAction ()
                     } label: {
                         HStack{
                             Spacer()
-                            Text(isLoginMode ? "Log In" : "Sign Up")
+                            Text(isLoginMode ? "Login" : "Sign Up")
                                 .foregroundColor(.white)
                                 .padding(.vertical, 10)
                                 .font(.system(size: 16, weight: .bold))
@@ -71,36 +71,31 @@ struct LoginView: View {
                         
                     }
                     
-                    // message that is displayed once buttton is clicked
+                    // Message that is displayed once buttton is clicked
                     Text(self.loginStatusMessage)
                         .foregroundColor(.red)
                     
                 }
                 .padding()
-                
             }
-            .navigationTitle(isLoginMode ? "Log In" : "Sign Up")
+            .navigationTitle(isLoginMode ? "Login" : "Sign Up")
             .background(Color.white)
-            
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
-    // button functionality
+    // Calls a function depending on boolean value
     private func handleAction () {
         if isLoginMode {
             loginUser()
-            //print ("Add account to Firebase")
         } else {
             createNewAccount()
-            //print ("Logins to firebase")
         }
     }
     
-    // firebase auth code to check if login is valid
+    // Signs in using Firebase Auth, using the email and password inputted into the Texfield by the user. Prints a loginStatusMessage validating the success or failure of logging in.
     private func loginUser(){
         FirebaseManager.shared.auth.signIn(withEmail: email, password: password){ result, err in
-            
             if let err = err {
                 print("Failed to login user:", err)
                 self.loginStatusMessage = "Failed to login user: \(err)"
@@ -110,13 +105,12 @@ struct LoginView: View {
             self.loginStatusMessage = "Successfully logged in user as: \(result?.user.uid ?? "")"
             
             self.didCompleteLoginProcess()
-            
         }
     }
     
     @State var loginStatusMessage = ""
     
-    // creates an account using Firebase Auth
+    // Creates an account using Firebase Auth, using the email and password inputted into the Texfield by the user. Prints a loginStatusMessage validating the success or failure of creating the account.
     private func createNewAccount(){
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password){ result, err in
             if let err = err {
@@ -129,14 +123,12 @@ struct LoginView: View {
             self.loginStatusMessage = "Successfully created user: \(result?.user.uid ?? "")" }
     }
     
-    // Stores users details Firebase Firestore
+    // Retrives the users uid from Auth suing currentUser, then creates a document in the Users collection in Firestore. The document identifier is the users' uid and stores their uid and email.
     private func storeUserInformation(){
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {return}
         
-        // the data of the user we are storing, uid and email
         let userData = ["uid": uid, "email": self.email]
         
-        // create a collection of users, and document there uid
         FirebaseManager.shared.firestore.collection("users").document(uid).setData(userData){err in
             if let err = err {
                 print(err)
@@ -148,7 +140,6 @@ struct LoginView: View {
             self.didCompleteLoginProcess()
         }
     }
-    
 }
 
 struct LoginView_Previews: PreviewProvider { 

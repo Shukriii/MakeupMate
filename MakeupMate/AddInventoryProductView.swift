@@ -1,5 +1,5 @@
 //
-//  InventoryProductView.swift
+//  AddInventoryProductView.swift
 //  MakeupMate
 //
 //  Created by Shukri  Ahmed on 07/03/2023.
@@ -20,6 +20,7 @@ import Firebase
 import SwiftUI
 import SDWebImageSwiftUI
 
+// This struct creates the view and uses variable to store the details entered
 struct AddInventoryProductView: View {
     
     @State private var name = ""
@@ -41,7 +42,7 @@ struct AddInventoryProductView: View {
                 ScrollView{
                     VStack {
                         HStack{
-                            //
+                            // The boolean becomes true and the Image Picker is displayed
                             Button {
                                 shouldShowImagePicker.toggle()
                             } label: {
@@ -51,7 +52,6 @@ struct AddInventoryProductView: View {
                                             .resizable()
                                             .frame(width: 180, height: 180)
                                             .scaledToFill()
-
                                     } else {
                                         Image(systemName: "photo").font(.system(size:120))
                                     }
@@ -157,12 +157,10 @@ struct AddInventoryProductView: View {
                             
                         }
                         .padding(12)
-
+                        
                         HStack{
                             Button{
                                 addProduct()
-                                //uploadImageToStorage()
-                                //self.storeProduct(imageProfileUrl: URL)
                             } label: {
                                 Image(systemName: "checkmark.circle")
                                     .font(.system(size: 30))
@@ -189,13 +187,13 @@ struct AddInventoryProductView: View {
                 ImagePicker(image: $image)
             }
         }
-        
     }
     
     @State var statusMessage = ""
     
     var productID: String?
     
+    // This function creates a document for the product, and then uses the document ID as a path reference to store the image associated to the product
     private func addProduct() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
        
@@ -205,9 +203,10 @@ struct AddInventoryProductView: View {
             .collection("inventory")
             .document()
         
-        print("This is the document ID: \(document.documentID)")
+        // assign the documentID to productID
+        let productID = document.documentID
         
-        let productID = document.documentID // assign the documentId to productID
+        // store the image with reference of productID
         let reference = FirebaseManager.shared.storage.reference(withPath: productID)
         print("Firebase Storage reference: \(reference)")
         
@@ -230,14 +229,17 @@ struct AddInventoryProductView: View {
                     print(statusMessage)
                     
                     guard let url = url else { return }
+                    // call storeProduct with proudctID and url of image
                     self.storeProduct(productID: productID, imageProfileUrl: url)
                 }
             }
+            // if no image then call storeProduct with productID and no url
         } else {
             self.storeProduct(productID: productID, imageProfileUrl: nil)
         }
     }
     
+    // This function stores the product into Firestore, finding the document created with productID
     private func storeProduct(productID: String, imageProfileUrl: URL?) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
@@ -249,11 +251,12 @@ struct AddInventoryProductView: View {
         //dictionary of data to be stored
         var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
         
-        // Check if image URL is nil and update the dictionary accordingly
+        // Check if image URL is not nil and add image to the dictionary accordingly
         if let imageProfileUrl = imageProfileUrl {
             productData["image"] = imageProfileUrl.absoluteString
         }
         
+        // set productData to the document 
         document.setData(productData) { error in
             if let error = error {
                 print(error)
@@ -266,70 +269,6 @@ struct AddInventoryProductView: View {
         presentationMode.wrappedValue.dismiss()
     }
 }
-    /*
-    private func uploadImageToStorage() {
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        // path of image is the user's uid
-        let reference = FirebaseManager.shared.storage.reference(withPath: uid)
-        
-        if let imageData = self.image?.jpegData(compressionQuality: 0.5) {
-            print("in if")
-            // upload data to Storage if an image is selected
-            reference.putData(imageData, metadata: nil) { metadata, err in
-                if let err = err {
-                    self.statusMessage = "Error uploading image: \(err)"
-                    return
-                }
-                
-                reference.downloadURL { url, err in
-                    if let err = err {
-                        self.statusMessage = "Failed to retrieve downloadURL: \(err)"
-                        return
-                    }
-                    
-                    self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
-                    //print(url?.absoluteString)
-                    
-                    guard let url = url else { return }
-                    self.storeProduct(imageProfileUrl: url)
-                }
-            }
-        } else {
-            storeProduct(imageProfileUrl: nil)
-            print("No url")
-        }
-    }
-    
-    // Retireves uid from Firebase Auth, then uses it to create collection in Firestore
-    // stores all the products details into Firestore
-    private func storeProduct(imageProfileUrl: URL?){
-        // set the uid to the uid of the user logged in
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        let document = FirebaseManager.shared.firestore.collection("products")
-            .document(uid)
-            .collection("inventory")
-            .document()
-        
-        //dictionary of data to be stored
-        var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
-        
-        // Check if image URL is nil and update the dictionary accordingly
-        if let imageProfileUrl = imageProfileUrl {
-            productData["image"] = imageProfileUrl.absoluteString
-        }
-        
-        document.setData(productData) { error in
-            if let error = error {
-                print(error)
-                self.statusMessage = "Failed to save product into Firestore: \(error)"
-                return
-                
-            }
-            print ("success")
-        }
-        presentationMode.wrappedValue.dismiss()
-    }*/
     
 struct InventoryProductView_Previews: PreviewProvider {
     static var previews: some View {
