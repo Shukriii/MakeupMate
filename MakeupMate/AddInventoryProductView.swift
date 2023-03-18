@@ -7,7 +7,8 @@
 
 /*
   InventoryView calls this function when the New Product button is clicked
-  No code has been copied directly
+  
+ No code has been copied directly
   Tutorials used -
   Floating label for text boxes: https://www.youtube.com/watch?v=Sg0rfYL3utI&t=649s&ab_channel=PeterFriese
   Adding a DatePicker (Calendar): https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-date-picker-and-read-values-from-it
@@ -40,7 +41,7 @@ struct AddInventoryProductView: View {
                 ScrollView{
                     VStack {
                         HStack{
-                            //IMAGE
+                            //
                             Button {
                                 shouldShowImagePicker.toggle()
                             } label: {
@@ -159,7 +160,8 @@ struct AddInventoryProductView: View {
 
                         HStack{
                             Button{
-                                uploadImageToStorage()
+                                addProduct()
+                                //uploadImageToStorage()
                                 //self.storeProduct(imageProfileUrl: URL)
                             } label: {
                                 Image(systemName: "checkmark.circle")
@@ -192,6 +194,79 @@ struct AddInventoryProductView: View {
     
     @State var statusMessage = ""
     
+    var productID: String?
+    
+    private func addProduct() {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+       
+        // Create a document
+        let document = FirebaseManager.shared.firestore.collection("products")
+            .document(uid)
+            .collection("inventory")
+            .document()
+        
+        print("This is the document ID: \(document.documentID)")
+        
+        let productID = document.documentID // assign the documentId to productID
+        let reference = FirebaseManager.shared.storage.reference(withPath: productID)
+        print("Firebase Storage reference: \(reference)")
+        
+        // If theres an image
+        if let imageData = self.image?.jpegData(compressionQuality: 0.5) {
+            // upload data to Storage if an image is selected
+            reference.putData(imageData, metadata: nil) { metadata, err in
+                if let err = err {
+                    self.statusMessage = "Error uploading image: \(err)"
+                    return
+                }
+            
+                reference.downloadURL { url, err in
+                    if let err = err {
+                        self.statusMessage = "Failed to retrieve downloadURL: \(err)"
+                        return
+                    }
+                    
+                    self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
+                    print(statusMessage)
+                    
+                    guard let url = url else { return }
+                    self.storeProduct(productID: productID, imageProfileUrl: url)
+                }
+            }
+        } else {
+            self.storeProduct(productID: productID, imageProfileUrl: nil)
+        }
+    }
+    
+    private func storeProduct(productID: String, imageProfileUrl: URL?) {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        let document = FirebaseManager.shared.firestore.collection("products")
+            .document(uid)
+            .collection("inventory")
+            .document(productID)
+        
+        //dictionary of data to be stored
+        var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
+        
+        // Check if image URL is nil and update the dictionary accordingly
+        if let imageProfileUrl = imageProfileUrl {
+            productData["image"] = imageProfileUrl.absoluteString
+        }
+        
+        document.setData(productData) { error in
+            if let error = error {
+                print(error)
+                self.statusMessage = "Failed to save product into Firestore: \(error)"
+                return
+                
+            }
+            print ("Successfully added the product")
+        }
+        presentationMode.wrappedValue.dismiss()
+    }
+}
+    /*
     private func uploadImageToStorage() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         // path of image is the user's uid
@@ -254,10 +329,8 @@ struct AddInventoryProductView: View {
             print ("success")
         }
         presentationMode.wrappedValue.dismiss()
-    }
-}
-
-
+    }*/
+    
 struct InventoryProductView_Previews: PreviewProvider {
     static var previews: some View {
         InventoryView()
