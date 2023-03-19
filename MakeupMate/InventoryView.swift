@@ -257,7 +257,7 @@ struct ProductRow: View {
                 }
                 Spacer ()
                 
-                NavigationLink(destination: EditView(productID: product.id, productImage: product.image)) {
+                NavigationLink(destination: EditInventoryProductView(productID: product.id, productImage: product.image)) {
                     Image(systemName: "square.and.pencil") // change icon
                         .font(.system(size: 20))
                     .foregroundColor(Color(.label)) }
