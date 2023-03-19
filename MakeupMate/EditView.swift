@@ -9,11 +9,6 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 // only 3 textfields can be shown at a time, could be because on appear is over used
-// do image then updat firebase
-
-// when a new image is picked upload to storage then get the url
-// and thne save that url
-
 struct EditView: View {
     
     @State var products = [ProductDetails]()
@@ -49,18 +44,20 @@ struct EditView: View {
                             shouldShowImagePicker.toggle()
                         } label: {
                             VStack {
-                                if let image = self.image {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .frame(width: 180, height: 180)
-                                        .scaledToFill()
-                                } else {
-                                    Image(systemName: "photo").font(.system(size:120))
+                                if let product = product {
+                                    if !product.image.isEmpty {
+                                        WebImage(url: URL(string: product.image))
+                                            .resizable()
+                                            .frame(width: 180, height: 180)
+                                            .scaledToFill()
+                                    }
+                                    else {
+                                        Image(systemName: "photo").font(.system(size:120))
+                                    }
                                 }
                             }
                         }
-                        
-                    }.sheet(isPresented: $shouldShowImagePicker, onDismiss: uploadImageToStorage) {
+                    }.sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {
                         ImagePicker(image: $image)
                     }
                     
@@ -122,10 +119,10 @@ struct EditView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
-                            let stock = product.stock
-                            Text(stock)
-                            let note = product.note
-                            Text(note)
+                            //let stock = product.stock
+                            //Text(stock)
+                            //let note = product.note
+                            //Text(note)
                             
                             /*STOCK
                             VStack (alignment: .leading) {
@@ -183,7 +180,7 @@ struct EditView: View {
                              .frame(width: 90)
 
                          Button{
-                             //saveProduct()
+                             saveProduct()
                              //updateProduct(imageProfileUrl: url)
                              
                          } label: {
@@ -220,6 +217,10 @@ struct EditView: View {
          }
      }
     
+    private func saveProduct() {
+        uploadImageToStorage()
+    }
+    
     @State var statusMessage = ""
     
     private func uploadImageToStorage() {
@@ -249,46 +250,9 @@ struct EditView: View {
                     self.updateProduct(imageProfileUrl: url)
                 }
             }
-            // if no image then call storeProduct with productID and no url
-        }
-    }
-    
-    private func updateImage() {
-        if let image = image {
-            self.image = image
-            print ("image: \(image)")
-            self.updatedImage = image
         } else {
-            print("productImage: \(productImage)")
-            guard let url = URL(string: productImage) else { return }
-            URLSession.shared.dataTask(with: url) { (data, response, error) in
-                guard let data = data, error == nil else { return }
-                DispatchQueue.main.async {
-                    self.image = UIImage(data: data)
-                }
-            }.resume()
+            self.updateProduct(imageProfileUrl: nil)
         }
-    }
-
-    
-    private func deleteProduct() {
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        // id of product
-        let id = self.productID
-        
-        FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory").document(id).delete { error in
-                if let error = error {
-                    print("Failed to delete:", error)
-                    return }
-            else {
-                print("product deleted")
-                self.showInventoryView = true
-            }
-        }
-        
-        presentationMode.wrappedValue.dismiss()
-        //NavigationLink(destination: InventoryView(), isActive: $showInventoryView)
     }
     
     private func updateProduct(imageProfileUrl: URL?) {
@@ -317,6 +281,26 @@ struct EditView: View {
                 }
             }
         presentationMode.wrappedValue.dismiss()
+    }
+    
+    private func deleteProduct() {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        // id of product
+        let id = self.productID
+        
+        FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory").document(id).delete { error in
+                if let error = error {
+                    print("Failed to delete:", error)
+                    return }
+            else {
+                print("product deleted")
+                self.showInventoryView = true
+            }
+        }
+        
+        presentationMode.wrappedValue.dismiss()
+        //NavigationLink(destination: InventoryView(), isActive: $showInventoryView)
     }
 }
 
