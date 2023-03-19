@@ -49,24 +49,18 @@ struct EditView: View {
                             shouldShowImagePicker.toggle()
                         } label: {
                             VStack {
-                                if let image = image {
+                                if let image = self.image {
                                     Image(uiImage: image)
                                         .resizable()
                                         .frame(width: 180, height: 180)
                                         .scaledToFill()
-                                } else if !productImage.isEmpty {
-                                    WebImage(url: URL(string: productImage))
-                                        .resizable()
-                                        .frame(width: 180, height: 180)
-                                        .scaledToFill()
                                 } else {
-                                    Image(systemName: "photo")
-                                        .font(.system(size:120))
+                                    Image(systemName: "photo").font(.system(size:120))
                                 }
                             }
                         }
                         
-                    }.sheet(isPresented: $shouldShowImagePicker, onDismiss: updateImage) {
+                    }.sheet(isPresented: $shouldShowImagePicker, onDismiss: uploadImageToStorage) {
                         ImagePicker(image: $image)
                     }
                     
@@ -189,7 +183,8 @@ struct EditView: View {
                              .frame(width: 90)
 
                          Button{
-                             updateProduct()
+                             //saveProduct()
+                             //updateProduct(imageProfileUrl: url)
                              
                          } label: {
                              Image(systemName: "checkmark.circle")
@@ -201,9 +196,7 @@ struct EditView: View {
             }
         }
     }
-    
-    
-    
+
     private func fetchProduct() {
          // uid of user logged in
          guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
@@ -226,6 +219,39 @@ struct EditView: View {
              self.product = ProductDetails(documentID: id, data: data)
          }
      }
+    
+    @State var statusMessage = ""
+    
+    private func uploadImageToStorage() {
+        let id = self.productID
+        
+        let reference = FirebaseManager.shared.storage.reference(withPath: id)
+        print("Firebase Storage reference: \(reference)")
+        
+        if let imageData = self.image?.jpegData(compressionQuality: 0.5) {
+            reference.putData(imageData, metadata: nil) { metadata, err in
+                if let err = err {
+                    self.statusMessage = "Error uploading image: \(err)"
+                    return
+                }
+            
+                reference.downloadURL { url, err in
+                    if let err = err {
+                        self.statusMessage = "Failed to retrieve downloadURL: \(err)"
+                        return
+                    }
+                    
+                    self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
+                    print(statusMessage)
+                    
+                    guard let url = url else { return }
+                    // call storeProduct with proudctID and url of image
+                    self.updateProduct(imageProfileUrl: url)
+                }
+            }
+            // if no image then call storeProduct with productID and no url
+        }
+    }
     
     private func updateImage() {
         if let image = image {
@@ -265,12 +291,16 @@ struct EditView: View {
         //NavigationLink(destination: InventoryView(), isActive: $showInventoryView)
     }
     
-    private func updateProduct() {
+    private func updateProduct(imageProfileUrl: URL?) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
         let id = self.productID
         
-        let productData = ["uid": uid, "name": name, "image": updatedImage, "brand": brand, "shade": shade, "stock": stock, "note": note] as [String : Any]
+        var productData = ["uid": uid, "name": name, "brand": brand, "shade": shade, "stock": stock, "note": note] as [String : Any]
+        
+        if let imageProfileUrl = imageProfileUrl {
+            productData["image"] = imageProfileUrl.absoluteString
+        }
         
         let document = FirebaseManager.shared.firestore.collection("products")
             .document(uid)
@@ -288,6 +318,5 @@ struct EditView: View {
             }
         presentationMode.wrappedValue.dismiss()
     }
-    
 }
 
