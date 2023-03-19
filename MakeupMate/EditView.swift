@@ -28,7 +28,7 @@ struct EditView: View {
     @State private var stock = ""
     @State private var note = ""
     @State var shouldShowImagePicker = false
-    @State var updatedImage: UIImage?
+    @State var updatedImage: String?
     @State var image: UIImage?
     @State var showInventoryView = false
     
@@ -38,26 +38,29 @@ struct EditView: View {
         VStack {
             ScrollView {
                 VStack {
-                    
+                    //WebImage(url: URL(string: product.image))
                     HStack {
                         Button {
                             shouldShowImagePicker.toggle()
                         } label: {
                             VStack {
-                                if let product = product {
-                                    if !product.image.isEmpty {
-                                        WebImage(url: URL(string: product.image))
-                                            .resizable()
-                                            .frame(width: 180, height: 180)
-                                            .scaledToFill()
-                                    }
-                                    else {
-                                        Image(systemName: "photo").font(.system(size:120))
-                                    }
+                                if let image = image {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .frame(width: 180, height: 180)
+                                        .scaledToFill()
+                                } else if !productImage.isEmpty {
+                                    WebImage(url: URL(string: productImage))
+                                        .resizable()
+                                        .frame(width: 180, height: 180)
+                                        .scaledToFill()
+                                } else {
+                                    Image(systemName: "photo").font(.system(size:120))
                                 }
+                                
                             }
                         }
-                    }.sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {
+                    }.sheet(isPresented: $shouldShowImagePicker, onDismiss: changeDisplayImage) {
                         ImagePicker(image: $image)
                     }
                     
@@ -193,7 +196,8 @@ struct EditView: View {
             }
         }
     }
-
+    
+   
     private func fetchProduct() {
          // uid of user logged in
          guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
@@ -222,6 +226,39 @@ struct EditView: View {
     }
     
     @State var statusMessage = ""
+    
+    func changeDisplayImage() {
+        let id = self.productID
+        
+        let reference = FirebaseManager.shared.storage.reference(withPath: id)
+        print("ChangeDisplayImage reference: \(reference)")
+        
+        // reference needs to become a url for WebImage
+        if let imageData = self.image?.jpegData(compressionQuality: 0.5) {
+            reference.putData(imageData, metadata: nil) { metadata, err in
+                if let err = err {
+                    self.statusMessage = "Error uploading image: \(err)"
+                    return
+                }
+            
+                reference.downloadURL { url, err in
+                    if let err = err {
+                        self.statusMessage = "Failed to retrieve downloadURL: \(err)"
+                        return
+                    }
+                    
+                    self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
+                    print(statusMessage)
+                    
+                    self.updatedImage = url?.absoluteString
+                    print("UpdatedImage: \(updatedImage)")
+                    //guard let url = url else { return }
+                    //let updatedImage = url
+                }
+            }
+        }
+    }
+    
     
     private func uploadImageToStorage() {
         let id = self.productID
