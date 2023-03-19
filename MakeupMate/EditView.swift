@@ -11,6 +11,9 @@ import SDWebImageSwiftUI
 // only 3 textfields can be shown at a time, could be because on appear is over used
 // do image then updat firebase
 
+// when a new image is picked upload to storage then get the url
+// and thne save that url
+
 struct EditView: View {
     
     @State var products = [ProductDetails]()
@@ -30,7 +33,7 @@ struct EditView: View {
     @State private var stock = ""
     @State private var note = ""
     @State var shouldShowImagePicker = false
-    @State var storageImage: UIImage?
+    @State var updatedImage: UIImage?
     @State var image: UIImage?
     @State var showInventoryView = false
     
@@ -40,52 +43,32 @@ struct EditView: View {
         VStack {
             ScrollView {
                 VStack {
+                    
                     HStack {
-                        
-                        // Shows picture! But does not change
-                        Button {
-                            shouldShowImagePicker.toggle()
-                        } label: { if let product = product {
-                            
-                            if !product.image.isEmpty {
-                                WebImage(url: URL(string: product.image))
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 180, height: 180)
-                                    .clipped()
-                                let storageImage = product.image
-                                
-                            } else {
-                                Image(systemName: "photo").font(.system(size:120))
-                            }
-                        }
-                        }
-                        
-                        /*
                         Button {
                             shouldShowImagePicker.toggle()
                         } label: {
                             VStack {
-                                if let product = product {
-                                    if let image = self.storageImage {
-                                        //WebImage(url: URL(string: image))
-                                        Image(uiImage: image) // use the stored image
+                                if let image = image {
+                                    Image(uiImage: image)
                                         .resizable()
                                         .frame(width: 180, height: 180)
                                         .scaledToFill()
-                                    
+                                } else if !productImage.isEmpty {
+                                    WebImage(url: URL(string: productImage))
+                                        .resizable()
+                                        .frame(width: 180, height: 180)
+                                        .scaledToFill()
                                 } else {
-                                    Image(systemName: "photo").font(.system(size:120))
+                                    Image(systemName: "photo")
+                                        .font(.system(size:120))
                                 }
                             }
-                            }
-                        }*/
+                        }
                         
                     }.sheet(isPresented: $shouldShowImagePicker, onDismiss: updateImage) {
-                        ImagePicker(image: $storageImage)
+                        ImagePicker(image: $image)
                     }
-                        
-                        
                     
                     Spacer ()
                     
@@ -245,18 +228,22 @@ struct EditView: View {
      }
     
     private func updateImage() {
-        if let storageImage = self.storageImage {
-            self.storageImage = storageImage } else {
-                guard let url = URL(string: productImage) else { return }
-                URLSession.shared.dataTask(with: url) { (data, response, error) in
-                    guard let data = data, error == nil else { return }
-                    DispatchQueue.main.async {
-                        self.storageImage = UIImage(data: data)
-                    }
-                }.resume()
-                
-            }
+        if let image = image {
+            self.image = image
+            print ("image: \(image)")
+            self.updatedImage = image
+        } else {
+            print("productImage: \(productImage)")
+            guard let url = URL(string: productImage) else { return }
+            URLSession.shared.dataTask(with: url) { (data, response, error) in
+                guard let data = data, error == nil else { return }
+                DispatchQueue.main.async {
+                    self.image = UIImage(data: data)
+                }
+            }.resume()
+        }
     }
+
     
     private func deleteProduct() {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
@@ -283,8 +270,7 @@ struct EditView: View {
         
         let id = self.productID
         
-        let productData = ["uid": uid, "name": name, "image": productImage, "brand": brand, "shade": shade, "stock": stock, "note": note] as [String : Any]
-
+        let productData = ["uid": uid, "name": name, "image": updatedImage, "brand": brand, "shade": shade, "stock": stock, "note": note] as [String : Any]
         
         let document = FirebaseManager.shared.firestore.collection("products")
             .document(uid)
