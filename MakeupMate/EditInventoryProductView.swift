@@ -5,19 +5,22 @@
 //  Created by Shukri  Ahmed on 14/03/2023.
 //
 
+/*
+ This file was written by the author using the knoweledge gained from writing AddInventoryProductView and InventoryView.
+ No tutorials were used
+ */
+
 import SwiftUI
 import SDWebImageSwiftUI
 
 struct EditInventoryProductView: View {
     
-    @State var products = [ProductDetails]()
-    let productID, productImage: String
     @State var product: ProductDetails?
+    let productID: String
 
-    init(productID: String, productImage: String) {
+    init(productID: String) {
         self.productID = productID
         self._product = State(initialValue: nil)
-        self.productImage = productImage
     }
     
     @State private var name = ""
@@ -25,10 +28,10 @@ struct EditInventoryProductView: View {
     @State private var shade = ""
     @State private var stock = ""
     @State private var note = ""
-    @State var shouldShowImagePicker = false
-    @State var updatedImage: String?
     @State var image: UIImage?
+    
     @State var showInventoryView = false
+    @State var shouldShowImagePicker = false
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -42,23 +45,25 @@ struct EditInventoryProductView: View {
                             shouldShowImagePicker.toggle()
                         } label: {
                             VStack {
-                                // if theres a new image selected display the image
-                                if let image = image {
-                                    Image(uiImage: image)
-                                        .resizable()
-                                        .frame(width: 180, height: 180)
-                                        .scaledToFill()
-                                    // if product.image is not empty display the products image
-                                } else if !productImage.isEmpty {
-                                    WebImage(url: URL(string: productImage))
-                                        .resizable()
-                                        .frame(width: 180, height: 180)
-                                        .scaledToFill()
-                                    // display the photo
-                                } else {
-                                    Image(systemName: "photo").font(.system(size:120))
+                                // TODO: add a button to remove the image
+                                if let product = product {
+                                    // if theres a new image selected display the image
+                                    if let image = image {
+                                        Image(uiImage: image)
+                                            .resizable()
+                                            .frame(width: 180, height: 180)
+                                            .scaledToFill()
+                                        // if product.image is not empty display the products image
+                                    } else if !product.image.isEmpty {
+                                        WebImage(url: URL(string: product.image))
+                                            .resizable()
+                                            .frame(width: 180, height: 180)
+                                            .scaledToFill()
+                                        // else display the photo
+                                    } else {
+                                        Image(systemName: "photo").font(.system(size:120))
+                                    }
                                 }
-                                
                             }
                         }
                     }.sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {
@@ -251,7 +256,7 @@ struct EditInventoryProductView: View {
                     print(statusMessage)
                     
                     guard let url = url else { return }
-                    // call storeProduct with proudctID and url of image
+                    // call updateProduct with proudctID and url of image
                     self.updateProduct(imageProfileUrl: url)
                 }
             }
@@ -268,8 +273,14 @@ struct EditInventoryProductView: View {
         
         var productData = ["uid": uid, "name": name, "brand": brand, "shade": shade, "stock": stock, "note": note] as [String : Any]
         
-        if let imageProfileUrl = imageProfileUrl {
-            productData["image"] = imageProfileUrl.absoluteString
+        if let product = product {
+            // if no new image was picked
+            if imageProfileUrl == nil && !product.image.isEmpty {
+                productData["image"] = product.image
+                // if a new image was pciked, which is either the url or nil
+            } else if let imageProfileUrl = imageProfileUrl {
+                productData["image"] = imageProfileUrl.absoluteString
+            }
         }
         
         let document = FirebaseManager.shared.firestore.collection("products")

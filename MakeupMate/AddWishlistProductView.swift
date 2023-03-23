@@ -1,34 +1,18 @@
 //
-//  AddInventoryProductView.swift
+//  AddWishlistProductView.swift
 //  MakeupMate
 //
-//  Created by Shukri  Ahmed on 07/03/2023.
+//  Created by Shukri  Ahmed on 22/03/2023.
 //
 
-/*
-  InventoryView calls this function when the New Product button is clicked
-  
- No code has been copied directly
-  Tutorials used -
-  Floating label for text boxes: https://www.youtube.com/watch?v=Sg0rfYL3utI&t=649s&ab_channel=PeterFriese
-  Adding a DatePicker (Calendar): https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-date-picker-and-read-values-from-it
-  Storing product into Firestore: https://www.youtube.com/watch?v=dA_Ve-9gizQ&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=12&ab_channel=LetsBuildThatApp
-  Storing image to Firebase Storage: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
- */
-
-import Firebase
 import SwiftUI
-import SDWebImageSwiftUI
 
-// This struct creates the view and uses variable to store the details entered
-struct AddInventoryProductView: View {
+struct AddWishlistProductView: View {
     
     @State private var name = ""
     @State private var brand = ""
     @State private var category = ""
     @State private var shade = ""
-    @State private var stock = ""
-    @State private var expiryDate = Date.now
     @State private var note = ""
     
     @Environment(\.presentationMode) var presentationMode
@@ -118,27 +102,6 @@ struct AddInventoryProductView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
-                            //STOCK
-                            VStack (alignment: .leading) {
-                                if !stock.isEmpty {
-                                    Text("Stock")
-                                        .font(.subheadline)
-                                    .foregroundColor(.purple)
-                                }
-                                TextField("Stock", text: $stock)
-                            }
-                            .padding(15)
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
-                            
-                            //EXPIRY DATE
-                            //TODO: Let no date be an option
-                            VStack {
-                                DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
-                                    Text("Expiry Date")
-                                }
-                            }
-                            
                             //NOTE
                             // TODO: how to make textfields expand
                             VStack (alignment: .leading) {
@@ -170,7 +133,7 @@ struct AddInventoryProductView: View {
                     }
                 }
             }
-            .navigationTitle("New Inventory Product")
+            .navigationTitle("New Wishlist Product")
             .navigationViewStyle(StackNavigationViewStyle())
             //Cancel button
             .toolbar{
@@ -200,7 +163,7 @@ struct AddInventoryProductView: View {
         // Create a document
         let document = FirebaseManager.shared.firestore.collection("products")
             .document(uid)
-            .collection("inventory")
+            .collection("wishlist")
             .document()
         
         // assign the documentID to productID
@@ -245,18 +208,18 @@ struct AddInventoryProductView: View {
         
         let document = FirebaseManager.shared.firestore.collection("products")
             .document(uid)
-            .collection("inventory")
+            .collection("wishlist")
             .document(productID)
         
         //dictionary of data to be stored
-        var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
+        var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "note": self.note] as [String : Any]
         
         // Check if image URL is not nil and add image to the dictionary accordingly
         if let imageProfileUrl = imageProfileUrl {
             productData["image"] = imageProfileUrl.absoluteString
         }
         
-        // set productData to the document 
+        // set productData to the document
         document.setData(productData) { error in
             if let error = error {
                 print(error)
@@ -269,9 +232,9 @@ struct AddInventoryProductView: View {
         presentationMode.wrappedValue.dismiss()
     }
 }
-    
-struct InventoryProductView_Previews: PreviewProvider {
+
+struct AddWishlistProductView_Previews: PreviewProvider {
     static var previews: some View {
-        InventoryView()
+        AddWishlistProductView()
     }
 }

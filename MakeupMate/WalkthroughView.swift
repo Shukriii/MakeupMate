@@ -26,7 +26,7 @@ struct WalkthroughView: View {
     var body: some View {
         
         if currentPage > totalPages {
-            NavigationBar()
+            NavigationBars()
             //InventoryView()
             //LoginView (didCompleteLoginProcess: {})
         }
