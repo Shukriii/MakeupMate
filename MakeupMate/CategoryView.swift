@@ -64,18 +64,9 @@ struct CategoryView: View {
     }
 }
 
-/*
- .alert(isPresented: $showingAlert) {
-     Alert(title: Text("Add Category"), message: Text("Enter a name for the category"), primaryButton: .default(Text("Save")) {
-         // Save the category here
-         print("Category saved: \(self.category)")
-     }, secondaryButton: .cancel())
- }
- 
-
 
 struct CategoryView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryView(, dismissAction: <#() -> Void#>)
+        CategoryView()
     }
-} */
+} 

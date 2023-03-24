@@ -92,6 +92,17 @@ struct AddInventoryProductView: View {
                             
                             //CATEGORY
                             //TODO: Add category dropdow or make it a new view - Main Product
+                            NavigationLink(destination: CategoryView()) {
+                                HStack {
+                                    Text("Category")
+                                    Spacer()
+                                    Image(systemName: "chevron.right.circle")
+                                }
+                                .padding(15)
+                                .background(Color(red: 0.914, green: 0.914, blue: 0.914))
+                                .cornerRadius(5)
+                            }
+                            /*
                             Button {
                                 shouldShowCategories = true
                             } label:  {
@@ -107,7 +118,7 @@ struct AddInventoryProductView: View {
                             .cornerRadius(5)
                             .sheet(isPresented: $shouldShowCategories, onDismiss: nil){
                                 CategoryView()
-                            } 
+                            }*/
                             
                             //SHADE
                             VStack (alignment: .leading) {
@@ -276,6 +287,6 @@ struct AddInventoryProductView: View {
     
 struct InventoryProductView_Previews: PreviewProvider {
     static var previews: some View {
-        InventoryView()
+        AddInventoryProductView()
     }
 }
