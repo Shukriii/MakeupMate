@@ -9,6 +9,8 @@
  Alert with textfield https://www.youtube.com/watch?v=NJDBb4sOfNE&ab_channel=Kavsoft
  */
 
+// Fix how only the text needs to be clicked
+
 import SwiftUI
 
 struct CategoryView: View {
@@ -41,8 +43,11 @@ struct CategoryView: View {
                 .foregroundColor(Color.green)
                 .imageScale(.large)
         }))
+        .onAppear{
+            vm.fetchCategories()
+        }
     }
-
+        
     func alertView() {
         
         let alert = UIAlertController(title: "Add Category", message: "Enter the name of the new category:", preferredStyle: .alert)
@@ -55,7 +60,7 @@ struct CategoryView: View {
         let save = UIAlertAction(title: "Save", style: .default) { (_) in
             // place textfield value into category
             categoryName = alert.textFields![0].text!
-            //storeCategory()
+            storeCategory()
         }
         
         let cancel = UIAlertAction(title: "Cancel", style: .default) { (_) in
@@ -91,7 +96,12 @@ struct CategoryRow: View {
     @ObservedObject private var vm = ViewModel(collectionName: "inventory")
     
     var body: some View {
-        Text(category.categoryName)
+        Button {
+            
+        } label: {
+            Text(category.categoryName)
+        }
+
     }
 }
 

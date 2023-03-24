@@ -25,7 +25,7 @@ struct AddInventoryProductView: View {
     
     @State private var name = ""
     @State private var brand = ""
-    @State private var category = ""
+    @State private var categoryField = ""
     @State private var shade = ""
     @State private var stock = ""
     @State private var expiryDate = Date.now
@@ -93,25 +93,33 @@ struct AddInventoryProductView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
-                            
-                            if let category = selectedCategory {
-                                            Text("Selected category: \(category.categoryName)")
-                                        }
-                            
                             //CATEGORY
                             //TODO: Add category dropdow or make it a new view - Main Product
                             NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                                 HStack {
-                                    Text("Category")
-                                    Spacer()
-                                    Image(systemName: "chevron.right.circle")
+                                    Text("Click to pick a category")
+
+                                }
+                                .padding(.horizontal)
+                                .cornerRadius(5)
+                            }
+                            
+                            if let category = selectedCategory {
+                                VStack (alignment: .leading) {
+                                    
+                                    if !category.categoryName.isEmpty {
+                                        Text("Category")
+                                            .font(.subheadline)
+                                            .foregroundColor(.purple)
+                                    }
+                                    TextField("Category", text: $categoryField)
+                                        .onAppear {
+                                            categoryField = category.categoryName.isEmpty ? "" : category.categoryName
+                                        }
                                 }
                                 .padding(15)
                                 .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                                 .cornerRadius(5)
-                                .onAppear{
-                                    vm.fetchCategories()
-                                }
                             }
 
                             //SHADE
@@ -247,7 +255,7 @@ struct AddInventoryProductView: View {
             .document(productID)
         
         //dictionary of data to be stored
-        var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.category, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
+        var productData = ["uid": uid, "name": self.name, "brand": self.brand, "category": self.categoryField, "shade": self.shade, "stock": self.stock, "expiryDate": self.expiryDate, "note": self.note] as [String : Any]
         
         // Check if image URL is not nil and add image to the dictionary accordingly
         if let imageProfileUrl = imageProfileUrl {
