@@ -44,3 +44,17 @@ struct ProductDetails: Identifiable {
         self.note = data[FirebaseConstants.note] as? String ?? ""
     }
 }
+
+struct CategoryDetails: Identifiable {
+
+    var id: String { documentID }
+    
+    let documentID: String
+    
+    var categoryName: String
+    
+    init(documentID: String, data: [String: Any]){
+        self.documentID = documentID
+        self.categoryName = data["Name"] as? String ?? ""
+    }
+}

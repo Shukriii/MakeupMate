@@ -32,13 +32,16 @@ struct AddInventoryProductView: View {
     @State private var note = ""
     
     @Environment(\.presentationMode) var presentationMode
+    @ObservedObject private var vm = ViewModel(collectionName: "inventory")
     
     @State var shouldShowImagePicker = false
     @State var shouldShowCategories = false
     @State var image: UIImage?
     
+    @State private var selectedCategory: CategoryDetails?
+    
     var body: some View {
-        NavigationView {
+        //NavigationView {
             VStack {
                 ScrollView{
                     VStack {
@@ -90,9 +93,14 @@ struct AddInventoryProductView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
+                            
+                            if let category = selectedCategory {
+                                            Text("Selected category: \(category.categoryName)")
+                                        }
+                            
                             //CATEGORY
                             //TODO: Add category dropdow or make it a new view - Main Product
-                            NavigationLink(destination: CategoryView()) {
+                            NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                                 HStack {
                                     Text("Category")
                                     Spacer()
@@ -101,25 +109,11 @@ struct AddInventoryProductView: View {
                                 .padding(15)
                                 .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                                 .cornerRadius(5)
-                            }
-                            /*
-                            Button {
-                                shouldShowCategories = true
-                            } label:  {
-                                HStack {
-                                    Text("Category")
-                                    Spacer()
-                                    Image(systemName: "chevron.right.circle")
+                                .onAppear{
+                                    vm.fetchCategories()
                                 }
-                                .padding(15)
-                                    
                             }
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
-                            .sheet(isPresented: $shouldShowCategories, onDismiss: nil){
-                                CategoryView()
-                            }*/
-                            
+
                             //SHADE
                             VStack (alignment: .leading) {
                                 if !shade.isEmpty {
@@ -183,25 +177,14 @@ struct AddInventoryProductView: View {
                             }
                        }
                     }
-                }
+                }.navigationTitle("New Inventory Product")
             }
-            .navigationTitle("New Inventory Product")
-            .navigationViewStyle(StackNavigationViewStyle())
-            //Cancel button
-            .toolbar{
-                ToolbarItemGroup(placement: .navigationBarLeading){
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-  
-                    } label: {
-                        Text ("Cancel").foregroundColor(.blue)
-                    }
-                }
-            }
+            
+            /*.navigationViewStyle(StackNavigationViewStyle())
             .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil){
                 ImagePicker(image: $image)
-            }
-        }
+            } */
+        
     }
     
     @State var statusMessage = ""

@@ -53,7 +53,6 @@ struct InventoryView: View {
                 
             }
             .overlay(
-                
                 NavigationLink(destination: AddInventoryProductView()) {
                     HStack() {
                         Spacer()
@@ -65,7 +64,7 @@ struct InventoryView: View {
                         .background(Color("Colour5"))
                         .cornerRadius(32)
                         .padding(.horizontal, 120)
-                })
+                }, alignment: .bottom)
                 
                 //newProductButton, alignment: .bottom)
             .navigationBarHidden(true)

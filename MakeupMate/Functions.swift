@@ -19,6 +19,8 @@ class ViewModel: ObservableObject {
     @Published var currentUser: CurrentUser?
     @Published var errorMessage = ""
     @Published var products = [ProductDetails]()
+    @Published var categories = [CategoryDetails]()
+    
     @Published var isUserCurrentlyLoggedOut = false
     @State var whichEdit: Bool = false
     
@@ -29,6 +31,7 @@ class ViewModel: ObservableObject {
         */
         fetchCurrentUser()
         fetchProducts(fromCollection: collectionName)
+        fetchCategories()
     }
     
     // Fetchs the currents users uid, and decodes the data from Firestore and places into currentUser
@@ -100,6 +103,30 @@ class ViewModel: ObservableObject {
                 })
                 self.errorMessage = "Fetched products successfully"
                 print (self.errorMessage)
+            }
+    }
+    
+    func fetchCategories() {
+        FirebaseManager.shared.firestore.collection("categories")
+            .order(by: "Name")
+            .addSnapshotListener{ querySnapshot, error in
+                if let error = error {
+                    self.errorMessage = "Failed to fetch category: \(error)"
+                    print("Failed to fetch category: \(error)")
+                    return
+                }
+                
+                // The snapshot listener querySnapshot listens for changes
+                querySnapshot?.documentChanges.forEach( { change in
+                    // if a product is added
+                    if change.type == .added {
+                        let data = change.document.data()
+                        self.categories.append(.init(documentID: change.document.documentID, data: data))
+                    }
+                })
+                self.errorMessage = "Fetched categories successfully"
+                print (self.errorMessage)
+                
             }
     }
     
