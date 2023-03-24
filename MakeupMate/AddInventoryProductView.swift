@@ -34,6 +34,7 @@ struct AddInventoryProductView: View {
     @Environment(\.presentationMode) var presentationMode
     
     @State var shouldShowImagePicker = false
+    @State var shouldShowCategories = false
     @State var image: UIImage?
     
     var body: some View {
@@ -92,7 +93,7 @@ struct AddInventoryProductView: View {
                             //CATEGORY
                             //TODO: Add category dropdow or make it a new view - Main Product
                             Button {
-                                print("category view appears")
+                                shouldShowCategories = true
                             } label:  {
                                 HStack {
                                     Text("Category")
@@ -104,6 +105,9 @@ struct AddInventoryProductView: View {
                             }
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
+                            .sheet(isPresented: $shouldShowCategories, onDismiss: nil){
+                                CategoryView()
+                            } 
                             
                             //SHADE
                             VStack (alignment: .leading) {

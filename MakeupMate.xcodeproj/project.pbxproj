@@ -31,6 +31,7 @@
 		A6B1E05C29CB4A2F0006EB99 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B1E05B29CB4A2F0006EB99 /* Functions.swift */; };
 		A6B1E05E29CBA7820006EB99 /* EditWishlistProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B1E05D29CBA7820006EB99 /* EditWishlistProductView.swift */; };
 		A6BF475829C2028E001940A7 /* NavigationBars.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BF475729C2028E001940A7 /* NavigationBars.swift */; };
+		A6EB990829CDE1F8003AA975 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EB990729CDE1F8003AA975 /* CategoryView.swift */; };
 		A6F877D029CA226D0010A8A9 /* WishlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F877CF29CA226D0010A8A9 /* WishlistView.swift */; };
 /* End PBXBuildFile section */
 
@@ -75,6 +76,7 @@
 		A6B1E05B29CB4A2F0006EB99 /* Functions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		A6B1E05D29CBA7820006EB99 /* EditWishlistProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWishlistProductView.swift; sourceTree = "<group>"; };
 		A6BF475729C2028E001940A7 /* NavigationBars.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBars.swift; sourceTree = "<group>"; };
+		A6EB990729CDE1F8003AA975 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		A6F877CF29CA226D0010A8A9 /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +145,7 @@
 				A631EAC9299E7DB900D9E1DD /* LoginView.swift */,
 				A61D710529B3789B0082258E /* InventoryView.swift */,
 				A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */,
+				A6EB990729CDE1F8003AA975 /* CategoryView.swift */,
 				A67D601729C08037003EEBB7 /* EditInventoryProductView.swift */,
 				A6F877CF29CA226D0010A8A9 /* WishlistView.swift */,
 				A6B1E05929CB47BF0006EB99 /* AddWishlistProductView.swift */,
@@ -324,6 +327,7 @@
 				A6B1E05C29CB4A2F0006EB99 /* Functions.swift in Sources */,
 				A614CB9B2992863A005087C9 /* WalkthroughView.swift in Sources */,
 				A61D710629B3789B0082258E /* InventoryView.swift in Sources */,
+				A6EB990829CDE1F8003AA975 /* CategoryView.swift in Sources */,
 				A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */,
 				A6A8E9DA29B75D380082B1D7 /* AddInventoryProductView.swift in Sources */,
 				A6B1E05A29CB47BF0006EB99 /* AddWishlistProductView.swift in Sources */,
