@@ -14,66 +14,95 @@ struct WishlistView: View {
     @State var shouldShowLogOutOptions = false
     
     @ObservedObject private var vm = ViewModel(collectionName: "wishlist")
+    @ObservedObject private var am = AccountFunctionalityViewModel()
     
     var body: some View {
         NavigationView {
             VStack {
                 
                 //delete later on, for testing purposes
-                Text ("Current User ID: \(vm.currentUser?.email ?? "")")
+                Text ("Current User ID: \(am.currentUser?.email ?? "")")
                 
                 //topNavigationBar
-                topNavigationBar(navigationName: "Your Wishlist")
-                    .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut, onDismiss: nil){
+                TopNavigationBar(navigationName: "Your Wishlist")
+                    .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
-                            self.vm.isUserCurrentlyLoggedOut = false
-                            self.vm.fetchCurrentUser()
+                            self.am.isUserCurrentlyLoggedOut = false
+                            self.am.fetchCurrentUser()
                             self.vm.removeProducts()
-                            self.vm.fetchProducts(fromCollection: "wishlist")
+                            //self.vm.fetchProducts(fromCollection: "wishlist")
                         })
                     }
 
                 productListView
 
             }
+            // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddWishlistProductView
             .overlay(
-                newProductButton, alignment: .bottom)
+                NavigationLink(destination: AddWishlistProductView()) {
+                    HStack() {
+                        Spacer()
+                        Text ("New Product")
+                            .font(.system(size: 16, weight: .bold))
+                        Spacer()
+                    }.foregroundColor(.white)
+                        .padding(.vertical)
+                        .background(Color("Colour5"))
+                        .cornerRadius(32)
+                        .padding(.horizontal, 120)
+                }, alignment: .bottom)
             .navigationBarHidden(true)
         }
     }
-    
-    
-    @State var shouldShowAddProductScreen = false
-    
-    //This function is called by the overlay and displays a button to allow users to add a product. A full screen over is presented that calls AddWishlistProductView()
-    private var newProductButton: some View {
-        Button {
-            shouldShowAddProductScreen.toggle()
-        }
-    label: {
-        HStack() {
-            Spacer()
-            Text ("New Product")
-                .font(.system(size: 16, weight: .bold))
-            Spacer()
-        }
-        .foregroundColor(.white)
-        .padding(.vertical)
-        .background(Color("Colour5"))
-        .cornerRadius(32)
-        .padding(.horizontal, 120)
-    }.fullScreenCover(isPresented: $shouldShowAddProductScreen){
-        AddWishlistProductView() }
-    }
-    
+
     private var productListView: some View {
         ScrollView {
             ForEach(vm.products) { product in
-                ProductRow(product: product)
+                WishlistRow(product: product)
             }.padding(.bottom, 50)
         }
     }
     
+}
+
+
+struct WishlistRow: View {
+    
+    let product: ProductDetails
+    
+    var body: some View {
+        VStack{
+            HStack {
+                
+                if !product.image.isEmpty {
+                    WebImage(url: URL(string: product.image))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 70, height: 70)
+                        .clipped()
+                } else {
+                    Image(systemName: "photo").font(.system(size:30))
+                }
+
+                VStack (alignment: .leading){
+                    Text(product.name)
+                        .font(.system(size: 17, weight: .semibold))
+                    Text(product.shade)
+                        .foregroundColor(Color(.lightGray))
+                    Text(product.brand)
+                }
+                Spacer ()
+
+                NavigationLink(destination: EditWishlistProductView(productID: product.id)) {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: 20))
+                    .foregroundColor(Color(.label)) }
+    
+            }
+            Divider()
+                .padding(.vertical, 2)
+        }.padding(.horizontal)
+    }
 }
 
 struct WishlistView_Previews: PreviewProvider {

@@ -77,37 +77,9 @@ struct EditInventoryProductView: View {
                         // Displays the textFields and if anything is stored in the associated variable displays that
                         if let product = product {
                             
-                            // NAME
-                            VStack (alignment: .leading) {
-                                if !product.name.isEmpty {
-                                    Text("Name")
-                                        .font(.subheadline)
-                                    .foregroundColor(.purple)
-                                }
-                                TextField("Name", text: $name)
-                                    .onAppear {
-                                        name = product.name.isEmpty ? "" : product.name
-                                    }
-                            }
-                            .padding(15)
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
+                            EditTextFieldView(listKey: product.name, displayName: "Name", variableName: $name)
                             
-                            //BRAND
-                            VStack (alignment: .leading) {
-                                if !product.brand.isEmpty {
-                                    Text("Brand")
-                                        .font(.subheadline)
-                                    .foregroundColor(.purple)
-                                }
-                                TextField("Brand", text: $brand)
-                                    .onAppear {
-                                        brand = product.brand.isEmpty ? "" : product.brand
-                                    }
-                            }
-                            .padding(15)
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
+                            EditTextFieldView(listKey: product.brand, displayName: "Brand", variableName: $brand)
                             
                             // CATEGORY
                             Button {
@@ -124,54 +96,12 @@ struct EditInventoryProductView: View {
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
                             
-                            //SHADE
-                            VStack (alignment: .leading) {
-                                if !product.shade.isEmpty {
-                                    Text("Shade")
-                                        .font(.subheadline)
-                                    .foregroundColor(.purple)
-                                }
-                                TextField("Shade", text: $shade)
-                                    .onAppear {
-                                        shade = product.shade.isEmpty ? "" : product.shade
-                                    }
-                            }
-                            .padding(15)
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
+                            EditTextFieldView(listKey: product.shade, displayName: "Shade", variableName: $shade)
                             
-                            // STOCK
-                            VStack (alignment: .leading) {
-                                if !product.stock.isEmpty {
-                                    Text("Stock")
-                                        .font(.subheadline)
-                                        .foregroundColor(.purple)
-                                }
-                                TextField("Stock", text: $stock)
-                                    .onAppear {
-                                        stock = product.stock.isEmpty ? "" : product.stock
-                                    }
-                            }
-                            .padding(15)
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
+                            EditTextFieldView(listKey: product.stock, displayName: "Stock", variableName: $stock)
+                            
+                            EditTextFieldView(listKey: product.note, displayName: "Note", variableName: $note)
 
-                            //NOTE
-                            VStack (alignment: .leading) {
-                                if !product.note.isEmpty {
-                                    Text("Note")
-                                        .font(.subheadline)
-                                        .foregroundColor(.purple)
-                                        .multilineTextAlignment(.center)
-                                }
-                                TextField("Note", text: $note)
-                                    .onAppear {
-                                        note = product.note.isEmpty ? "" : product.note
-                                }
-                            }
-                            .padding(15)
-                            .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-                            .cornerRadius(5)
                         }
                     }
                     .onAppear {

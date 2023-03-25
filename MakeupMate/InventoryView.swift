@@ -30,28 +30,29 @@ struct InventoryView: View {
     @State var shouldShowLogOutOptions = false
     
     @ObservedObject private var vm = ViewModel(collectionName: "inventory")
+    @ObservedObject private var am = AccountFunctionalityViewModel()
     
     var body: some View {
         NavigationView {
             VStack {
                 
                 //delete later on, for testing purposes
-                Text ("Current User ID: \(vm.currentUser?.email ?? "")")
+                Text ("Current User ID: \(am.currentUser?.email ?? "")")
                 
-                //topNavigationBar
-                topNavigationBar(navigationName: "Your Inventory")
-                    .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut, onDismiss: nil){
+                TopNavigationBar(navigationName: "Your Inventory")
+                    .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
-                            self.vm.isUserCurrentlyLoggedOut = false
-                            self.vm.fetchCurrentUser()
+                            self.am.isUserCurrentlyLoggedOut = false
+                            self.am.fetchCurrentUser()
                             self.vm.removeProducts()
-                            self.vm.fetchProducts(fromCollection: "inventory")
+                            //self.vm.fetchProducts(fromCollection: "inventory")
                         })
                     }
                 
                 productListView
                 
             }
+            // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddInventoryProductView
             .overlay(
                 NavigationLink(destination: AddInventoryProductView()) {
                     HStack() {
@@ -65,33 +66,8 @@ struct InventoryView: View {
                         .cornerRadius(32)
                         .padding(.horizontal, 120)
                 }, alignment: .bottom)
-                
-                //newProductButton, alignment: .bottom)
             .navigationBarHidden(true)
         }
-    }
-
-    @State var shouldShowAddProductScreen = false
-    
-    //This function is called by the overlay and displays a button to allow users to add a product. A full screen over is presented that calls AddInventoryProductView()
-    private var newProductButton: some View {
-        Button {
-            shouldShowAddProductScreen.toggle()
-        }
-    label: {
-        HStack() {
-            Spacer()
-            Text ("New Product")
-                .font(.system(size: 16, weight: .bold))
-            Spacer()
-        }
-        .foregroundColor(.white)
-        .padding(.vertical)
-        .background(Color("Colour5"))
-        .cornerRadius(32)
-        .padding(.horizontal, 120)
-    }.fullScreenCover(isPresented: $shouldShowAddProductScreen){
-        AddInventoryProductView() }
     }
     
     // Using vm it counts the number of products stored in Firestore and using a ForEach displays the product using ProductRow
@@ -103,6 +79,46 @@ struct InventoryView: View {
         }
     }
     
+}
+
+// This struct is passed a product which is a list, and using the ProductDetails struct it uses a variable to access the data. Is displays the product image, along with product name, shade and brand if avaliable. It has an Edit icon which redirects the user to EditView
+struct ProductRow: View {
+    
+    let product: ProductDetails
+    
+    var body: some View {
+        VStack{
+            HStack {
+                
+                if !product.image.isEmpty {
+                    WebImage(url: URL(string: product.image))
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 70, height: 70)
+                        .clipped()
+                } else {
+                    Image(systemName: "photo").font(.system(size:30))
+                }
+
+                VStack (alignment: .leading){
+                    Text(product.name)
+                        .font(.system(size: 17, weight: .semibold))
+                    Text(product.shade)
+                        .foregroundColor(Color(.lightGray))
+                    Text(product.brand)
+                }
+                Spacer ()
+
+                NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: 20))
+                    .foregroundColor(Color(.label)) }
+    
+            }
+            Divider()
+                .padding(.vertical, 2)
+        }.padding(.horizontal)
+    }
 }
 
 struct InventoryView_Previews: PreviewProvider {
