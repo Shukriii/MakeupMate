@@ -9,8 +9,7 @@
  Alert with textfield https://www.youtube.com/watch?v=NJDBb4sOfNE&ab_channel=Kavsoft
  */
 
-// When adding a product when a new category is selected all previous text disappears, but not for edit
-// delete
+// TODO: Delete category
 
 import SwiftUI
 
@@ -18,22 +17,24 @@ struct CategoryView: View {
     
     @State private var categoryName = ""
     @State private var showAlert = false
-    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
-    
     @Binding var selectedCategory: CategoryDetails?
+    
     @Environment(\.presentationMode) var presentationMode
+
+    @ObservedObject private var af = AddFunctionalityViewModel()
     
     var body: some View {
         
         Form {
-            ForEach (vm.categories) { category in
-                CategoryRow(category: category)
-                    .onTapGesture {
-                        withAnimation {
-                            selectedCategory = category
-                        }
-                        presentationMode.wrappedValue.dismiss()
+            ForEach (af.categories) { category in
+                Button(action: {
+                    withAnimation {
+                        selectedCategory = category
                     }
+                    presentationMode.wrappedValue.dismiss()
+                }) {
+                    Text(category.categoryName)
+                }
             }
         }
         .navigationBarTitle("Pick a Category")
@@ -45,7 +46,7 @@ struct CategoryView: View {
                 .imageScale(.large)
         }))
         .onAppear{
-            vm.fetchCategories()
+            af.fetchCategories()
         }
     }
         
@@ -87,20 +88,6 @@ struct CategoryView: View {
             }
             print ("Successfully added the category")
         }
-    }
-}
-
-struct CategoryRow: View {
-    
-    let category: CategoryDetails
-    
-    var body: some View {
-        Button {
-            
-        } label: {
-            Text(category.categoryName)
-        }
-
     }
 }
 

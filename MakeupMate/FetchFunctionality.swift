@@ -1,8 +1,8 @@
 //
-//  Functions.swift
+//  FetchFunctionality.swift
 //  MakeupMate
 //
-//  Created by Shukri  Ahmed on 22/03/2023.
+//  Created by Shukri  Ahmed on 26/03/2023.
 //
 
 import Foundation
@@ -16,14 +16,12 @@ class FetchFunctionalityViewModel: ObservableObject {
 
     @Published var errorMessage = ""
     @Published var products = [ProductDetails]()
-    @Published var categories = [CategoryDetails]()
     
     init(collectionName: String) {
         fetchProducts(fromCollection: collectionName)
-        fetchCategories()
     }
     
-    // figure out this is being called with no one calling and providing it with collectionName 
+    // figure out this is being called with no one calling and providing it with collectionName
     func fetchProducts(fromCollection collectionName: String) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             self.errorMessage = "fetchProducts(): Could not find firebase uid"
@@ -66,30 +64,6 @@ class FetchFunctionalityViewModel: ObservableObject {
                 return
             }
     }
-    
-    func fetchCategories() {
-        FirebaseManager.shared.firestore.collection("categories")
-            .order(by: "Name")
-            .addSnapshotListener{ querySnapshot, error in
-                if let error = error {
-                    self.errorMessage = "Failed to fetch category: \(error)"
-                    print("Failed to fetch category: \(error)")
-                    return
-                }
-                
-                // The snapshot listener querySnapshot listens for changes
-                querySnapshot?.documentChanges.forEach( { change in
-                    // if a product is added
-                    if change.type == .added {
-                        let data = change.document.data()
-                        self.categories.append(.init(documentID: change.document.documentID, data: data))
-                    }
-                })
-                self.errorMessage = "Fetched categories successfully"
-                print (self.errorMessage)
-                
-            }
-    }
 
     // Is called after a user logs out to clear the Inventory
     func removeProducts(){
@@ -98,7 +72,3 @@ class FetchFunctionalityViewModel: ObservableObject {
     }
     
 }
-
-
-
-

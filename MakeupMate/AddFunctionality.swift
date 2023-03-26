@@ -12,6 +12,11 @@ import SwiftUI
 class AddFunctionalityViewModel: ObservableObject {
     
     @Published var statusMessage = ""
+    @Published var categories = [CategoryDetails]()
+    
+    init(){
+        fetchCategories()
+    }
     
     func addProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         
@@ -94,6 +99,30 @@ class AddFunctionalityViewModel: ObservableObject {
         }
         
         presentationMode?.wrappedValue.dismiss()
+    }
+    
+    func fetchCategories() {
+        FirebaseManager.shared.firestore.collection("categories")
+            .order(by: "Name")
+            .addSnapshotListener{ querySnapshot, error in
+                if let error = error {
+                    self.statusMessage = "Failed to fetch category: \(error)"
+                    print("Failed to fetch category: \(error)")
+                    return
+                }
+                
+                // The snapshot listener querySnapshot listens for changes
+                querySnapshot?.documentChanges.forEach( { change in
+                    // if a product is added
+                    if change.type == .added {
+                        let data = change.document.data()
+                        self.categories.append(.init(documentID: change.document.documentID, data: data))
+                    }
+                })
+                self.statusMessage = "Fetched categories successfully"
+                print (self.statusMessage)
+                
+            }
     }
     
 }
