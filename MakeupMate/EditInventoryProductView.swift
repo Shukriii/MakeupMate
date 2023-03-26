@@ -15,6 +15,7 @@ import SDWebImageSwiftUI
 
 struct EditInventoryProductView: View {
     
+    @State private var selectedCategory: CategoryDetails?
     @State var product: ProductDetails?
     let productID: String
 
@@ -25,15 +26,18 @@ struct EditInventoryProductView: View {
     
     @State private var name = ""
     @State private var brand = ""
+    @State private var category = ""
     @State private var shade = ""
     @State private var stock = ""
     @State private var note = ""
     @State var image: UIImage?
     
-    @State var showInventoryView = false
     @State var shouldShowImagePicker = false
-    
+    @State var goesToCategories = false
+
     @Environment(\.presentationMode) var presentationMode
+    
+    @ObservedObject private var ef = EditFunctionalityViewModel()
     
     // Creates deisgn of view, which is similar to the view to add a product
     var body: some View {
@@ -46,7 +50,7 @@ struct EditInventoryProductView: View {
                         } label: {
                             VStack {
                                 // TODO: add a button to remove the image
-                                if let product = product {
+                                if let product = ef.product {
                                     // if theres a new image selected display the image
                                     if let image = image {
                                         Image(uiImage: image)
@@ -68,51 +72,59 @@ struct EditInventoryProductView: View {
                         }
                     }.sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {
                         ImagePicker(image: $image)
+                        
                     }
                     
                     Spacer ()
                     
                     VStack (spacing: 16){
                         
-                        // Displays the textFields and if anything is stored in the associated variable displays that
-                        if let product = product {
+                        // Displays the textFields and anything is stored in the associated variable
+                        if let product = ef.product {
                             
                             EditTextFieldView(listKey: product.name, displayName: "Name", variableName: $name)
                             
                             EditTextFieldView(listKey: product.brand, displayName: "Brand", variableName: $brand)
                             
-                            // CATEGORY
-                            Button {
-                                print("category view appears")
-                            } label:  {
-                                HStack {
-                                    Text("Category")
-                                    Spacer()
-                                    Image(systemName: "chevron.right.circle")
-                                }
-                                .padding(15)
-                                    
+                            NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory), isActive: $goesToCategories) {
+                                EmptyView()
                             }
+
+                            Button(action: {
+                                goesToCategories = true
+                            }) {
+                                if let selectedCategory = selectedCategory {
+                                    Text("Category Selected: \(selectedCategory.categoryName)")
+                                }
+                                else if !product.category.isEmpty {
+                                    Text("Category Selected: \(product.category)")
+                                }
+                                else {
+                                    Text("No Category Selected, Click here to change category")
+                                }
+                            }
+                            .padding(15)
                             .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                             .cornerRadius(5)
-                            
+
                             EditTextFieldView(listKey: product.shade, displayName: "Shade", variableName: $shade)
                             
                             EditTextFieldView(listKey: product.stock, displayName: "Stock", variableName: $stock)
                             
                             EditTextFieldView(listKey: product.note, displayName: "Note", variableName: $note)
-
+                            
                         }
                     }
                     .onAppear {
                         // Load the product details from Firestore
-                        fetchProduct()
+                        ef.fetchProduct(fromCollection: "inventory", productID: productID)
                     }
                     .padding(12)
                     
                     HStack{
                          Button{
-                             deleteProduct()
+                             //deleteProduct()
+                             ef.deleteProduct(fromCollection: "inventory", productID: productID, presentationMode: presentationMode)
                          } label: {
                              Image(systemName: "trash")
                                  .font(.system(size: 30))
@@ -123,7 +135,18 @@ struct EditInventoryProductView: View {
                              .frame(width: 90)
 
                          Button{
-                             uploadImageToStorage()
+                             //uploadImageToStorage()
+                             if let product = ef.product {
+                                 if let selectedCategory = selectedCategory {
+                                     self.category = selectedCategory.categoryName
+                                     print("category is selected \(category)")
+                                 } else if !product.category.isEmpty {
+                                     self.category = product.category
+                                     print("category is product \(category)")
+                                 }
+                             }
+                             
+                             ef.uploadImageToStorage(fromCollection: "inventory", productID: productID, name: name, brand: brand, categoryField: category, shade: shade, stock: stock, note: note, image: image, presentationMode: presentationMode)
                          } label: {
                              Image(systemName: "checkmark.circle")
                                  .font(.system(size: 30))
@@ -134,120 +157,10 @@ struct EditInventoryProductView: View {
             }.navigationTitle("Edit Product")
         }
     }
-    
-   // This function uses the productID passed into EditInventoryProdcut to find the document with the id
-    private func fetchProduct() {
-         // uid of user logged in
-         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-         
-         // id of product
-         let id = self.productID
-         
-         // to find in Firestore
-         FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory").document(id).getDocument {
-             snapshot, error in
-                 if let error = error {
-                     print("Failed to fetch current user:", error)
-                     return }
-             
-             guard let data = snapshot?.data() else {
-                 print("No data found")
-                 return }
-             
-             print(data)
-             // stores the data into a product, using ProductDetails to decode the data
-             self.product = ProductDetails(documentID: id, data: data)
-         }
-     }
-    
-    @State var statusMessage = ""
-    
-    // This function uploads the image being displayed to Firebase Storage, if no image has been chosen it calls updateProduct with nil
-    private func uploadImageToStorage() {
-        let id = self.productID
-        
-        let reference = FirebaseManager.shared.storage.reference(withPath: id)
-        print("Firebase Storage reference: \(reference)")
-        
-        if let imageData = self.image?.jpegData(compressionQuality: 0.5) {
-            reference.putData(imageData, metadata: nil) { metadata, err in
-                if let err = err {
-                    self.statusMessage = "Error uploading image: \(err)"
-                    return
-                }
-            
-                reference.downloadURL { url, err in
-                    if let err = err {
-                        self.statusMessage = "Failed to retrieve downloadURL: \(err)"
-                        return
-                    }
-                    
-                    self.statusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
-                    print(statusMessage)
-                    
-                    guard let url = url else { return }
-                    // call updateProduct with proudctID and url of image
-                    self.updateProduct(imageProfileUrl: url)
-                }
-            }
-        } else {
-            self.updateProduct(imageProfileUrl: nil)
-        }
-    }
-    
-    // This fuction updates the product in Firestore
-    private func updateProduct(imageProfileUrl: URL?) {
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        let id = self.productID
-        
-        var productData = ["uid": uid, "name": name, "brand": brand, "shade": shade, "stock": stock, "note": note] as [String : Any]
-        
-        if let product = product {
-            // if no new image was picked
-            if imageProfileUrl == nil && !product.image.isEmpty {
-                productData["image"] = product.image
-                // if a new image was pciked, which is either the url or nil
-            } else if let imageProfileUrl = imageProfileUrl {
-                productData["image"] = imageProfileUrl.absoluteString
-            }
-        }
-        
-        let document = FirebaseManager.shared.firestore.collection("products")
-            .document(uid)
-            .collection("inventory")
-            .document(id)
-            
-            document.setData(productData) { error in
-                if let error = error {
-                    print("Failed to save product into Firestore: \(error)")
-                    return
-                } else {
-                    print("product updated")
-                    self.showInventoryView = true
-                }
-            }
-        presentationMode.wrappedValue.dismiss()
-    }
-    
-    // this function finds the document in Firestore and deletes the document
-    private func deleteProduct() {
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        // id of product
-        let id = self.productID
-        
-        FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory").document(id).delete { error in
-                if let error = error {
-                    print("Failed to delete:", error)
-                    return }
-            else {
-                print("product deleted")
-                self.showInventoryView = true
-            }
-        }
-        
-        presentationMode.wrappedValue.dismiss()
-    }
 }
 
+struct EditInventoryProductView_Previews: PreviewProvider {
+    static var previews: some View {
+        InventoryView()
+    }
+}

@@ -13,7 +13,7 @@ struct WishlistView: View {
     
     @State var shouldShowLogOutOptions = false
     
-    @ObservedObject private var vm = ViewModel(collectionName: "wishlist")
+    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "wishlist")
     @ObservedObject private var am = AccountFunctionalityViewModel()
     
     var body: some View {
@@ -30,10 +30,10 @@ struct WishlistView: View {
                             self.am.isUserCurrentlyLoggedOut = false
                             self.am.fetchCurrentUser()
                             self.vm.removeProducts()
-                            //self.vm.fetchProducts(fromCollection: "wishlist")
+                            
                         })
                     }
-
+                //self.vm.fetchProducts(fromCollection: "wishlist")
                 productListView
 
             }

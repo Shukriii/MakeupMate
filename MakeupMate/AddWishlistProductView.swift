@@ -91,8 +91,7 @@ struct AddWishlistProductView: View {
                     
                     HStack{
                         Button{
-                            af.addProduct(fromCollection: "wishlist", name: name, brand: brand, categoryField: categoryField, note: note, image: image, presentationMode: presentationMode)
-                            //addProduct()
+                            af.addProduct(fromCollection: "wishlist", name: name, brand: brand, categoryField: categoryField, shade: shade, note: note, image: image, presentationMode: presentationMode)
                         } label: {
                             Image(systemName: "checkmark.circle")
                                 .font(.system(size: 30))

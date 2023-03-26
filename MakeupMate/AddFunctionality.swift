@@ -13,7 +13,7 @@ class AddFunctionalityViewModel: ObservableObject {
     
     @Published var statusMessage = ""
     
-    func addProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String? = nil, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
+    func addProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
        
@@ -61,7 +61,7 @@ class AddFunctionalityViewModel: ObservableObject {
     }
     
     // This function stores the product into Firestore, finding the document created with productID
-    func storeProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String? = nil, stock: String? = nil, note: String, presentationMode: Binding<PresentationMode>? = nil) {
+    func storeProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, presentationMode: Binding<PresentationMode>? = nil) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
         let document = FirebaseManager.shared.firestore.collection("products")
@@ -70,10 +70,9 @@ class AddFunctionalityViewModel: ObservableObject {
             .document(productID)
         
         //dictionary of data to be stored, common to both Inventory and Wishlist
-        var productData = ["uid": uid, "name": name, "brand": brand, "category": categoryField, "note": note] as [String : Any]
+        var productData = ["uid": uid, "name": name, "brand": brand, "category": categoryField, "shade": shade, "note": note] as [String : Any]
         
         if collectionName == "inventory" {
-            productData["shade"] = shade
             productData["stock"] = stock
         }
 

@@ -29,7 +29,7 @@ struct InventoryView: View {
     
     @State var shouldShowLogOutOptions = false
     
-    @ObservedObject private var vm = ViewModel(collectionName: "inventory")
+    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
     @ObservedObject private var am = AccountFunctionalityViewModel()
     
     var body: some View {

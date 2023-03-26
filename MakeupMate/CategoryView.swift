@@ -9,7 +9,8 @@
  Alert with textfield https://www.youtube.com/watch?v=NJDBb4sOfNE&ab_channel=Kavsoft
  */
 
-// Fix how only the text needs to be clicked
+// When adding a product when a new category is selected all previous text disappears, but not for edit
+// delete
 
 import SwiftUI
 
@@ -17,7 +18,7 @@ struct CategoryView: View {
     
     @State private var categoryName = ""
     @State private var showAlert = false
-    @ObservedObject private var vm = ViewModel(collectionName: "inventory")
+    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
     
     @Binding var selectedCategory: CategoryDetails?
     @Environment(\.presentationMode) var presentationMode
@@ -92,8 +93,6 @@ struct CategoryView: View {
 struct CategoryRow: View {
     
     let category: CategoryDetails
-    
-    @ObservedObject private var vm = ViewModel(collectionName: "inventory")
     
     var body: some View {
         Button {

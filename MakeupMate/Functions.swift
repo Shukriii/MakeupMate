@@ -12,7 +12,7 @@ import SDWebImageSwiftUI
 // Class with 4 functions
 // fetchAllInventoryProducts() - fetchs the inventory products of the current user
 // removeInventoryProduct() - Removes inventory products from the view
-class ViewModel: ObservableObject {
+class FetchFunctionalityViewModel: ObservableObject {
 
     @Published var errorMessage = ""
     @Published var products = [ProductDetails]()
@@ -23,6 +23,7 @@ class ViewModel: ObservableObject {
         fetchCategories()
     }
     
+    // figure out this is being called with no one calling and providing it with collectionName 
     func fetchProducts(fromCollection collectionName: String) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             self.errorMessage = "fetchProducts(): Could not find firebase uid"
