@@ -29,7 +29,7 @@ struct BottomNavigationBar: View {
                 case 1:
                     WishlistView()
                 case 2:
-                    Text("Compare")
+                    CompareView()
                 case 3:
                     Text("Calendar")
                 default:

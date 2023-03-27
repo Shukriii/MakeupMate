@@ -49,6 +49,5 @@ struct TopNavigationBar: View {
             }),
                             .cancel()])
         }
-        
     }
 }
