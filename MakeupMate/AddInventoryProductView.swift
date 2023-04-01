@@ -8,12 +8,9 @@
 /*
   InventoryView calls this function when the New Product button is clicked
   
- No code has been copied directly
+  No code has been copied directly
   Tutorials used -
-  Floating label for text boxes: https://www.youtube.com/watch?v=Sg0rfYL3utI&t=649s&ab_channel=PeterFriese
   Adding a DatePicker (Calendar): https://www.hackingwithswift.com/quick-start/swiftui/how-to-create-a-date-picker-and-read-values-from-it
-  Storing product into Firestore: https://www.youtube.com/watch?v=dA_Ve-9gizQ&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=12&ab_channel=LetsBuildThatApp
-  Storing image to Firebase Storage: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
  */
 
 import Firebase
@@ -66,6 +63,7 @@ struct AddInventoryProductView: View {
                     
                     VStack (spacing: 16){
                         
+                        // Using the struct to create TextFields
                         AddTextFieldView(AddDisplayName: "Name", AddVariableName: $name)
                         
                         AddTextFieldView(AddDisplayName: "Brand", AddVariableName: $brand)
@@ -116,8 +114,8 @@ struct AddInventoryProductView: View {
                     
                     HStack{
                         Button{
-                            af.addProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, image: image, presentationMode: presentationMode)
-                            //addProduct()
+                            // uses variable af to access the class and passes the varibles into addProduct
+                            af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, image: image, presentationMode: presentationMode)
                         } label: {
                             Image(systemName: "checkmark.circle")
                                 .font(.system(size: 30))
@@ -129,6 +127,7 @@ struct AddInventoryProductView: View {
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil){
+            // Displays the users photo library to select an image
             ImagePicker(image: $image)
         }
     }

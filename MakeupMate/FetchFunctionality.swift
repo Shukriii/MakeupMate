@@ -6,12 +6,11 @@
 //
 
 import Foundation
-import SwiftUI
-import SDWebImageSwiftUI
 
-// Class with 4 functions
-// fetchAllInventoryProducts() - fetchs the inventory products of the current user
-// removeInventoryProduct() - Removes inventory products from the view
+/*
+  No code has been copied directly, but the querySnapshot used in fetchProduct function has been addpated from this tutorial: https://www.youtube.com/watch?v=G0AyApE2w1c&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=13&ab_channel=LetsBuildThatApp
+ */
+
 class FetchFunctionalityViewModel: ObservableObject {
 
     @Published var errorMessage = ""
@@ -21,7 +20,8 @@ class FetchFunctionalityViewModel: ObservableObject {
         fetchProducts(fromCollection: collectionName)
     }
     
-    // figure out this is being called with no one calling and providing it with collectionName
+    // Provided with a parameter collectName using that it uses the querySnapshot to fetch all the products.
+    // querySnapshot listens for documents changes and updates the product array as appropirate
     func fetchProducts(fromCollection collectionName: String) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
             self.errorMessage = "fetchProducts(): Could not find firebase uid"

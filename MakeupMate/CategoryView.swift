@@ -6,17 +6,16 @@
 //
 
 /*
- Alert with textfield https://www.youtube.com/watch?v=NJDBb4sOfNE&ab_channel=Kavsoft
+  This view displays all the categories and gives users the option to add and delete a category
+ 
+  The code for alertView has been reused from: https://www.youtube.com/watch?v=NJDBb4sOfNE&ab_channel=Kavsoft
  */
-
-// TODO: Delete category
 
 import SwiftUI
 
 struct CategoryView: View {
     
     @State private var categoryName = ""
-    @State private var showAlert = false
     @Binding var selectedCategory: CategoryDetails?
     
     @Environment(\.presentationMode) var presentationMode
@@ -24,34 +23,40 @@ struct CategoryView: View {
     @ObservedObject private var af = AddFunctionalityViewModel()
     
     var body: some View {
-        
-        Form {
-            ForEach (af.categories) { category in
-                Button(action: {
-                    withAnimation {
-                        selectedCategory = category
+        VStack {
+            Form {
+                ForEach (af.categories) { category in
+                    Button(action: {
+                        withAnimation {
+                            selectedCategory = category
+                        }
+                        presentationMode.wrappedValue.dismiss()
+                    }) {
+                        Text(category.categoryName)
                     }
-                    presentationMode.wrappedValue.dismiss()
-                }) {
-                    Text(category.categoryName)
-                }
+                }.onDelete(perform: delete)
             }
+            .navigationBarTitle("Pick a Category")
+            .navigationBarItems(trailing: Button(action: {
+                alertView()
+            }, label: {
+                Image(systemName: "plus.circle.fill")
+                    .foregroundColor(Color("Colour5"))
+                    .imageScale(.large)
+            }))
+            .onAppear{
+                // calls the fethcCategory funtion
+                af.fetchCategories()
+            }
+            
+            Text("Swipe a category to delete it")
+                .font(.callout)
         }
-        .navigationBarTitle("Pick a Category")
-        .navigationBarItems(trailing: Button(action: {
-            alertView()
-        }, label: {
-            Image(systemName: "plus.circle.fill")
-                .foregroundColor(Color.green)
-                .imageScale(.large)
-        }))
-        .onAppear{
-            af.fetchCategories()
-        }
+        .background(Color(red: 0.949, green: 0.949, blue: 0.97))
     }
-        
-    func alertView() {
-        
+    
+    // This fucntion displays an alert on screen and calls the storeCategory function
+    private func alertView() {
         let alert = UIAlertController(title: "Add Category", message: "Enter the name of the new category:", preferredStyle: .alert)
         
         alert.addTextField{ (name) in
@@ -76,6 +81,7 @@ struct CategoryView: View {
         })
     }
     
+    // Using the categoryName it adds a new document to the collection "categories"
     private func storeCategory(){
         print(categoryName)
         let categoryData = ["Name": categoryName] as [String : Any]
@@ -89,6 +95,24 @@ struct CategoryView: View {
             print ("Successfully added the category")
         }
     }
+    
+    // This function removes the document from Firestore and remove the category from the array of categories
+    private func delete(at offsets: IndexSet) {
+        
+        offsets.forEach { index in
+            let category = af.categories[index]
+            FirebaseManager.shared.firestore.collection("categories").document(category.id).delete { error in
+                if let error = error {
+                    print("Failed to delete:", error)
+                    return
+                } else {
+                    print("Category deleted")
+                }
+            }
+        }
+        af.categories.remove(atOffsets: offsets)
+    }
+    
 }
 
 struct CategoryView_Previews: PreviewProvider {
@@ -96,3 +120,4 @@ struct CategoryView_Previews: PreviewProvider {
         InventoryView()
     }
 } 
+

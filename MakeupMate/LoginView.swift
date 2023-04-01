@@ -6,10 +6,10 @@
 //
 
 /*
-  LoginView is called by InventoryView once the user logs out, using the closure didCompleteLoginProcess. 
+  LoginView is called when the user logs out, using the closure didCompleteLoginProcess. 
  
   Code has been resued from following tutorials -
-  Login View: https://www.youtube.com/watch?v=aVO4EVGvQcw&ab_channel=LetsBuildThatApp
+  To create the login view: https://www.youtube.com/watch?v=aVO4EVGvQcw&ab_channel=LetsBuildThatApp
   Setting up Firebase Auth and creating user: https://www.youtube.com/watch?v=xXjYGamyREs&t=612s&ab_channel=LetsBuildThatApp
   Saving user into Firebase Firestore: https://www.youtube.com/watch?v=VtwFwDJvU8w&t=6s&ab_channel=LetsBuildThatApp
  */

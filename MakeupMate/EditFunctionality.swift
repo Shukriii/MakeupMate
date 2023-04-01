@@ -5,6 +5,9 @@
 //  Created by Shukri  Ahmed on 25/03/2023.
 //
 
+/*
+ The author developed this class using functions previously created, no code has been reused 
+ */
 import Foundation
 import SwiftUI
 
@@ -15,26 +18,27 @@ class EditFunctionalityViewModel: ObservableObject {
     
     // As soon as the EditView is displayed this function is called
     func fetchProduct(fromCollection collectionName: String, productID: String) {
-         // uid of user logged in
-         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        // uid of user logged in
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
-         // to find in Firestore
-         FirebaseManager.shared.firestore.collection("products").document(uid).collection(collectionName).document(productID).getDocument {
-             snapshot, error in
-                 if let error = error {
-                     print("Failed to fetch current user:", error)
-                     return }
-             
-             guard let data = snapshot?.data() else {
-                 print("No data found")
-                 return }
-             
-             //print(data)
-             
-             // stores the data into a product, using ProductDetails to decode the data
-             self.product = ProductDetails(documentID: productID, data: data)
-         }
-     }
+        
+        // to find in Firestore
+        FirebaseManager.shared.firestore.collection("products").document(uid).collection(collectionName).document(productID).getDocument {
+            snapshot, error in
+            if let error = error {
+                print("Failed to fetch current user:", error)
+                return }
+            
+            guard let data = snapshot?.data() else {
+                print("No data found")
+                return }
+            
+            //print(data)
+            
+            // stores the data into a product, using ProductDetails to decode the data
+            self.product = ProductDetails(documentID: productID, data: data)
+        }
+    }
     
     // Whave the save button is clicked, this function uploads the image being displayed to Firebase Storage, if no image has been chosen it calls updateProduct with nil
     func uploadImageToStorage(fromCollection collectionName: String, productID: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {

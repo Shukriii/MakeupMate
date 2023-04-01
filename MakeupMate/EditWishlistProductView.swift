@@ -5,6 +5,9 @@
 //  Created by Shukri  Ahmed on 22/03/2023.
 //
 
+/*
+ Adapted from EditInventoryProduct View has the same functionality 
+ */
 import SwiftUI
 import SDWebImageSwiftUI
 

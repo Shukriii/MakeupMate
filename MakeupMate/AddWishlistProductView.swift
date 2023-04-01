@@ -5,6 +5,10 @@
 //  Created by Shukri  Ahmed on 22/03/2023.
 //
 
+/*
+ Adapted from AddInventoryProductView has the same functionality 
+ */
+
 import SwiftUI
 
 struct AddWishlistProductView: View {
@@ -54,7 +58,6 @@ struct AddWishlistProductView: View {
                         
                         AddTextFieldView(AddDisplayName: "Brand", AddVariableName: $brand)
                         
-                        //TODO: Add category dropdow or make it a new view - Main Product
                         NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                             HStack {
                                 Text("Click to pick a category")
@@ -91,7 +94,7 @@ struct AddWishlistProductView: View {
                     
                     HStack{
                         Button{
-                            af.addProduct(fromCollection: "wishlist", name: name, brand: brand, categoryField: categoryField, shade: shade, note: note, image: image, presentationMode: presentationMode)
+                            af.uploadProduct(fromCollection: "wishlist", name: name, brand: brand, categoryField: categoryField, shade: shade, note: note, image: image, presentationMode: presentationMode)
                         } label: {
                             Image(systemName: "checkmark.circle")
                                 .font(.system(size: 30))

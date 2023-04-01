@@ -6,7 +6,9 @@
 //
 
 /*
- A resuable View, displaying a Textfield to enter a products details
+  Displays a Textfield to enter a products details
+ 
+  Floating label for text boxes reused from: https://www.youtube.com/watch?v=Sg0rfYL3utI&t=649s&ab_channel=PeterFriese
  */
 
 import SwiftUI

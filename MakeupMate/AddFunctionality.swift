@@ -9,6 +9,13 @@ import Foundation
 import UIKit
 import SwiftUI
 
+/*
+  No code has been copied directly, only adapted from tutorials
+ 
+  Storing product into Firestore: https://www.youtube.com/watch?v=dA_Ve-9gizQ&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=12&ab_channel=LetsBuildThatApp
+  Storing image to Firebase Storage: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
+ */
+
 class AddFunctionalityViewModel: ObservableObject {
     
     @Published var statusMessage = ""
@@ -18,7 +25,9 @@ class AddFunctionalityViewModel: ObservableObject {
         fetchCategories()
     }
     
-    func addProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
+    // This function creates a documents and a reference to store the product using the unique documentID
+    // calls storeProduct either witha url or the url set to nil
+    func uploadProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
        
@@ -54,13 +63,11 @@ class AddFunctionalityViewModel: ObservableObject {
                     
                     guard let url = url else { return }
                     // call storeProduct with proudctID and url of image
-                    //self.storeProduct(productID: productID, imageProfileUrl: url)
                     self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: url, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, presentationMode: presentationMode)
                 }
             }
             // if no image then call storeProduct with productID and no url
         } else {
-            //self.storeProduct(productID: productID, imageProfileUrl: nil)
             self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: nil, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, presentationMode: presentationMode)
         }
     }
@@ -73,7 +80,7 @@ class AddFunctionalityViewModel: ObservableObject {
             .document(uid)
             .collection(collectionName)
             .document(productID)
-        
+
         //dictionary of data to be stored, common to both Inventory and Wishlist
         var productData = ["uid": uid, "name": name, "brand": brand, "category": categoryField, "shade": shade, "note": note] as [String : Any]
         
@@ -113,7 +120,7 @@ class AddFunctionalityViewModel: ObservableObject {
                 
                 // The snapshot listener querySnapshot listens for changes
                 querySnapshot?.documentChanges.forEach( { change in
-                    // if a product is added
+                    // if a category is added
                     if change.type == .added {
                         let data = change.document.data()
                         self.categories.append(.init(documentID: change.document.documentID, data: data))
@@ -124,5 +131,6 @@ class AddFunctionalityViewModel: ObservableObject {
                 
             }
     }
-    
 }
+
+

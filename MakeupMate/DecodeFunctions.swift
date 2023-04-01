@@ -5,10 +5,22 @@
 //  Created by Shukri  Ahmed on 11/03/2023.
 //
 
-/*
- This struct decodes the dictionary of product data, and places them into variable to they can be easily accessed
- */
 import Foundation
+
+/*
+ This struct decodes a dictionary of data, and places them into variable to they can be easily accessed
+ 
+ This code was reused from tutorial: https://www.youtube.com/watch?v=yHngqpFpVZU&t=1136s&ab_channel=LetsBuildThatApp
+ */
+struct CurrentUser {
+    let uid, email: String
+    
+    //decoding the properties
+    init(data: [String: Any]){
+        self.uid = data["uid"] as? String ?? ""
+        self.email = data["email"] as? String ?? ""
+    }
+}
 
 // Creating constants which ProductDetails uses
 struct FirebaseConstants {
@@ -23,6 +35,9 @@ struct FirebaseConstants {
     static let note = "note"
 }
 
+/*
+ This struct decodes the dictionary of product data, and places them into variables to they can be easily accessed
+ */
 struct ProductDetails: Identifiable {
     
     var id: String { documentID }
@@ -45,16 +60,17 @@ struct ProductDetails: Identifiable {
     }
 }
 
+// Decodes the category details fetched from firestore, making the data identifable by the documentID
 struct CategoryDetails: Identifiable {
 
     var id: String { documentID }
+    var categoryName: String
     
     let documentID: String
-    
-    var categoryName: String
     
     init(documentID: String, data: [String: Any]){
         self.documentID = documentID
         self.categoryName = data["Name"] as? String ?? ""
     }
 }
+

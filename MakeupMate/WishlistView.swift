@@ -5,6 +5,10 @@
 //  Created by Shukri  Ahmed on 21/03/2023.
 //
 
+/*
+ Code has been adapted from InvenotryView, displays the users Wishlist products
+ */
+
 import SwiftUI
 import SDWebImageSwiftUI
 
@@ -28,7 +32,7 @@ struct WishlistView: View {
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
-                            self.am.fetchCurrentUser()
+                            //self.am.fetchCurrentUser()
                             self.vm.removeProducts()
                             
                         })

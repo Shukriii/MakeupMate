@@ -10,7 +10,7 @@
  It initalises FirebaseApp and configures the services.
  This class prevents code repetition, by making it avaliable via FirebaseManager.
  
- This code has been reused from: https://www.youtube.com/watch?v=yHngqpFpVZU&t=1106s&ab_channel=LetsBuildThatApp
+ This class has been reused from (4:25): https://www.youtube.com/watch?v=yHngqpFpVZU&t=1106s&ab_channel=LetsBuildThatApp
  */
 
 import Foundation

@@ -1,17 +1,19 @@
 //
-//  AccountFunctionality.swift
+//  ObservableObjects.swift
 //  MakeupMate
 //
-//  Created by Shukri  Ahmed on 25/03/2023.
+//  Created by Shukri  Ahmed on 29/03/2023.
 //
 
 import Foundation
 
-// fetchCurrentUser() - fetchs the current user
-// handleSignOut() - Uses firebase Auth to sign current user out
+/*
+  No code has been directly copied but has been adapted from the following tutorials
+  
+  To fetch the current user from Firestore: https://www.youtube.com/watch?v=yHngqpFpVZU&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=7&ab_channel=LetsBuildThatApp
+  Sign out functionality: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
 
-// TODO: - LoginView only appears when on InventoryView
-
+ */
 class AccountFunctionalityViewModel: ObservableObject {
     
     @Published var currentUser: CurrentUser?
@@ -27,7 +29,6 @@ class AccountFunctionalityViewModel: ObservableObject {
     }
     
     //Fetchs the currents users uid, and decodes the data from Firestore and places into currentUser
-    // Adapted from Video 2
     func fetchCurrentUser(){
         // Retrives the uid from Firebase Auth and places into uid
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else {
@@ -48,12 +49,12 @@ class AccountFunctionalityViewModel: ObservableObject {
                 print(self.errorMessage)
                 return }
             
-            // places the data from the document into currenUser
+            // places the data from the document into currentUser
             self.currentUser = .init(data: data)
         }
     }
     
-    // Adapted from Video 3
+    // Signs the user out, and updates the boolean value to true
     func handleSignOut() {
         isUserCurrentlyLoggedOut.toggle()
         try? FirebaseManager.shared.auth.signOut()

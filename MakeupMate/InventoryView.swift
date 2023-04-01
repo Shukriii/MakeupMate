@@ -5,26 +5,20 @@
 //  Created by Shukri  Ahmed on 04/03/2023.
 //
 
-/* Once the walkthrough is complete this is the next view displayed.
-   If the user is not logged in, a fullScreenCover of LoginView will appear (line 189)
+/* - View of the Inventory, it displays the products in Firestore. Has navigation links to AddInventoryProduct and EditInventoryProduct.
+   - If the user is not logged in, a fullScreenCover of LoginView will appear (line 189)
  
-   This view let users:
-        - See all the products in their inventory
-        - Log out (calls LoginView)
-        - Add an inventory product (calls AddInventoryProductView)
+   No code has been copied directly, the code has been adapted from the following tutorial.
  
-   No code has been copied directly, the code has been adapted from the following tutorials
-   Video 1 - Creating inventory view: https://www.youtube.com/watch?v=pPsKTTd55xI&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=6&ab_channel=LetsBuildThatApp
-   Video 2 - To fetch the current user from Firestore: https://www.youtube.com/watch?v=yHngqpFpVZU&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=7&ab_channel=LetsBuildThatApp
-   Video 3 - Log in and log out: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
-   Video 4 - Fetch inventory products from Firestore: https://www.youtube.com/watch?v=G0AyApE2w1c&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=13&ab_channel=LetsBuildThatApp
+   Created a template of displaying the product on screen using: https://www.youtube.com/watch?v=pPsKTTd55xI&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=6&ab_channel=LetsBuildThatApp
  */
 
 
 import SwiftUI
 import SDWebImageSwiftUI
 
-// This struct calls topNavigationBar and productListView to populate the VStack, and has a button to add a new product. The variable vm calls the class InventoryViewModel, it has an overlay that adds a new product
+// This struct calls TopNavigationBar and provides it with the navigationName, displays a full screen cover if the user is logged out
+// ProductListView provides ProductRow with the array of products fetched
 struct InventoryView: View {
     
     @State var shouldShowLogOutOptions = false
@@ -44,8 +38,8 @@ struct InventoryView: View {
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
                             self.am.fetchCurrentUser()
+                            self.vm.fetchProducts(fromCollection: "inventory")
                             self.vm.removeProducts()
-                            //self.vm.fetchProducts(fromCollection: "inventory")
                         })
                     }
                 
@@ -89,7 +83,6 @@ struct ProductRow: View {
     var body: some View {
         VStack{
             HStack {
-                
                 if !product.image.isEmpty {
                     WebImage(url: URL(string: product.image))
                         .resizable()
@@ -109,6 +102,7 @@ struct ProductRow: View {
                 }
                 Spacer ()
 
+                // Edit icon for each product with a navigation link to EditInventoryProduct and provides the view with the productID
                 NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 20))

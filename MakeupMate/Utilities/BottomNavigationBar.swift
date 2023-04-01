@@ -1,5 +1,5 @@
 //
-//  NavigationBar.swift
+//  BottomNavigationBar.swift
 //  MakeupMate
 //
 //  Created by Shukri  Ahmed on 15/03/2023.

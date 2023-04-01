@@ -12,7 +12,7 @@
  
  I reused the code from this video: https://www.youtube.com/watch?v=HVAMShhJOUo&ab_channel=Kavsoft
  
- Replaced the tutorial code with my own images, information and colour scheme
+ Replaced the tutorial code with my own images, information and colour scheme. 
  */
 
 
