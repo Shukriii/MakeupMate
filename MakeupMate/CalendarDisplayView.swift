@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import simd
 
 struct CalendarDisplayView: View {
     
@@ -71,8 +72,51 @@ struct CalendarDisplayView: View {
             LazyVGrid(columns: columns, spacing: 15){
                 ForEach(extractDate()){ value in
                     CardView(value: value)
+                        .background(
+                            Capsule()
+                                .fill(Color("Colour5"))
+                                .padding(.horizontal,8)
+                                .opacity(isSameDay(date1: value.date, date2: currentDate) ? 1 : 0)
+                        )
+                        .onTapGesture {
+                            currentDate = value.date
+                        }
                 }
             }
+            
+            VStack(spacing: 15){
+                Text("Tasks")
+                    .font(.title2.bold())
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    //.padding(.vertical,20)
+                
+                if let task = tasks.first(where: { task in
+                    return isSameDay(date1: task.taskDate, date2: currentDate)
+                }){
+                    ForEach(task.task){ task in
+                        VStack(alignment: .leading, spacing: 10){
+                            // custom time
+                            Text(task.time
+                                    .addingTimeInterval(CGFloat.random(in: 0...5000)), style: .time)
+                            
+                            Text(task.title)
+                                .font(.title2.bold())
+                        }
+                        .padding(.vertical, 10)
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(
+                            Color("Colour5")
+                                .opacity(0.5)
+                                .cornerRadius(10))
+                    }
+                    
+                } else {
+                    Text("No task found")
+                }
+            }
+            .padding()
+
         }
         .onChange(of: currentMonth){ newValue in
             //update the month
@@ -84,12 +128,39 @@ struct CalendarDisplayView: View {
     func CardView(value: DateValue)->some View{
         VStack{
             if value.day != -1 {
-                Text("\(value.day)")
-                    .font(.title3.bold())
+                
+                if let task = tasks.first(where: { task in
+                    return isSameDay(date1: task.taskDate, date2: value.date)
+                }){
+                    Text("\(value.day)")
+                        .font(.title3.bold())
+                        .foregroundColor(isSameDay(date1: task.taskDate, date2: currentDate) ? .white : .primary)
+                        .frame(maxWidth: .infinity)
+                    
+                    Spacer()
+                    
+                    Circle()
+                        .fill(isSameDay(date1: task.taskDate, date2: currentDate) ? .white : Color("Colour5"))
+                        .frame(width: 8, height: 8)
+                }
+                else {
+                    Text("\(value.day)")
+                        .font(.title3.bold())
+                        .foregroundColor(isSameDay(date1: value.date, date2: currentDate) ? .white : .primary)
+                        .frame(maxWidth: .infinity)
+                    
+                    Spacer()
+                }
             }
         }
-        .padding(.vertical, 8)
+        .padding(.vertical, 9)
         .frame(height: 60, alignment: .top)
+    }
+    
+    //checking to see if same day
+    func isSameDay(date1: Date, date2: Date)->Bool{
+        let calendar = Calendar.current
+        return calendar.isDate(date1, inSameDayAs: date2)
     }
     
     //extracting Year and Month for display

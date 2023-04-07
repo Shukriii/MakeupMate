@@ -41,7 +41,7 @@ struct CompareView: View {
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
                         })
-                    }
+                    }.padding(.vertical)
                 
                 displayView
                 

@@ -31,7 +31,7 @@ struct BottomNavigationBar: View {
                 case 2:
                     CompareView()
                 case 3:
-                    Text("Calendar")
+                    ExpiryCalendarView()
                 default:
                     Text("Remaining tabs")
                 }

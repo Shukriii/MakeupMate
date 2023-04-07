@@ -9,17 +9,28 @@ import SwiftUI
 
 struct ExpiryCalendarView: View {
     
+    @ObservedObject private var am = AccountFunctionalityViewModel()
     @State var currentDate: Date = Date()
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false){
-            VStack(spacing: 20) {
-                
-                // The calendar will appear here
-                CalendarDisplayView(currentDate: $currentDate)
-                
-                
-            }
+        NavigationView {
+            VStack (alignment: .leading, spacing: 15) {
+            
+                TopNavigationBar(navigationName: "Expiry Calendar")
+                    .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
+                        LoginView(didCompleteLoginProcess: {
+                            self.am.isUserCurrentlyLoggedOut = false
+                        })
+                    }
+            
+                ScrollView(.vertical, showsIndicators: false){
+                    
+                    // The calendar will appear here
+                    CalendarDisplayView(currentDate: $currentDate)
+                    
+                }
+                .padding(.vertical)
+            }.navigationBarHidden(true)
         }
     }
 }
