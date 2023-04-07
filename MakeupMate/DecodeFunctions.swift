@@ -70,7 +70,7 @@ struct CategoryDetails: Identifiable {
     
     init(documentID: String, data: [String: Any]){
         self.documentID = documentID
-        self.categoryName = data["Name"] as? String ?? ""
+        self.categoryName = data[FirebaseConstants.name] as? String ?? ""
     }
 }
 

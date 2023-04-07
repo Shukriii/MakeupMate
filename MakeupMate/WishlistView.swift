@@ -32,12 +32,12 @@ struct WishlistView: View {
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
-                            //self.am.fetchCurrentUser()
+                            self.am.fetchCurrentUser()
                             self.vm.removeProducts()
-                            
+                            self.vm.fetchProducts(fromCollection: "wishlist")
                         })
                     }
-                //self.vm.fetchProducts(fromCollection: "wishlist")
+                
                 productListView
 
             }

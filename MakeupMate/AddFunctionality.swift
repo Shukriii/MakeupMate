@@ -109,8 +109,10 @@ class AddFunctionalityViewModel: ObservableObject {
     }
     
     func fetchCategories() {
-        FirebaseManager.shared.firestore.collection("categories")
-            .order(by: "Name")
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories")
+            .order(by: "name")
             .addSnapshotListener{ querySnapshot, error in
                 if let error = error {
                     self.statusMessage = "Failed to fetch category: \(error)"

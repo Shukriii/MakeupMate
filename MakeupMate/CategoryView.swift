@@ -83,10 +83,11 @@ struct CategoryView: View {
     
     // Using the categoryName it adds a new document to the collection "categories"
     private func storeCategory(){
-        print(categoryName)
-        let categoryData = ["Name": categoryName] as [String : Any]
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+
+        let categoryData = ["name": categoryName] as [String : Any]
             
-        FirebaseManager.shared.firestore.collection("categories").document().setData(categoryData) { error in
+        FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories").document().setData(categoryData) { error in
             if let error = error {
                 print("Failed to save category: \(error)")
                 return
@@ -98,10 +99,11 @@ struct CategoryView: View {
     
     // This function removes the document from Firestore and remove the category from the array of categories
     private func delete(at offsets: IndexSet) {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
         offsets.forEach { index in
             let category = af.categories[index]
-            FirebaseManager.shared.firestore.collection("categories").document(category.id).delete { error in
+            FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories").document(category.id).delete { error in
                 if let error = error {
                     print("Failed to delete:", error)
                     return

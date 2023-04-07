@@ -38,8 +38,9 @@ struct InventoryView: View {
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
                             self.am.fetchCurrentUser()
-                            self.vm.fetchProducts(fromCollection: "inventory")
                             self.vm.removeProducts()
+                            self.vm.fetchProducts(fromCollection: "inventory")
+                            
                         })
                     }
                 
