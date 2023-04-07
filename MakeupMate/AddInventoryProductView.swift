@@ -27,6 +27,7 @@ struct AddInventoryProductView: View {
     @State private var shade = ""
     @State private var stock = ""
     @State private var expiryDate = Date.now
+    @State private var expiryDateString = ""
     @State private var note = ""
     
     @Environment(\.presentationMode) var presentationMode
@@ -107,15 +108,20 @@ struct AddInventoryProductView: View {
                                 Text("Expiry Date")
                             }
                         }
-                        
+    
                         AddTextFieldView(AddDisplayName: "Note", AddVariableName: $note)
                     }
                     .padding(12)
                     
                     HStack{
                         Button{
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
+
+                            let expiryDateString = dateFormatter.string(from: expiryDate)
+                            
                             // uses variable af to access the class and passes the varibles into addProduct
-                            af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, image: image, presentationMode: presentationMode)
+                            af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
                         } label: {
                             Image(systemName: "checkmark.circle")
                                 .font(.system(size: 30))

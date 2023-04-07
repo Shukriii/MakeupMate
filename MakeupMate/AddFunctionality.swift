@@ -27,7 +27,7 @@ class AddFunctionalityViewModel: ObservableObject {
     
     // This function creates a documents and a reference to store the product using the unique documentID
     // calls storeProduct either witha url or the url set to nil
-    func uploadProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
+    func uploadProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
        
@@ -63,17 +63,17 @@ class AddFunctionalityViewModel: ObservableObject {
                     
                     guard let url = url else { return }
                     // call storeProduct with proudctID and url of image
-                    self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: url, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, presentationMode: presentationMode)
+                    self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: url, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, presentationMode: presentationMode)
                 }
             }
             // if no image then call storeProduct with productID and no url
         } else {
-            self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: nil, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, presentationMode: presentationMode)
+            self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: nil, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, presentationMode: presentationMode)
         }
     }
     
     // This function stores the product into Firestore, finding the document created with productID
-    func storeProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, presentationMode: Binding<PresentationMode>? = nil) {
+    func storeProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, note: String, presentationMode: Binding<PresentationMode>? = nil) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
         let document = FirebaseManager.shared.firestore.collection("products")
@@ -86,6 +86,7 @@ class AddFunctionalityViewModel: ObservableObject {
         
         if collectionName == "inventory" {
             productData["stock"] = stock
+            productData["expiryDate"] = expiryDateString
         }
 
         // Check if image URL is not nil and add image to the dictionary accordingly
