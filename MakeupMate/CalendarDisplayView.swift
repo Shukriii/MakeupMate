@@ -68,6 +68,7 @@ struct CalendarDisplayView: View {
             // Dates display using LazyGrid
             let columns = Array(repeating: GridItem(.flexible()), count: 7)
             
+            // Purple circle for when a day is selected
             LazyVGrid(columns: columns, spacing: 15){
                 ForEach(extractDate()){ value in
                     CardView(value: value)
@@ -84,23 +85,19 @@ struct CalendarDisplayView: View {
                 }
             }
             
-            // Displays the product
+            // Displays the expired product
             VStack(spacing: 10){
                 Text("Products")
                     .font(.title2.bold())
                     .frame(maxWidth: .infinity, alignment: .leading)
                     //.padding(.vertical,20)
                 
-                if let task = tasks.first(where: { task in
-                    return isSameDay(date1: task.taskDate, date2: currentDate)
+                if let product = expiredProducts.first(where: { product in
+                    return isSameDay(date1: product.expireDate, date2: currentDate)
                 }){
-                    ForEach(task.task){ task in
+                    ForEach(product.expiryProduct){ product in
                         VStack(alignment: .leading, spacing: 10){
-                            // custom time
-                            Text(task.time
-                                    .addingTimeInterval(CGFloat.random(in: 0...5000)), style: .time)
-
-                            Text(task.title)
+                            Text(product.name)
                                 .font(.title2.bold())
                         }
                         .padding(.vertical, 10)
@@ -130,18 +127,18 @@ struct CalendarDisplayView: View {
         VStack{
             if value.day != -1 {
                 
-                if let task = tasks.first(where: { task in
-                    return isSameDay(date1: task.taskDate, date2: value.date)
+                if let product = expiredProducts.first(where: { product in
+                    return isSameDay(date1: product.expireDate, date2: value.date)
                 }){
                     Text("\(value.day)")
                         .font(.title3.bold())
-                        .foregroundColor(isSameDay(date1: task.taskDate, date2: currentDate) ? .white : .primary)
+                        .foregroundColor(isSameDay(date1: product.expireDate, date2: currentDate) ? .white : .primary)
                         .frame(maxWidth: .infinity)
                     
                     Spacer()
                     
                     Circle()
-                        .fill(isSameDay(date1: task.taskDate, date2: currentDate) ? .white : Color("Colour5"))
+                        .fill(isSameDay(date1: product.expireDate, date2: currentDate) ? .white : Color("Colour5"))
                         .frame(width: 8, height: 8)
                 }
                 else {

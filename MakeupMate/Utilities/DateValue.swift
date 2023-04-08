@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct DateValue: Identifiable{
     var id = UUID().uuidString
     var day: Int
@@ -57,15 +58,31 @@ var tasks: [TaskMetaData] = [
 // A expiry product has an Id, name and date
 struct ExpiryProduct: Identifiable{
     var id = UUID().uuidString
-    var productName: String
-    var productDate : Date = Date()
+    var name: String
+    var time : Date = Date()
 }
 
 struct ExpiryProductMetaData: Identifiable {
     var id = UUID().uuidString
-    var expiredProduct: [ExpiryProduct]
+    var expiryProduct: [ExpiryProduct]
     var expireDate: Date
 }
+
+var expiredProducts: [ExpiryProductMetaData] = [
+    ExpiryProductMetaData(expiryProduct: [
+        ExpiryProduct(name: "Product 1"),
+        ExpiryProduct(name: "Product 2"),
+        ExpiryProduct(name: "Product 3"),
+    ], expireDate: getSampleDateFromDateString(dateString: "28 Apr 2023 at 14:47:00 GMT+1")),
+
+    ExpiryProductMetaData(expiryProduct: [
+        ExpiryProduct(name: "Product 4"),
+    ], expireDate: getSampleDateFromDateString(dateString: "9 Apr 2023 at 14:47:00 GMT+1")),
+
+    ExpiryProductMetaData(expiryProduct: [
+        ExpiryProduct(name: "Product 5"),
+    ], expireDate: getSampleDateFromDateString(dateString: "1 Apr 2023 at 14:47:00 GMT+1")),
+]
 
 func getSampleDateFromDateString(dateString: String) -> Date {
     // Takes the date "28 Apr 2023 at 14:47:00 GMT+1" and make into "28 Apr 2023"
@@ -88,22 +105,6 @@ func getSampleDateFromDateString(dateString: String) -> Date {
 
     return sampleDate ?? Date() // Provide a default value in case sample date calculation fails
 }
-
-var expiredProducts: [ExpiryProductMetaData] = [
-    ExpiryProductMetaData(expiredProduct: [
-        ExpiryProduct(productName: "Product 1"),
-        ExpiryProduct(productName: "Product 2"),
-        ExpiryProduct(productName: "Product 3"),
-    ], expireDate: getSampleDateFromDateString(dateString: "28 Apr 2023 at 14:47:00 GMT+1")),
-
-    ExpiryProductMetaData(expiredProduct: [
-        ExpiryProduct(productName: "Product 4"),
-    ], expireDate: getSampleDateFromDateString(dateString: "9 Apr 2023 at 14:47:00 GMT+1")),
-
-    ExpiryProductMetaData(expiredProduct: [
-        ExpiryProduct(productName: "Product 5"),
-    ], expireDate: getSampleDateFromDateString(dateString: "1 Apr 2023 at 14:47:00 GMT+1")),
-]
 
 //func getOffsetFromDateString(dateString: String) -> Int? {
 //    let dateFormatter = DateFormatter()
