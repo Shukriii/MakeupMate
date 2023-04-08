@@ -17,7 +17,7 @@ struct BottomNavigationBar: View {
     
     @State var selectedIndex = 0
     
-    let tabBarImageNames = ["bag", "cart", "speedometer", "calendar"]
+    let tabBarImageNames = ["bag", "wand.and.stars.inverse", "speedometer", "calendar"]
     
     var body: some View {
         VStack {

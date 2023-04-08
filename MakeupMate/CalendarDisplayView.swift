@@ -16,7 +16,7 @@ struct CalendarDisplayView: View {
     @State var currentMonth: Int = 0
     
     var body: some View {
-        VStack(spacing: 35){
+        VStack(spacing: 20){
             
             //Days
             let days: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -46,7 +46,7 @@ struct CalendarDisplayView: View {
                 
                 Button {
                     withAnimation{
-                        currentMonth -= 1
+                        currentMonth += 1
                     }
                 } label: {
                     Image(systemName: "chevron.right")
@@ -62,7 +62,6 @@ struct CalendarDisplayView: View {
                         .font(.callout)
                         .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
-                    
                 }
             }
             
@@ -73,6 +72,7 @@ struct CalendarDisplayView: View {
                 ForEach(extractDate()){ value in
                     CardView(value: value)
                         .background(
+                            // when a day is selected
                             Capsule()
                                 .fill(Color("Colour5"))
                                 .padding(.horizontal,8)
@@ -84,8 +84,9 @@ struct CalendarDisplayView: View {
                 }
             }
             
-            VStack(spacing: 15){
-                Text("Tasks")
+            // Displays the product
+            VStack(spacing: 10){
+                Text("Products")
                     .font(.title2.bold())
                     .frame(maxWidth: .infinity, alignment: .leading)
                     //.padding(.vertical,20)
@@ -98,7 +99,7 @@ struct CalendarDisplayView: View {
                             // custom time
                             Text(task.time
                                     .addingTimeInterval(CGFloat.random(in: 0...5000)), style: .time)
-                            
+
                             Text(task.title)
                                 .font(.title2.bold())
                         }
@@ -112,10 +113,10 @@ struct CalendarDisplayView: View {
                     }
                     
                 } else {
-                    Text("No task found")
+                    Text("No product found")
                 }
             }
-            .padding()
+            .padding(.horizontal)
 
         }
         .onChange(of: currentMonth){ newValue in

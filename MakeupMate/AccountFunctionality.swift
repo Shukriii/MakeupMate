@@ -22,7 +22,7 @@ class AccountFunctionalityViewModel: ObservableObject {
     @Published var isUserCurrentlyLoggedOut = false
     
     init() {
-        /* If the user is logged out set the uid to nil,
+        /*If the user is logged out set the uid to nil,
         DispatchQueue.main.async {
             self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil } */
         fetchCurrentUser()

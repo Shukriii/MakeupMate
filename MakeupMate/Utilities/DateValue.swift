@@ -54,3 +54,93 @@ var tasks: [TaskMetaData] = [
     ], taskDate: getSampleDate(offset: 10)),
 ]
 
+// A expiry product has an Id, name and date
+struct ExpiryProduct: Identifiable{
+    var id = UUID().uuidString
+    var productName: String
+    var productDate : Date = Date()
+}
+
+struct ExpiryProductMetaData: Identifiable {
+    var id = UUID().uuidString
+    var expiredProduct: [ExpiryProduct]
+    var expireDate: Date
+}
+
+func getSampleDateFromDateString(dateString: String) -> Date {
+    // Takes the date "28 Apr 2023 at 14:47:00 GMT+1" and make into "28 Apr 2023"
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "dd MMM yyyy"
+    guard let date = dateString.components(separatedBy: " at ").first.flatMap({ dateFormatter.date(from: $0) }) else {
+        return Date() // Provide a default value in case date calculation fails
+    }
+    
+    // Figures out offset
+    let calendar = Calendar.current
+    let today = calendar.startOfDay(for: Date())
+    let otherDate = calendar.startOfDay(for: date)
+    let components = calendar.dateComponents([.day], from: today, to: otherDate)
+
+    // Calculates sample date using the offset
+    let calendarNow = Calendar.current
+    
+    let sampleDate = calendarNow.date(byAdding: .day, value: components.day!, to: Date()) //components.day ?? 0
+
+    return sampleDate ?? Date() // Provide a default value in case sample date calculation fails
+}
+
+var expiredProducts: [ExpiryProductMetaData] = [
+    ExpiryProductMetaData(expiredProduct: [
+        ExpiryProduct(productName: "Product 1"),
+        ExpiryProduct(productName: "Product 2"),
+        ExpiryProduct(productName: "Product 3"),
+    ], expireDate: getSampleDateFromDateString(dateString: "28 Apr 2023 at 14:47:00 GMT+1")),
+
+    ExpiryProductMetaData(expiredProduct: [
+        ExpiryProduct(productName: "Product 4"),
+    ], expireDate: getSampleDateFromDateString(dateString: "9 Apr 2023 at 14:47:00 GMT+1")),
+
+    ExpiryProductMetaData(expiredProduct: [
+        ExpiryProduct(productName: "Product 5"),
+    ], expireDate: getSampleDateFromDateString(dateString: "1 Apr 2023 at 14:47:00 GMT+1")),
+]
+
+//func getOffsetFromDateString(dateString: String) -> Int? {
+//    let dateFormatter = DateFormatter()
+//    dateFormatter.dateFormat = "dd MMM yyyy"
+//    guard let date = dateString.components(separatedBy: " at ").first.flatMap({ dateFormatter.date(from: $0) }) else {
+//        return nil
+//    }
+//
+//    let calendar = Calendar.current
+//    let today = calendar.startOfDay(for: Date())
+//    let otherDate = calendar.startOfDay(for: date)
+//    let components = calendar.dateComponents([.day], from: today, to: otherDate)
+//
+//    return components.day
+//}
+
+//func getOffsetFromDateString(dateString: String) -> Int? {
+//    let dateFormatter = DateFormatter()
+//    dateFormatter.dateFormat = "dd MMM yyyy"
+//    guard let date = dateString.components(separatedBy: " at ").first.flatMap({ dateFormatter.date(from: $0) }) else {
+//        return nil
+//    }
+//
+//    let calendar = Calendar.current
+//    let today = calendar.startOfDay(for: Date())
+//    let otherDate = calendar.startOfDay(for: date)
+//    let components = calendar.dateComponents([.day], from: today, to: otherDate)
+//
+//    return components.day
+//}
+
+//func getDateFromDateString(dateString: String) -> Date? {
+//    let dateFormatter = DateFormatter()
+//    dateFormatter.dateFormat = "dd MMM yyyy"
+//    guard let date = dateString.components(separatedBy: " at ").first.flatMap({ dateFormatter.date(from: $0) }) else {
+//        return nil
+//    }
+//
+//    return date
+//}
