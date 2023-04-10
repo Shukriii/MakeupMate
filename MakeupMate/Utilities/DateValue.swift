@@ -14,51 +14,12 @@ struct DateValue: Identifiable{
     var date: Date
 }
 
-//Array of Tasks
-struct Task: Identifiable{
-    var id = UUID().uuidString //product id?
-    var title: String //product.name
-    var time : Date = Date()
-    
-}
-
-struct TaskMetaData: Identifiable {
-    var id = UUID().uuidString
-    var task: [Task]
-    var taskDate: Date
-}
-
-func getSampleDate(offset: Int)->Date{
-    let calendar = Calendar.current
-    let date = calendar.date(byAdding: .day, value: offset, to: Date())
-    
-    return date ?? Date()
-}
-
-var tasks: [TaskMetaData] = [
-    TaskMetaData(task: [
-        Task(title: "Task 1"),
-        Task(title: "Task 2"),
-        Task(title: "Task 3"),
-    ], taskDate: getSampleDate(offset: 1)),
-    
-    TaskMetaData(task: [
-        Task(title: "Task 4"),
-    ], taskDate: getSampleDate(offset: -3)),
-    
-    TaskMetaData(task: [
-        Task(title: "Task 5"),
-    ], taskDate: getSampleDate(offset: -8)),
-    
-    TaskMetaData(task: [
-        Task(title: "Task 6"),
-    ], taskDate: getSampleDate(offset: 10)),
-]
-
 // A expiry product has an Id, name and date
 struct ExpiryProduct: Identifiable{
     var id = UUID().uuidString
     var name: String
+    var shade: String
+    var brand: String
     var time : Date = Date()
 }
 
@@ -70,19 +31,21 @@ struct ExpiryProductMetaData: Identifiable {
 
 var expiredProducts: [ExpiryProductMetaData] = [
     ExpiryProductMetaData(expiryProduct: [
-        ExpiryProduct(name: "Product 1"),
-        ExpiryProduct(name: "Product 2"),
-        ExpiryProduct(name: "Product 3"),
+        ExpiryProduct(name: "Product 1", shade: "1", brand: "1"),
+        ExpiryProduct(name: "Product 2", shade: "2", brand: "2"),
+        ExpiryProduct(name: "Product 3", shade: "3", brand: "3"),
     ], expireDate: getSampleDateFromDateString(dateString: "28 Apr 2023 at 14:47:00 GMT+1")),
 
     ExpiryProductMetaData(expiryProduct: [
-        ExpiryProduct(name: "Product 4"),
+        ExpiryProduct(name: "Product 4", shade: "4", brand: "4"),
     ], expireDate: getSampleDateFromDateString(dateString: "9 Apr 2023 at 14:47:00 GMT+1")),
 
     ExpiryProductMetaData(expiryProduct: [
-        ExpiryProduct(name: "Product 5"),
+        ExpiryProduct(name: "Product 5", shade: "5", brand: "5"),
     ], expireDate: getSampleDateFromDateString(dateString: "1 Apr 2023 at 14:47:00 GMT+1")),
 ]
+
+//var expiredProducts2: [ExpiryProductMetaData] = []
 
 func getSampleDateFromDateString(dateString: String) -> Date {
     // Takes the date "28 Apr 2023 at 14:47:00 GMT+1" and make into "28 Apr 2023"
@@ -106,42 +69,57 @@ func getSampleDateFromDateString(dateString: String) -> Date {
     return sampleDate ?? Date() // Provide a default value in case sample date calculation fails
 }
 
-//func getOffsetFromDateString(dateString: String) -> Int? {
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.dateFormat = "dd MMM yyyy"
-//    guard let date = dateString.components(separatedBy: " at ").first.flatMap({ dateFormatter.date(from: $0) }) else {
-//        return nil
-//    }
-//
-//    let calendar = Calendar.current
-//    let today = calendar.startOfDay(for: Date())
-//    let otherDate = calendar.startOfDay(for: date)
-//    let components = calendar.dateComponents([.day], from: today, to: otherDate)
-//
-//    return components.day
-//}
+class ExpiryProductViewModel: ObservableObject {
+    
+    @Published var statusMessage = ""
+    @Published var products = [ProductDetails]()
+    @Published var expiredProducts2 = [ExpiryProductMetaData]()
+    
+    init(){
+        fetchExpiryProducts()
+    }
+    
+    func fetchExpiryProducts() {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory")
+            .order(by: "name")
+            .addSnapshotListener{ querySnapshot, error in
+                if let error = error {
+                    self.statusMessage = "Failed to fetch expired products: \(error)"
+                    print(self.statusMessage)
+                    return
+                }
+                
+                // The snapshot listener querySnapshot listens for changes
+                querySnapshot?.documentChanges.forEach( { change in
+                    // if a category is added
+                    if change.type == .added {
+                        let data = change.document.data()
+                        self.products.append(.init(documentID: change.document.documentID, data: data))
+                    }
+                })
+                self.statusMessage = "Fetched expired products successfully"
+                print (self.statusMessage)
+                
+                for product in self.products {
+                    if product.expiryDate.isEmpty {
+                        if let index = self.products.firstIndex(where: { $0.documentID == product.documentID }) {
+                            self.products.remove(at: index)
+                            
+                        }
+                    }
+                }
+                
+                print("products with expiry date \(self.products)")
 
-//func getOffsetFromDateString(dateString: String) -> Int? {
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.dateFormat = "dd MMM yyyy"
-//    guard let date = dateString.components(separatedBy: " at ").first.flatMap({ dateFormatter.date(from: $0) }) else {
-//        return nil
-//    }
-//
-//    let calendar = Calendar.current
-//    let today = calendar.startOfDay(for: Date())
-//    let otherDate = calendar.startOfDay(for: date)
-//    let components = calendar.dateComponents([.day], from: today, to: otherDate)
-//
-//    return components.day
-//}
+                self.products.forEach { product in
+                    self.expiredProducts2.append(ExpiryProductMetaData(expiryProduct: [
+                        ExpiryProduct(name: product.name, shade: product.shade, brand: product.brand),
+                    ], expireDate: getSampleDateFromDateString(dateString: product.expiryDate)))
+                }
 
-//func getDateFromDateString(dateString: String) -> Date? {
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.dateFormat = "dd MMM yyyy"
-//    guard let date = dateString.components(separatedBy: " at ").first.flatMap({ dateFormatter.date(from: $0) }) else {
-//        return nil
-//    }
-//
-//    return date
-//}
+            }
+    }
+    
+}

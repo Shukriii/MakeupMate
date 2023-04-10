@@ -49,7 +49,7 @@ struct InventoryView: View {
             }
             // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddInventoryProductView
             .overlay(
-                NavigationLink(destination: AddInventoryProductView()) {
+                NavigationLink(destination: NewDesign()) {
                     HStack() {
                         Spacer()
                         Text ("New Product")

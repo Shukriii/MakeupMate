@@ -36,6 +36,7 @@ struct CategoryView: View {
                     }
                 }.onDelete(perform: delete)
             }
+            .padding(.top, 0.3)
             .navigationBarTitle("Pick a Category")
             .navigationBarItems(trailing: Button(action: {
                 alertView()

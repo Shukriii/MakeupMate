@@ -112,13 +112,9 @@ struct EditInventoryProductView: View {
                             
                             EditTextFieldView(listKey: product.stock, displayName: "Stock", variableName: $stock)
                             
-                            //Text(product.expiryDate)
+                            Text(product.expiryDate)
                             
                             Text("product: \(getSampleDateFromDateString(dateString: product.expiryDate))")
-                            
-                            Text("Offset: \(getSampleDateFromDateString(dateString: "28 Apr 2023 at 14:47:00 GMT+1"))")
-                            
-                            Text("Task: \(getSampleDate(offset: 20))")
                             
                             EditTextFieldView(listKey: product.note, displayName: "Note", variableName: $note)
                             

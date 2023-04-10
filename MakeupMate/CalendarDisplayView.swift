@@ -11,6 +11,7 @@ import simd
 struct CalendarDisplayView: View {
     
     @Binding var currentDate: Date
+    @ObservedObject private var ep = ExpiryProductViewModel()
     
     // Update month when arrow is clicked
     @State var currentMonth: Int = 0
@@ -92,20 +93,25 @@ struct CalendarDisplayView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     //.padding(.vertical,20)
                 
-                if let product = expiredProducts.first(where: { product in
+                if let product = ep.expiredProducts2.first(where: { product in
                     return isSameDay(date1: product.expireDate, date2: currentDate)
                 }){
                     ForEach(product.expiryProduct){ product in
                         VStack(alignment: .leading, spacing: 10){
                             Text(product.name)
-                                .font(.title2.bold())
+                                .font(.system(size: 19, weight: .semibold))
+                            Text(product.shade)
+                                .foregroundColor(Color(.gray))
+                                .fontWeight(.semibold)
+                            Text(product.brand)
+                                .fontWeight(.semibold)
                         }
                         .padding(.vertical, 10)
                         .padding(.horizontal)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(
                             Color("Colour5")
-                                .opacity(0.5)
+                                .opacity(0.3)
                                 .cornerRadius(10))
                     }
                     
@@ -122,12 +128,13 @@ struct CalendarDisplayView: View {
         }
     }
     
+    // Purple dot if date has an expired product
     @ViewBuilder
     func CardView(value: DateValue)->some View{
         VStack{
             if value.day != -1 {
                 
-                if let product = expiredProducts.first(where: { product in
+                if let product = ep.expiredProducts2.first(where: { product in
                     return isSameDay(date1: product.expireDate, date2: value.date)
                 }){
                     Text("\(value.day)")

@@ -151,8 +151,6 @@ struct CompareView: View {
                 self.statusMessage = "Fetched products successfully"
                 print (self.statusMessage)
                 
-                print("original Products: \(inventoryProducts)")
-                
                 for product in self.inventoryProducts {
                     if product.category != self.selectedCategory {
                         if let index = self.inventoryProducts.firstIndex(where: { $0.documentID == product.documentID }) {
@@ -162,7 +160,6 @@ struct CompareView: View {
                     }
                 }
                 
-                print("inventory Products: \(inventoryProducts)")
             }
     }
     

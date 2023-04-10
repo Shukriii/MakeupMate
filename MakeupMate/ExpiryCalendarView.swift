@@ -20,6 +20,7 @@ struct ExpiryCalendarView: View {
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
+                            self.am.fetchCurrentUser()
                         })
                     }
             
