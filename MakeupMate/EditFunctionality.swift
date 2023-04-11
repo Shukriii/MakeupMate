@@ -41,7 +41,7 @@ class EditFunctionalityViewModel: ObservableObject {
     }
     
     // Whave the save button is clicked, this function uploads the image being displayed to Firebase Storage, if no image has been chosen it calls updateProduct with nil
-    func uploadImageToStorage(fromCollection collectionName: String, productID: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
+    func uploadImageToStorage(fromCollection collectionName: String, productID: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         
         let reference = FirebaseManager.shared.storage.reference(withPath: productID)
         
@@ -64,21 +64,22 @@ class EditFunctionalityViewModel: ObservableObject {
                     guard let url = url else { return }
                     
                     // call updateProduct with proudctID and url of image
-                    self.updateProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: url, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, image: image, presentationMode: presentationMode)
+                    self.updateProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: url, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
                 }
             }
         } else {
-            self.updateProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: nil, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, note: note, image: image, presentationMode: presentationMode)
+            self.updateProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: nil, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
         }
     }
     
-    func updateProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
+    func updateProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
         var productData = ["uid": uid, "name": name, "brand": brand, "category": categoryField, "shade": shade, "note": note] as [String : Any]
         
         if collectionName == "inventory" {
             productData["stock"] = stock
+            productData["expiryDate"] = expiryDateString
         }
         
         if let product = product {

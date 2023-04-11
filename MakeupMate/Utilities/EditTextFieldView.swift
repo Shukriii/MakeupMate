@@ -20,22 +20,10 @@ struct EditTextFieldView: View {
     @Binding var variableName: String //name
     
     var body: some View {
-        
-        VStack (alignment: .leading) {
-            if !listKey.isEmpty {
-                Text(displayName) //" "
-                    .font(.subheadline)
-                    .foregroundColor(.purple)
-                    .multilineTextAlignment(.center)
+        TextField(displayName, text: $variableName)
+            .onAppear {
+                variableName = listKey.isEmpty ? "" : listKey
             }
-            TextField(displayName, text: $variableName)
-                .onAppear {
-                    variableName = listKey.isEmpty ? "" : listKey
-            }
-        }
-        .padding(15)
-        .background(Color(red: 0.914, green: 0.914, blue: 0.914))
-        .cornerRadius(5)
     }
 }
 

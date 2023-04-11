@@ -104,7 +104,7 @@ struct ProductRow: View {
                 Spacer ()
 
                 // Edit icon for each product with a navigation link to EditInventoryProduct and provides the view with the productID
-                NavigationLink(destination: EditInventoryProductView(productID: product.id)) {
+                NavigationLink(destination: EditInventoryView(productID: product.id)) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 20))
                     .foregroundColor(Color(.label)) }

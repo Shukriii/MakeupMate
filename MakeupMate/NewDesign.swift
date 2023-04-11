@@ -68,7 +68,7 @@ struct NewDesign: View {
                     TextField("Shade", text: $shade)
                 }
                 
-                Section(header: Text("Product Category"), footer: Text("Click to pick a category")){
+                Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                     NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                         if let category = selectedCategory {
                             HStack {
@@ -164,7 +164,7 @@ struct NewDesign: View {
             .navigationBarTitle("New Product")
         }
         .navigationViewStyle(StackNavigationViewStyle())
-        .fullScreenCover(isPresented: $shouldShowImagePicker, onDismiss: nil){
+        .sheet(isPresented: $shouldShowImagePicker, onDismiss: nil){
             // Displays the users photo library to select an image
             ImagePicker(image: $image)
         }
