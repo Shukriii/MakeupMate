@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct DateValue: Identifiable{
     var id = UUID().uuidString
     var day: Int
@@ -28,24 +27,6 @@ struct ExpiryProductMetaData: Identifiable {
     var expiryProduct: [ExpiryProduct]
     var expireDate: Date
 }
-
-var expiredProducts: [ExpiryProductMetaData] = [
-    ExpiryProductMetaData(expiryProduct: [
-        ExpiryProduct(name: "Product 1", shade: "1", brand: "1"),
-        ExpiryProduct(name: "Product 2", shade: "2", brand: "2"),
-        ExpiryProduct(name: "Product 3", shade: "3", brand: "3"),
-    ], expireDate: getSampleDateFromDateString(dateString: "28 Apr 2023 at 14:47:00 GMT+1")),
-
-    ExpiryProductMetaData(expiryProduct: [
-        ExpiryProduct(name: "Product 4", shade: "4", brand: "4"),
-    ], expireDate: getSampleDateFromDateString(dateString: "9 Apr 2023 at 14:47:00 GMT+1")),
-
-    ExpiryProductMetaData(expiryProduct: [
-        ExpiryProduct(name: "Product 5", shade: "5", brand: "5"),
-    ], expireDate: getSampleDateFromDateString(dateString: "1 Apr 2023 at 14:47:00 GMT+1")),
-]
-
-//var expiredProducts2: [ExpiryProductMetaData] = []
 
 func getSampleDateFromDateString(dateString: String) -> Date {
     // Takes the date "28 Apr 2023 at 14:47:00 GMT+1" and make into "28 Apr 2023"
@@ -73,7 +54,7 @@ class ExpiryProductViewModel: ObservableObject {
     
     @Published var statusMessage = ""
     @Published var products = [ProductDetails]()
-    @Published var expiredProducts2 = [ExpiryProductMetaData]()
+    @Published var expiredProducts = [ExpiryProductMetaData]()
     
     init(){
         fetchExpiryProducts()
@@ -114,7 +95,7 @@ class ExpiryProductViewModel: ObservableObject {
                 print("products with expiry date \(self.products)")
 
                 self.products.forEach { product in
-                    self.expiredProducts2.append(ExpiryProductMetaData(expiryProduct: [
+                    self.expiredProducts.append(ExpiryProductMetaData(expiryProduct: [
                         ExpiryProduct(name: product.name, shade: product.shade, brand: product.brand),
                     ], expireDate: getSampleDateFromDateString(dateString: product.expiryDate)))
                 }

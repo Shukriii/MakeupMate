@@ -93,7 +93,7 @@ struct CalendarDisplayView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     //.padding(.vertical,20)
                 
-                if let product = ep.expiredProducts2.first(where: { product in
+                if let product = ep.expiredProducts.first(where: { product in
                     return isSameDay(date1: product.expireDate, date2: currentDate)
                 }){
                     ForEach(product.expiryProduct){ product in
@@ -134,7 +134,7 @@ struct CalendarDisplayView: View {
         VStack{
             if value.day != -1 {
                 
-                if let product = ep.expiredProducts2.first(where: { product in
+                if let product = ep.expiredProducts.first(where: { product in
                     return isSameDay(date1: product.expireDate, date2: value.date)
                 }){
                     Text("\(value.day)")

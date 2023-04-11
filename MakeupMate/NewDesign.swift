@@ -6,7 +6,7 @@
 //
 
 // Stepper https://www.youtube.com/watch?v=jrAA9Gt-jqw&t=300s&ab_channel=DesignCode
-// Hidden expiry date
+// Hidden expiry date https://www.youtube.com/watch?v=Utkdlpo8T6w&ab_channel=GoingWalkabout
 import SwiftUI
 import SDWebImageSwiftUI
 
@@ -22,6 +22,7 @@ struct NewDesign: View {
     @State private var expiryDate = Date.now
     @State private var expiryDateString = ""
     @State private var note = ""
+    @State private var dateSet = false
     
     @Environment(\.presentationMode) var presentationMode
     
@@ -87,9 +88,38 @@ struct NewDesign: View {
                 }
                 
                 Section(header: Text("Product Expiry Date"), footer: Text("The date the product will expire")){
-                    DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
-                        Text("Expiry Date")
+                    // IF a date as been chosen
+                    if(dateSet){
+                        HStack {
+                            DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
+                                Text("Expiry Date")
+                            }
+                            //Button to get rid of date
+                            Button {
+                                dateSet.toggle()
+                                //expiryDateString = ""
+                                print("expiry date has been removed")
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .frame(width: 20, height: 20, alignment: .center)
+                                    .foregroundColor(Color.gray)
+                            }
+                        }
                     }
+                    else {
+                        Button {
+                            print("expiry date picked")
+                            dateSet.toggle()
+                        } label : {
+                            HStack {
+                                Text("Expiry Date")
+                                Spacer()
+                                Text("<tap to set>")
+                            }
+                            .padding(.vertical, 7)
+                        }
+                    }
+                    
                 }
                 
                 //try to make bigger
@@ -108,8 +138,18 @@ struct NewDesign: View {
                     Button{
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
-                        
-                        let expiryDateString = dateFormatter.string(from: expiryDate)
+
+                        let calendar = Calendar.current
+                        _ = calendar.dateComponents([.year, .month, .day], from: expiryDate)
+                        _ = calendar.dateComponents([.year, .month, .day], from: Date.now)
+
+                        if calendar.isDate(expiryDate, inSameDayAs: Date.now) {
+                            expiryDateString = ""
+                            print("in if")
+                        } else {
+                            expiryDateString = dateFormatter.string(from: expiryDate)
+                            print("in else")
+                        }
                         
                         let stock = String(stockInt)
                         
@@ -136,3 +176,5 @@ struct NewDesign_Previews: PreviewProvider {
         InventoryView()
     }
 }
+
+
