@@ -111,8 +111,8 @@ struct EditInventoryView: View {
                     
                     Section(header: Text("Product Expiry Date"), footer: Text("The date the product will expire")){
                         
-                        // Display expiry date picker
-                        if(!product.expiryDate.isEmpty && !dateSet){
+                        // If dateSet = false, Display expiry date picker
+                        if (!product.expiryDate.isEmpty && !dateSet){
                             HStack {
                                 DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
                                     Text("Expiry Date")
@@ -213,8 +213,7 @@ struct EditInventoryView: View {
                             _ = calendar.dateComponents([.year, .month, .day], from: expiryDate)
                             _ = calendar.dateComponents([.year, .month, .day], from: Date.now)
                             
-
-                            if calendar.isDate(expiryDate, inSameDayAs: date ?? Date.now) {
+                            if dateSet || calendar.isDate(expiryDate, inSameDayAs: date ?? Date.now) {
                                 expiryDateString = ""
                                 print("in if")
                             } else {
