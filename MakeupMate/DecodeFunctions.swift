@@ -32,6 +32,7 @@ struct FirebaseConstants {
     static let shade = "shade"
     static let stock = "stock"
     static let expiryDate = "expiryDate"
+    static let webLink = "webLink"
     static let note = "note"
 }
 
@@ -44,7 +45,7 @@ struct ProductDetails: Identifiable {
     
     let documentID: String
     
-    var uid, image, name, brand, category, shade, stock, expiryDate, note: String
+    var uid, image, name, brand, category, shade, stock, expiryDate, webLink, note: String
     
     init(documentID: String, data: [String: Any]){
         self.documentID = documentID
@@ -56,6 +57,7 @@ struct ProductDetails: Identifiable {
         self.shade = data[FirebaseConstants.shade] as? String ?? ""
         self.stock = data[FirebaseConstants.stock] as? String ?? ""
         self.expiryDate = data[FirebaseConstants.expiryDate] as? String ?? ""
+        self.webLink = data[FirebaseConstants.webLink] as? String ?? ""
         self.note = data[FirebaseConstants.note] as? String ?? ""
     }
 }

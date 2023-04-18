@@ -10,7 +10,7 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-struct NewDesign: View {
+struct NewAddInventoryProductView: View {
     
     @State var image: UIImage?
     @State private var name = ""
@@ -57,25 +57,26 @@ struct NewDesign: View {
                 .background(Color(red: 0.949, green: 0.949, blue: 0.97))
                 
                 Section(header: Text("Product Name")){
-                    TextField("Name", text: $name)
+                    TextField("E.g. Blush", text: $name)
                 }
                 
                 Section(header: Text("Product Brand")){
-                    TextField("Brand", text: $brand)
+                    TextField("E.g. MAC", text: $brand)
                 }
                 
                 Section(header: Text("Product Shade")){
-                    TextField("Shade", text: $shade)
+                    TextField("E.g. News Flash", text: $shade)
                 }
                 
                 Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                     NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
-                        if let category = selectedCategory {
-                            HStack {
-                                Text(categoryField)
-                            }
-                            .onAppear {
-                                categoryField = category.categoryName.isEmpty ? "" : category.categoryName
+                        HStack {
+                            Text(categoryField.isEmpty ? "E.g. Powder Blushes" : categoryField)
+                                .foregroundColor(categoryField.isEmpty ? Color(red: 0.784, green: 0.784, blue: 0.793) : Color.black)
+                        }
+                        .onAppear {
+                            if let category = selectedCategory {
+                                categoryField = category.categoryName
                             }
                         }
                     }
@@ -88,7 +89,7 @@ struct NewDesign: View {
                 }
                 
                 Section(header: Text("Product Expiry Date"), footer: Text("The date the product will expire")){
-                    // IF a date as been chosen
+                    // True display expiry date
                     if(dateSet){
                         HStack {
                             DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
@@ -124,7 +125,7 @@ struct NewDesign: View {
                 
                 //try to make bigger
                 Section(header: Text("Note")){
-                    TextField("Note", text: $note)
+                    TextField("E.g. Running out soon", text: $note)
                 }
                 
                 Section{
@@ -139,11 +140,8 @@ struct NewDesign: View {
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
 
-                        let calendar = Calendar.current
-                        _ = calendar.dateComponents([.year, .month, .day], from: expiryDate)
-                        _ = calendar.dateComponents([.year, .month, .day], from: Date.now)
-
-                        if calendar.isDate(expiryDate, inSameDayAs: Date.now) {
+                        // if false no date has been picked
+                        if (!dateSet) {
                             expiryDateString = ""
                             print("in if")
                         } else {

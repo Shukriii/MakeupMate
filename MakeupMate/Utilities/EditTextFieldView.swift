@@ -13,12 +13,12 @@
 import SwiftUI
 
 struct EditTextFieldView: View {
-    
+
     var listKey: String //product.name
     var displayName: String //"Name"
-    
+
     @Binding var variableName: String //name
-    
+
     var body: some View {
         TextField(displayName, text: $variableName)
             .onAppear {
@@ -26,7 +26,6 @@ struct EditTextFieldView: View {
             }
     }
 }
-
 
 
 

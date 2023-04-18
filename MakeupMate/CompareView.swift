@@ -66,7 +66,7 @@ struct CompareView: View {
                                         self.selectedCategory = category.categoryName //The category picked name
                                         withAnimation {
                                             self.isExpanded .toggle()
-                                            fetchCategoryProducts()
+                                            //fetchCategoryProducts()
                                             findCategoryInventoryProducts()
                                             findCategoryWishlistProducts()
                                         }

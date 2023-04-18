@@ -27,7 +27,7 @@ class AddFunctionalityViewModel: ObservableObject {
     
     // This function creates a documents and a reference to store the product using the unique documentID
     // calls storeProduct either witha url or the url set to nil
-    func uploadProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
+    func uploadProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, webLink: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
        
@@ -63,17 +63,17 @@ class AddFunctionalityViewModel: ObservableObject {
                     
                     guard let url = url else { return }
                     // call storeProduct with proudctID and url of image
-                    self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: url, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, presentationMode: presentationMode)
+                    self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: url, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, webLink: webLink, note: note, presentationMode: presentationMode)
                 }
             }
             // if no image then call storeProduct with productID and no url
         } else {
-            self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: nil, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, presentationMode: presentationMode)
+            self.storeProduct(fromCollection: collectionName, productID: productID, imageProfileUrl: nil, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, webLink: webLink, note: note, presentationMode: presentationMode)
         }
     }
     
     // This function stores the product into Firestore, finding the document created with productID
-    func storeProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, note: String, presentationMode: Binding<PresentationMode>? = nil) {
+    func storeProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, webLink: String? = nil, note: String, presentationMode: Binding<PresentationMode>? = nil) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
         let document = FirebaseManager.shared.firestore.collection("products")
@@ -87,6 +87,10 @@ class AddFunctionalityViewModel: ObservableObject {
         if collectionName == "inventory" {
             productData["stock"] = stock
             productData["expiryDate"] = expiryDateString
+        }
+        
+        if collectionName == "wishlist" {
+            productData["webLink"] = webLink
         }
 
         // Check if image URL is not nil and add image to the dictionary accordingly
@@ -128,8 +132,21 @@ class AddFunctionalityViewModel: ObservableObject {
                         let data = change.document.data()
                         self.categories.append(.init(documentID: change.document.documentID, data: data))
                     }
+                    //if a category is deleted
+                    if change.type == .removed {
+                        if let index = self.categories.firstIndex(where: { $0.documentID == change.document.documentID }) {
+                            self.categories.remove(at: index)
+                        }
+                    }
+                    // if a product is modified
+                    if change.type == .modified {
+                        if let index = self.categories.firstIndex(where: { $0.documentID == change.document.documentID }) {
+                            let data = change.document.data()
+                            self.categories[index] = .init(documentID:change.document.documentID, data: data)
+                            }
+                        }
                 })
-                self.statusMessage = "Fetched categories successfully"
+                self.statusMessage = "AF - Fetched categories successfully"
                 print (self.statusMessage)
                 
             }

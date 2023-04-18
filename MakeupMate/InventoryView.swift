@@ -49,7 +49,7 @@ struct InventoryView: View {
             }
             // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddInventoryProductView
             .overlay(
-                NavigationLink(destination: NewDesign()) {
+                NavigationLink(destination: NewAddInventoryProductView()) {
                     HStack() {
                         Spacer()
                         Text ("New Product")
@@ -91,7 +91,7 @@ struct ProductRow: View {
                         .frame(width: 70, height: 70)
                         .clipped()
                 } else {
-                    Image(systemName: "photo").font(.system(size:30))
+                    Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
                 }
 
                 VStack (alignment: .leading){
@@ -104,7 +104,7 @@ struct ProductRow: View {
                 Spacer ()
 
                 // Edit icon for each product with a navigation link to EditInventoryProduct and provides the view with the productID
-                NavigationLink(destination: EditInventoryView(productID: product.id)) {
+                NavigationLink(destination: NewEditInventoryProductView(productID: product.id)) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 20))
                     .foregroundColor(Color(.label)) }

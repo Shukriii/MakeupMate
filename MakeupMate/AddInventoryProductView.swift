@@ -100,19 +100,16 @@ struct AddInventoryProductView: View {
                         
                         AddTextFieldView(AddDisplayName: "Shade", AddVariableName: $shade)
                         
+                        AddTextFieldView(AddDisplayName: "Stock", AddVariableName: $stock)
                         
-                        Section(header: Text("Stock"), footer: Text("How many items of this product you own")){
-                            AddTextFieldView(AddDisplayName: "Stock", AddVariableName: $stock)
-                        }
                         
                         //EXPIRY DATE
                         //TODO: Let no date be an option
-                        Section(header: Text("Product Expiry Date")) {
-                            DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
+
+                         DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
                                 Text("Expiry Date")
                             }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                         .frame(maxWidth: .infinity, alignment: .leading)
                         
     
                         AddTextFieldView(AddDisplayName: "Note", AddVariableName: $note)

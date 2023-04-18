@@ -8,7 +8,7 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-struct EditInventoryView: View {
+struct NewEditInventoryProductView: View {
     
     @State private var selectedCategory: CategoryDetails?
     @State var product: ProductDetails?
@@ -63,7 +63,7 @@ struct EditInventoryView: View {
                                         .scaledToFill()
                                     // else display the photo
                                 } else {
-                                    Image(systemName: "photo").font(.system(size:120))
+                                    Image(systemName: "photo.on.rectangle.angled").font(.system(size:120))
                                 }
                             }
                         }
@@ -207,18 +207,11 @@ struct EditInventoryView: View {
                             let dateFormatter = DateFormatter()
                             dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
                             
-                            let date = dateFormatter.date(from: product.expiryDate)
-
-                            let calendar = Calendar.current
-                            _ = calendar.dateComponents([.year, .month, .day], from: expiryDate)
-                            _ = calendar.dateComponents([.year, .month, .day], from: Date.now)
-                            
-                            if dateSet || calendar.isDate(expiryDate, inSameDayAs: date ?? Date.now) {
+                            // If dataSet is true, then <tap to set> is being displayed i.e. no date picked
+                            if (dateSet) {
                                 expiryDateString = ""
-                                print("in if")
                             } else {
                                 expiryDateString = dateFormatter.string(from: expiryDate)
-                                print("in else")
                             }
                             
                             ef.uploadImageToStorage(fromCollection: "inventory", productID: productID, name: name, brand: brand, categoryField: category, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)

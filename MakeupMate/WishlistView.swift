@@ -43,7 +43,7 @@ struct WishlistView: View {
             }
             // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddWishlistProductView
             .overlay(
-                NavigationLink(destination: AddWishlistProductView()) {
+                NavigationLink(destination: NewAddWishlistProductView()) {
                     HStack() {
                         Spacer()
                         Text ("New Product")
@@ -85,7 +85,7 @@ struct WishlistRow: View {
                         .frame(width: 70, height: 70)
                         .clipped()
                 } else {
-                    Image(systemName: "photo").font(.system(size:30))
+                    Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
                 }
 
                 VStack (alignment: .leading){
@@ -96,8 +96,18 @@ struct WishlistRow: View {
                     Text(product.brand)
                 }
                 Spacer ()
+                
+                if (!product.webLink.isEmpty) {
+                    Image(systemName: "safari")
+                        .font(.system(size: 20))
+                        .onTapGesture {
+                            if let url = URL(string: product.webLink) {
+                                UIApplication.shared.open(url)
+                            }
+                        }
+                }
 
-                NavigationLink(destination: EditWishlistProductView(productID: product.id)) {
+                NavigationLink(destination: NewEditWishlistProductView(productID: product.id)) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 20))
                     .foregroundColor(Color(.label)) }
