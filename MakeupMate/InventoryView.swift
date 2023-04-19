@@ -25,24 +25,27 @@ struct InventoryView: View {
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
     @ObservedObject private var am = AccountFunctionalityViewModel()
+    @ObservedObject private var af = AddFunctionalityViewModel()
     
     var body: some View {
         NavigationView {
             VStack {
                 
                 //delete later on, for testing purposes
-                Text ("Current User ID: \(am.currentUser?.email ?? "")")
+                //Text ("Current User ID: \(am.currentUser?.email ?? "")")
                 
-                TopNavigationBar(navigationName: "Your Inventory")
+                TopNavigationBar(navigationName: "Your Makeup Collection")
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
                             self.am.fetchCurrentUser()
                             self.vm.removeProducts()
                             self.vm.fetchProducts(fromCollection: "inventory")
-                            
+                            self.af.fetchCategories()
                         })
                     }
+                
+                //Divider().padding(.vertical, 2)
                 
                 productListView
                 
@@ -67,14 +70,59 @@ struct InventoryView: View {
     
     // Using vm it counts the number of products stored in Firestore and using a ForEach displays the product using ProductRow
     private var productListView: some View {
-        ScrollView {
-            ForEach(vm.products) { product in
-                ProductRow(product: product)
-            }.padding(.bottom, 50)
+        
+       ScrollView {
+           
+            ForEach(af.categories) { category in
+                CategoryRow(category: category)
+            }
+            .padding(.bottom, 50)
+
         }
     }
     
 }
+
+// get rid of showing a product with no category
+struct CategoryRow: View {
+    
+    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
+    
+    let category: CategoryDetails
+    
+    var hasProducts: Bool {
+            vm.products.contains(where: { $0.category == category.categoryName })
+        }
+    
+    var body: some View {
+        
+        if hasProducts {
+            VStack {
+                HStack {
+                    Text("\(category.categoryName)")
+                        .font(.system(size: 18, weight: .semibold))
+                    Spacer()
+                }
+                .padding(.horizontal)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
+            
+            Spacer()
+            
+            VStack {
+                ForEach(vm.products) { product in
+                    if product.category == category.categoryName {
+                        ProductRow(product: product)
+                    }
+                }
+            }
+            
+        }
+    }
+}
+
 
 // This struct is passed a product which is a list, and using the ProductDetails struct it uses a variable to access the data. Is displays the product image, along with product name, shade and brand if avaliable. It has an Edit icon which redirects the user to EditView
 struct ProductRow: View {
@@ -83,6 +131,7 @@ struct ProductRow: View {
     
     var body: some View {
         VStack{
+            
             HStack {
                 if !product.image.isEmpty {
                     WebImage(url: URL(string: product.image))
@@ -91,7 +140,7 @@ struct ProductRow: View {
                         .frame(width: 70, height: 70)
                         .clipped()
                 } else {
-                    Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
+                    Image(systemName: "photo.on.rectangle.angled").font(.system(size:35))
                 }
 
                 VStack (alignment: .leading){
@@ -110,8 +159,8 @@ struct ProductRow: View {
                     .foregroundColor(Color(.label)) }
     
             }
-            Divider()
-                .padding(.vertical, 2)
+            Divider().padding(.vertical, 2)
+            
         }.padding(.horizontal)
     }
 }

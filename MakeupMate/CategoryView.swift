@@ -21,6 +21,8 @@ struct CategoryView: View {
     @Environment(\.presentationMode) var presentationMode
 
     @ObservedObject private var af = AddFunctionalityViewModel()
+    @ObservedObject private var vim = FetchFunctionalityViewModel(collectionName: "inventory")
+    @ObservedObject private var vwm = FetchFunctionalityViewModel(collectionName: "wishlist")
     
     var body: some View {
         VStack {
@@ -56,6 +58,55 @@ struct CategoryView: View {
         .background(Color(red: 0.949, green: 0.949, blue: 0.97))
     }
     
+    // Using the categoryName it adds a new document to the collection "categories"
+    private func storeCategory(){
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+
+        let categoryData = ["name": categoryName] as [String : Any]
+            
+        FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories").document().setData(categoryData) { error in
+            if let error = error {
+                print("Failed to save category: \(error)")
+                return
+                
+            }
+            print ("Successfully added the category")
+        }
+    }
+    
+    // This function removes the document from Firestore and remove the category from the array of categories
+    private func delete(at offsets: IndexSet) {
+        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
+        
+        offsets.forEach { index in
+            let category = af.categories[index]
+            
+            // if the category has products
+            var hasInventoryProducts: Bool {
+                vim.products.contains(where: { $0.category == category.categoryName })
+            }
+            
+            var hasWishlistProducts: Bool {
+                vwm.products.contains(where: { $0.category == category.categoryName })
+            }
+            
+            if (hasInventoryProducts || hasWishlistProducts){
+                af.displayMessage(title: "Error: Category Deletion Failed", message: "This cateory has products in it.")
+            } else {
+                FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories").document(category.id).delete { error in
+                    if let error = error {
+                        print("Failed to delete:", error)
+                        return
+                    } else {
+                        print("Category deleted")
+                    }
+                }
+                af.categories.remove(atOffsets: offsets)
+            }
+           
+        }
+    }
+    
     // This fucntion displays an alert on screen and calls the storeCategory function
     private func alertView() {
         let alert = UIAlertController(title: "Add Category", message: "Enter the name of the new category:", preferredStyle: .alert)
@@ -81,41 +132,6 @@ struct CategoryView: View {
         UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: {
         })
     }
-    
-    // Using the categoryName it adds a new document to the collection "categories"
-    private func storeCategory(){
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-
-        let categoryData = ["name": categoryName] as [String : Any]
-            
-        FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories").document().setData(categoryData) { error in
-            if let error = error {
-                print("Failed to save category: \(error)")
-                return
-                
-            }
-            print ("Successfully added the category")
-        }
-    }
-    
-    // This function removes the document from Firestore and remove the category from the array of categories
-    private func delete(at offsets: IndexSet) {
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        offsets.forEach { index in
-            let category = af.categories[index]
-            FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories").document(category.id).delete { error in
-                if let error = error {
-                    print("Failed to delete:", error)
-                    return
-                } else {
-                    print("Category deleted")
-                }
-            }
-        }
-        af.categories.remove(atOffsets: offsets)
-    }
-    
 }
 
 struct CategoryView_Previews: PreviewProvider {

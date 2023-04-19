@@ -151,6 +151,20 @@ class AddFunctionalityViewModel: ObservableObject {
                 
             }
     }
+    
+    func displayMessage(title: String, message: String) {
+        
+        let alert = UIAlertController(title: "\(title)", message: "\(message)", preferredStyle: .alert)
+        
+        //Buttons
+        let dismiss = UIAlertAction(title: "Dismiss", style: .default) { (_) in
+        }
+        
+        alert.addAction(dismiss)
+        
+        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: {
+        })
+    }
 }
 
 

@@ -151,8 +151,15 @@ struct NewAddInventoryProductView: View {
                         
                         let stock = String(stockInt)
                         
-                        // uses variable af to access the class and passes the varibles into addProduct
-                        af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
+                        if (name == "") {
+                            af.displayMessage(title: "Add Name", message: "A product must have a name.")
+                        } else if (categoryField == "") {
+                            af.displayMessage(title: "Add Category", message: "A product must have a category.")
+                        } else {
+                            // uses variable af to access the class and passes the varibles into addProduct
+                            af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
+                        }
+
                     } label: {
                         Text("Save Product")
                     }
