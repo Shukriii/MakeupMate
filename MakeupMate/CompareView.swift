@@ -237,7 +237,7 @@ struct ProductListing: View {
                                     .frame(width: 50, height: 50)
                                     .clipped()
                             } else {
-                                Image(systemName: "photo").font(.system(size:30))
+                                Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
                             }
                             
                             VStack (alignment: .leading){
