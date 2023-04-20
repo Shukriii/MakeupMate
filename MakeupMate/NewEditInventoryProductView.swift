@@ -87,18 +87,34 @@ struct NewEditInventoryProductView: View {
                     Section(header: Text("Product Shade")){
                         EditTextFieldView(listKey: product.shade, displayName: "Shade", variableName: $shade)
                     }
-
+                    
                     Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                         NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
-                            if let selectedCategory = selectedCategory {
-                                Text(selectedCategory.categoryName)
+                            HStack {
+                                Text(categoryField.isEmpty ? "E.g. Powder Blushes" : categoryField)
+                                    .foregroundColor(categoryField.isEmpty ? Color(red: 0.784, green: 0.784, blue: 0.793) : Color.black)
                             }
-                            else if !product.category.isEmpty {
-                                Text(product.category)
+                            .onAppear {
+                                if let category = selectedCategory {
+                                    categoryField = category.categoryName
+                                } else if !product.category.isEmpty {
+                                    categoryField = product.category
+                                }
                             }
                         }
                     }
-                    .navigationViewStyle(StackNavigationViewStyle())
+                    
+//                    Section(header: Text("Product Category"), footer: Text("Click to select a category")){
+//                        NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
+//                            if let selectedCategory = selectedCategory {
+//                                Text(selectedCategory.categoryName)
+//                            }
+//                            else if !product.category.isEmpty {
+//                                Text(product.category)
+//                            }
+//                        }
+//                    }
+//                    .navigationViewStyle(StackNavigationViewStyle())
                     
                     Section(header: Text("Product Stock"), footer: Text("How many items of the product you own")){
                         
@@ -190,16 +206,16 @@ struct NewEditInventoryProductView: View {
                         
                         // SAVE
                         Button{
-                            // for category
-                            if let product = ef.product {
-                                // if a category has been picked from the dropdown then category = selectedCategory
-                                if let selectedCategory = selectedCategory {
-                                    self.category = selectedCategory.categoryName
-                                // if a category hasn't been chosen then category = product.category 
-                                } else if !product.category.isEmpty {
-                                    self.category = product.category
-                                }
-                            }
+//                            // for category
+//                            if let product = ef.product {
+//                                // if a category has been picked from the dropdown then category = selectedCategory
+//                                if let selectedCategory = selectedCategory {
+//                                    self.category = selectedCategory.categoryName
+//                                // if a category hasn't been chosen then category = product.category
+//                                } else if !product.category.isEmpty {
+//                                    self.category = product.category
+//                                }
+//                            }
                             
                             // for stock
                             let stock = String(stockInt)
@@ -215,7 +231,7 @@ struct NewEditInventoryProductView: View {
                                 expiryDateString = dateFormatter.string(from: expiryDate)
                             }
                             
-                            ef.uploadImageToStorage(fromCollection: "inventory", productID: productID, name: name, brand: brand, categoryField: category, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
+                            ef.uploadImageToStorage(fromCollection: "inventory", productID: productID, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
                             
                         } label: {
                             Text("Save Product")
@@ -224,18 +240,18 @@ struct NewEditInventoryProductView: View {
                     }
                 }
             }
+            .onAppear {
+                // Load the product details from Firestore
+                ef.fetchProduct(fromCollection: "inventory", productID: productID)
+            }
             //.navigationViewStyle(StackNavigationViewStyle())
             .navigationTitle("Edit Product")
-            .navigationViewStyle(StackNavigationViewStyle())
+            //.navigationViewStyle(StackNavigationViewStyle())
         }
-        //.navigationViewStyle(StackNavigationViewStyle())
+        .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {
             // Displays the users photo library to select an image
             ImagePicker(image: $image)
-        }
-        .onAppear {
-            // Load the product details from Firestore
-            ef.fetchProduct(fromCollection: "inventory", productID: productID)
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }

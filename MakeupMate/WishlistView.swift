@@ -19,13 +19,14 @@ struct WishlistView: View {
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "wishlist")
     @ObservedObject private var am = AccountFunctionalityViewModel()
+    @ObservedObject private var af = AddFunctionalityViewModel()
     
     var body: some View {
         NavigationView {
             VStack {
                 
                 //delete later on, for testing purposes
-                Text ("Current User ID: \(am.currentUser?.email ?? "")")
+                //Text ("Current User ID: \(am.currentUser?.email ?? "")")
                 
                 //topNavigationBar
                 TopNavigationBar(navigationName: "Your Wishlist")
@@ -35,6 +36,7 @@ struct WishlistView: View {
                             self.am.fetchCurrentUser()
                             self.vm.removeProducts()
                             self.vm.fetchProducts(fromCollection: "wishlist")
+                            self.af.fetchCategories()
                         })
                     }
                 
@@ -57,18 +59,64 @@ struct WishlistView: View {
                 }, alignment: .bottom)
             .navigationBarHidden(true)
         }
+        .navigationViewStyle(.stack)
     }
 
     private var productListView: some View {
         ScrollView {
-            ForEach(vm.products) { product in
-                WishlistRow(product: product)
+            ForEach(af.categories) { category in
+                WishlistCategoryRow(category: category)
             }.padding(.bottom, 50)
         }
+        .navigationViewStyle(.stack)
     }
     
 }
 
+struct WishlistCategoryRow: View {
+    
+    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "wishlist")
+    
+    let category: CategoryDetails
+    
+    var hasProducts: Bool {
+            vm.products.contains(where: { $0.category == category.categoryName })
+        }
+    
+    var body: some View {
+        
+        if hasProducts {
+            VStack {
+                VStack {
+                    HStack {
+                        Text("\(category.categoryName)")
+                            .font(.system(size: 18, weight: .semibold))
+                        Spacer()
+                    }
+                    .padding(.horizontal)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
+                
+                Spacer()
+                
+                VStack {
+                    ForEach(vm.products) { product in
+                        if product.category == category.categoryName {
+                            WishlistRow(product: product)
+                        }
+                    }
+                }
+                //.navigationViewStyle(StackNavigationViewStyle())
+                //.navigationViewStyle(.stack)
+                
+            }
+            .navigationViewStyle(.stack)
+            //.navigationViewStyle(StackNavigationViewStyle())
+        }
+    }
+}
 
 struct WishlistRow: View {
     
@@ -116,6 +164,7 @@ struct WishlistRow: View {
             Divider()
                 .padding(.vertical, 2)
         }.padding(.horizontal)
+        .navigationViewStyle(.stack)
     }
 }
 

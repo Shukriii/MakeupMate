@@ -22,8 +22,7 @@ import SDWebImageSwiftUI
 struct InventoryView: View {
     
     @State var shouldShowLogOutOptions = false
-    @State var isShowingAddProduct = false
-
+    @State var productsForCategory = [ProductDetails]()
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
     @ObservedObject private var am = AccountFunctionalityViewModel()
@@ -31,23 +30,33 @@ struct InventoryView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                
-                //delete later on, for testing purposes
-                //Text ("Current User ID: \(am.currentUser?.email ?? "")")
-                
-                TopNavigationBar(navigationName: "Your Makeup Collection")
-                    .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
-                        LoginView(didCompleteLoginProcess: {
-                            self.am.isUserCurrentlyLoggedOut = false
-                            self.am.fetchCurrentUser()
-                            self.vm.removeProducts()
-                            self.vm.fetchProducts(fromCollection: "inventory")
-                            self.af.fetchCategories()
-                        })
+            ScrollView {
+                VStack {
+
+                    TopNavigationBar(navigationName: "Your Makeup Collection")
+                        .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
+                            LoginView(didCompleteLoginProcess: {
+                                self.am.isUserCurrentlyLoggedOut = false
+                                self.am.fetchCurrentUser()
+                                self.vm.removeProducts()
+                                self.vm.fetchProducts(fromCollection: "inventory")
+                                self.af.fetchCategories()
+                            })
+                        }
+                    
+                    //productListView
+                    
+                    ForEach(af.categories) { category in
+                        // categoryProducts is the list of products that belong to the category
+                        let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
+                        
+                        let productsForCategory = vm.products.filter { $0.category == category.categoryName }
+                        // if the category has products
+                        if hasProducts {
+                            CategoryRow(category: category, categoryProducts: productsForCategory)
+                        }
                     }
-                
-                productListView
+                }
                 
             }
             // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddInventoryProductView
@@ -69,116 +78,110 @@ struct InventoryView: View {
         .navigationViewStyle(StackNavigationViewStyle())
         //.navigationViewStyle(.stack)
     }
-    
-    // Using vm it counts the number of products stored in Firestore and using a ForEach displays the product using ProductRow
-    private var productListView: some View {
+
+    struct CategoryRow: View {
         
-       ScrollView {
-           
-            ForEach(af.categories) { category in
-                CategoryRow(category: category)
+        let category: CategoryDetails
+        let categoryProducts: [ProductDetails]
+
+        var body: some View {
+            
+                VStack {
+                    VStack {
+                        HStack {
+                            Text("\(category.categoryName)")
+                                .font(.system(size: 18, weight: .semibold))
+                            Spacer()
+                        }
+                        .padding(.horizontal)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                    .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
+                    
+                    Spacer()
+
+                    VStack {
+                        ForEach(categoryProducts) { product in
+                            if product.category == category.categoryName {
+                                ProductRow(product: product)
+                            }
+                        }
+                    }
+                    //.navigationViewStyle(StackNavigationViewStyle())
+                    //.navigationViewStyle(.stack)
+                    
+                }
+                //.navigationViewStyle(StackNavigationViewStyle())
             }
-            .padding(.bottom, 50)
-            .navigationViewStyle(StackNavigationViewStyle())
+    
+    }
+    
+    struct ProductRow: View {
+        
+        let product: ProductDetails
+        @State var isShowingEdit = false
+        
+        var body: some View {
+            VStack{
+                
+                HStack {
+                    if !product.image.isEmpty {
+                        WebImage(url: URL(string: product.image))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 70, height: 70)
+                            .clipped()
+                    } else {
+                        Image(systemName: "photo.on.rectangle.angled").font(.system(size:35))
+                    }
+
+                    VStack (alignment: .leading){
+                        Text(product.name)
+                            .font(.system(size: 17, weight: .semibold))
+                        Text(product.shade)
+                            .foregroundColor(Color(.lightGray))
+                        Text(product.brand)
+                    }
+                    Spacer ()
+                    
+                    NavigationLink(destination: NewEditInventoryProductView(productID: product.id)) {
+                        Image(systemName: "square.and.pencil")
+                            .font(.system(size: 20))
+                        .foregroundColor(Color(.label)) }
+                    
+//                    Button {
+//                        isShowingEdit.toggle()
+//                    } label: {
+//                        Image(systemName: "square.and.pencil")
+//                            .font(.system(size: 20))
+//                            .foregroundColor(Color(.label))
+//                    }
+//
+//                    //Edit icon for each product with a navigation link to EditInventoryProduct and provides the view with the productID
+//                    NavigationLink(destination: NewEditInventoryProductView(productID: product.id), isActive: $isShowingEdit) {
+//                    }
+                    //.navigationViewStyle(StackNavigationViewStyle())
+                    
+                }
+                //.navigationViewStyle(StackNavigationViewStyle())
+                
+                Divider().padding(.vertical, 2)
+            
+            }
+            .padding(.horizontal)
+            //.navigationViewStyle(StackNavigationViewStyle())
+            //.navigationViewStyle(.stack)
         }
     }
     
 }
 
-// get rid of showing a product with no category
-struct CategoryRow: View {
-    
-    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
-    
-    let category: CategoryDetails
-    
-    var hasProducts: Bool {
-            vm.products.contains(where: { $0.category == category.categoryName })
-        }
-    
-    var body: some View {
-        
-        if hasProducts {
-            VStack {
-                VStack {
-                    HStack {
-                        Text("\(category.categoryName)")
-                            .font(.system(size: 18, weight: .semibold))
-                        Spacer()
-                    }
-                    .padding(.horizontal)
-                }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
-                
-                Spacer()
-                
-                VStack {
-                    ForEach(vm.products) { product in
-                        if product.category == category.categoryName {
-                            ProductRow(product: product)
-                        }
-                    }
-                }
-                .navigationViewStyle(StackNavigationViewStyle())
-                //.navigationViewStyle(.stack)
-                
-            }
-            .navigationViewStyle(StackNavigationViewStyle())
-        }
-    }
-}
+
 
 
 // This struct is passed a product which is a list, and using the ProductDetails struct it uses a variable to access the data. Is displays the product image, along with product name, shade and brand if avaliable. It has an Edit icon which redirects the user to EditView
-struct ProductRow: View {
-    
-    let product: ProductDetails
-    
-    var body: some View {
-        VStack{
-            
-            HStack {
-                if !product.image.isEmpty {
-                    WebImage(url: URL(string: product.image))
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 70, height: 70)
-                        .clipped()
-                } else {
-                    Image(systemName: "photo.on.rectangle.angled").font(.system(size:35))
-                }
 
-                VStack (alignment: .leading){
-                    Text(product.name)
-                        .font(.system(size: 17, weight: .semibold))
-                    Text(product.shade)
-                        .foregroundColor(Color(.lightGray))
-                    Text(product.brand)
-                }
-                Spacer ()
-
-                // Edit icon for each product with a navigation link to EditInventoryProduct and provides the view with the productID
-                NavigationLink(destination: NewEditInventoryProductView(productID: product.id)) {
-                    Image(systemName: "square.and.pencil")
-                        .font(.system(size: 20))
-                    .foregroundColor(Color(.label))
-                    
-                }
-                .navigationViewStyle(StackNavigationViewStyle())
-    
-            }
-            //.navigationViewStyle(StackNavigationViewStyle())
-            
-            Divider().padding(.vertical, 2)
-            
-        }
-        .padding(.horizontal)
-        .navigationViewStyle(StackNavigationViewStyle())
-        //.navigationViewStyle(.stack)
-    }
-}
     
     
     
@@ -190,3 +193,63 @@ struct InventoryView_Previews: PreviewProvider {
         }
     }
 }
+
+
+
+
+// Using vm it counts the number of products stored in Firestore and using a ForEach displays the product using ProductRow
+//    private var productListView: some View {
+//
+//        let categoriesList = af.categories
+//
+//        ScrollView {
+//            // For all the categories, call CategoryRow for each category
+//            ForEach(af.categories) { category in
+//
+//                // First check if category has products
+//                var hasProducts: Bool {
+//                    vm.products.contains(where: { $0.category == category.categoryName })
+//                }
+//
+//                if hasProducts {
+//                    CategoryRow(category: category)
+//                }
+//
+//            }
+//            .padding(.bottom, 50)
+//            .navigationViewStyle(StackNavigationViewStyle())
+//        }
+//    }
+
+//    private var productListView: some View {
+//        ScrollView {
+//
+//            let categories = af.categories
+//            ForEach(categories) { category in
+//                // First check if category has products
+//                let productsForCategory = vm.products.filter { $0.category == category.categoryName }
+//                if !productsForCategory.isEmpty {
+//                    CategoryRow(category: s, products: productsForCategory)
+//                }
+//            }
+//            .padding(.bottom, 50)
+//            .navigationViewStyle(StackNavigationViewStyle())
+//        }
+//    }
+
+
+//
+//    private var productListView: some View {
+//        ScrollView {
+//            ForEach(af.categories) { category in
+//                // First check if category has products
+//                let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
+//
+//                if hasProducts {
+//                    CategoryRow(category: category, products = vm.products)
+//                }
+//            }
+//            .padding(.bottom, 50)
+//            .navigationViewStyle(StackNavigationViewStyle())
+//        }
+//    }

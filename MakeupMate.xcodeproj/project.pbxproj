@@ -25,14 +25,10 @@
 		A652405529E2DC5B00768D46 /* NewAddInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A652405429E2DC5B00768D46 /* NewAddInventoryProductView.swift */; };
 		A652405B29E590FB00768D46 /* NewEditInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A652405A29E590FA00768D46 /* NewEditInventoryProductView.swift */; };
 		A67D601629BF5994003EEBB7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A67D601529BF5994003EEBB7 /* SDWebImageSwiftUI */; };
-		A67D601829C08037003EEBB7 /* EditInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67D601729C08037003EEBB7 /* EditInventoryProductView.swift */; };
 		A68A30E1299E757F00E01C84 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */; };
 		A69379E929D492FD000312EF /* AccountFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69379E829D492FD000312EF /* AccountFunctionality.swift */; };
 		A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A2134829BA3B1D007B3625 /* ImagePicker.swift */; };
 		A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */; };
-		A6A8E9DA29B75D380082B1D7 /* AddInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */; };
-		A6B1E05A29CB47BF0006EB99 /* AddWishlistProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B1E05929CB47BF0006EB99 /* AddWishlistProductView.swift */; };
-		A6B1E05E29CBA7820006EB99 /* EditWishlistProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B1E05D29CBA7820006EB99 /* EditWishlistProductView.swift */; };
 		A6BF475829C2028E001940A7 /* BottomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BF475729C2028E001940A7 /* BottomNavigationBar.swift */; };
 		A6CB36A329F02A3100DF9822 /* CategoryFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CB36A229F02A3000DF9822 /* CategoryFunctionality.swift */; };
 		A6CC288E29CF3C41009044B9 /* EditTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC288D29CF3C41009044B9 /* EditTextFieldView.swift */; };
@@ -84,14 +80,10 @@
 		A63685CE29BD1D86008C17B9 /* DecodeFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeFunctions.swift; sourceTree = "<group>"; };
 		A652405429E2DC5B00768D46 /* NewAddInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddInventoryProductView.swift; sourceTree = "<group>"; };
 		A652405A29E590FA00768D46 /* NewEditInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEditInventoryProductView.swift; sourceTree = "<group>"; };
-		A67D601729C08037003EEBB7 /* EditInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditInventoryProductView.swift; sourceTree = "<group>"; };
 		A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A69379E829D492FD000312EF /* AccountFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountFunctionality.swift; sourceTree = "<group>"; };
 		A6A2134829BA3B1D007B3625 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
-		A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInventoryProductView.swift; sourceTree = "<group>"; };
-		A6B1E05929CB47BF0006EB99 /* AddWishlistProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWishlistProductView.swift; sourceTree = "<group>"; };
-		A6B1E05D29CBA7820006EB99 /* EditWishlistProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditWishlistProductView.swift; sourceTree = "<group>"; };
 		A6BF475729C2028E001940A7 /* BottomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavigationBar.swift; sourceTree = "<group>"; };
 		A6CB36A229F02A3000DF9822 /* CategoryFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryFunctionality.swift; sourceTree = "<group>"; };
 		A6CC288D29CF3C41009044B9 /* EditTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldView.swift; sourceTree = "<group>"; };
@@ -181,10 +173,6 @@
 				A6CC289E29D0F9F5009044B9 /* CompareView.swift */,
 				A6D69B4A29E02CF500BA19A6 /* ExpiryCalendarView.swift */,
 				A6D69B4C29E033F000BA19A6 /* CalendarDisplayView.swift */,
-				A6A8E9D929B75D370082B1D7 /* AddInventoryProductView.swift */,
-				A67D601729C08037003EEBB7 /* EditInventoryProductView.swift */,
-				A6B1E05929CB47BF0006EB99 /* AddWishlistProductView.swift */,
-				A6B1E05D29CBA7820006EB99 /* EditWishlistProductView.swift */,
 				A614CB9C29928640005087C9 /* Assets.xcassets */,
 				A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */,
 				A614CB9E29928640005087C9 /* Preview Content */,
@@ -376,7 +364,6 @@
 				A6D69B4D29E033F000BA19A6 /* CalendarDisplayView.swift in Sources */,
 				A6D69B4B29E02CF500BA19A6 /* ExpiryCalendarView.swift in Sources */,
 				A63685CF29BD1D86008C17B9 /* DecodeFunctions.swift in Sources */,
-				A67D601829C08037003EEBB7 /* EditInventoryProductView.swift in Sources */,
 				A6CC288E29CF3C41009044B9 /* EditTextFieldView.swift in Sources */,
 				A6CC289F29D0F9F5009044B9 /* CompareView.swift in Sources */,
 				A6351AF629E992E700C807A3 /* NewAddWishlistProductView.swift in Sources */,
@@ -389,15 +376,12 @@
 				A6EB990829CDE1F8003AA975 /* CategoryView.swift in Sources */,
 				A652405B29E590FB00768D46 /* NewEditInventoryProductView.swift in Sources */,
 				A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */,
-				A6A8E9DA29B75D380082B1D7 /* AddInventoryProductView.swift in Sources */,
 				A6CC289D29D0F7FA009044B9 /* FetchFunctionality.swift in Sources */,
-				A6B1E05A29CB47BF0006EB99 /* AddWishlistProductView.swift in Sources */,
 				A6F877D029CA226D0010A8A9 /* WishlistView.swift in Sources */,
 				A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */,
 				A6D69B4F29E0440F00BA19A6 /* DateValue.swift in Sources */,
 				A631EACA299E7DB900D9E1DD /* LoginView.swift in Sources */,
 				A6CC289329CF43CC009044B9 /* AddTextFieldView.swift in Sources */,
-				A6B1E05E29CBA7820006EB99 /* EditWishlistProductView.swift in Sources */,
 				A614CB992992863A005087C9 /* MakeupMateApp.swift in Sources */,
 				A6BF475829C2028E001940A7 /* BottomNavigationBar.swift in Sources */,
 				A6CB36A329F02A3100DF9822 /* CategoryFunctionality.swift in Sources */,
