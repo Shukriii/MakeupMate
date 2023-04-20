@@ -56,6 +56,7 @@ struct CategoryView: View {
                 .font(.callout)
         }
         .background(Color(red: 0.949, green: 0.949, blue: 0.97))
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     
     // Using the categoryName it adds a new document to the collection "categories"

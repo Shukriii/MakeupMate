@@ -98,31 +98,33 @@ struct NewEditWishlistProductView: View {
                     }
                     
                     Section(header: Text("Product URL")){
+                        // editUrl is false, and product.weblink is not empty
                         if (!product.webLink.isEmpty && !editURL) {
                             HStack {
-                                
-                                if let url = URL(string: product.webLink) {
-                                    Text("\(product.webLink)")
-                                        .foregroundColor(.blue)
-                                        .onTapGesture{
-                                            UIApplication.shared.open(url)
-                                        }
-                                } else {
-                                    Text("Invalid URL")
-                                        .foregroundColor(.red)
+                                    if let url = URL(string: product.webLink) {
+                                        Text("\(product.webLink)")
+                                            .foregroundColor(.blue)
+                                            .onTapGesture{
+                                                UIApplication.shared.open(url)
+                                            }
+                                        
+                                    } else {
+                                        Text("Invalid URL")
+                                            .foregroundColor(.red)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Button {
+                                        editURL.toggle()
+                                        print("product.webLink date has been removed")
+                                    } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .frame(width: 20, height: 20, alignment: .center)
+                                            .foregroundColor(Color.gray)
+                                    }
                                 }
-                                
-                                Spacer()
-                                
-                                Button {
-                                    editURL.toggle()
-                                    print("product.webLink date has been removed")
-                                } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .frame(width: 20, height: 20, alignment: .center)
-                                        .foregroundColor(Color.gray)
-                                }
-                            }
+                            // product.weblink is emptty or editUrl is true
                         } else if (product.webLink.isEmpty || editURL){
                             HStack {
                                 TextField("https://www.boots.com", text: $webLink)
@@ -157,6 +159,7 @@ struct NewEditWishlistProductView: View {
                         Button{
                             // for category
                             if let product = ef.product {
+                                
                                 // if a category has been picked from the dropdown then category = selectedCategory
                                 if let selectedCategory = selectedCategory {
                                     self.category = selectedCategory.categoryName
@@ -165,6 +168,12 @@ struct NewEditWishlistProductView: View {
                                     self.category = product.category
                                 }
                             }
+                            
+                            // webLink has not been edited
+                            if(!product.webLink.isEmpty && !editURL) {
+                                webLink = product.webLink
+                            }
+                            
                             ef.uploadImageToStorage(fromCollection: "wishlist", productID: productID, name: name, brand: brand, categoryField: category, shade: shade, webLink: webLink, note: note, image: image, presentationMode: presentationMode)
                             
                         } label: {

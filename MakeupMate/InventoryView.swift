@@ -22,6 +22,8 @@ import SDWebImageSwiftUI
 struct InventoryView: View {
     
     @State var shouldShowLogOutOptions = false
+    @State var isShowingAddProduct = false
+
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
     @ObservedObject private var am = AccountFunctionalityViewModel()
@@ -64,17 +66,20 @@ struct InventoryView: View {
                 }, alignment: .bottom)
             .navigationBarHidden(true)
         }
-        .navigationViewStyle(.stack)
+        .navigationViewStyle(StackNavigationViewStyle())
+        //.navigationViewStyle(.stack)
     }
     
     // Using vm it counts the number of products stored in Firestore and using a ForEach displays the product using ProductRow
     private var productListView: some View {
+        
        ScrollView {
+           
             ForEach(af.categories) { category in
                 CategoryRow(category: category)
             }
             .padding(.bottom, 50)
-
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
     
@@ -83,132 +88,48 @@ struct InventoryView: View {
 // get rid of showing a product with no category
 struct CategoryRow: View {
     
+    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")
+    
     let category: CategoryDetails
-    @State private var inventoryProducts = [ProductDetails]()
-    @State private var statusMessage = ""
+    
+    var hasProducts: Bool {
+            vm.products.contains(where: { $0.category == category.categoryName })
+        }
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("\(category.categoryName)")
-                    .font(.system(size: 18, weight: .semibold))
-                Spacer()
-            }
-            .padding(.horizontal)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 8)
-        .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
-        .onAppear() {
-            findCategoryInventoryProducts()
-        }
         
-        Spacer()
-        
-        VStack {
-            ProductRow2(productList: $inventoryProducts)
-        }
-    }
-    
-    private func findCategoryInventoryProducts(){
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        FirebaseManager.shared.firestore.collection("products").document(uid).collection("inventory")
-            .order(by: "name")
-            .addSnapshotListener{ querySnapshot, error in
-                if let error = error {
-                    self.statusMessage = "Failed to fetch product: \(error)"
-                    print(self.statusMessage)
-                    return
+        if hasProducts {
+            VStack {
+                VStack {
+                    HStack {
+                        Text("\(category.categoryName)")
+                            .font(.system(size: 18, weight: .semibold))
+                        Spacer()
+                    }
+                    .padding(.horizontal)
                 }
-                
-                // The snapshot listener querySnapshot listens for changes
-                querySnapshot?.documentChanges.forEach( { change in
-                    // if a product is added
-                    if change.type == .added {
-                        let data = change.document.data()
-                        self.inventoryProducts.append(.init(documentID: change.document.documentID, data: data))
-                    }
-                    //if product is deleted
-                    if change.type == .removed {
-                        if let index = self.inventoryProducts.firstIndex(where: { $0.documentID == change.document.documentID }) {
-                            self.inventoryProducts.remove(at: index)
-                        }
-                    }
-                    // if a product is modified
-                    if change.type == .modified {
-                        if let index = self.inventoryProducts.firstIndex(where: { $0.documentID == change.document.documentID }) {
-                            let data = change.document.data()
-                            self.inventoryProducts[index] = .init(documentID:change.document.documentID, data: data)
-                        }
-                    }
-                })
-                self.statusMessage = "Inventory - Fetched products successfully"
-                print (self.statusMessage)
-                
-                for product in self.inventoryProducts {
-                    if product.category != self.category.categoryName {
-                        if let index = self.inventoryProducts.firstIndex(where: { $0.documentID == product.documentID }) {
-                            self.inventoryProducts.remove(at: index)
-                            
-                        }
-                    }
-                }
-            }
-            
-    }
-}
-    
-
-
-
-struct ProductRow2: View {
-    
-    @Binding var productList: [ProductDetails]
-    
-    var body: some View {
-        VStack {
-            ForEach (productList) { product in
-                HStack {
-                    if !product.image.isEmpty {
-                        WebImage(url: URL(string: product.image))
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 50, height: 50)
-                            .clipped()
-                    } else {
-                        Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
-                    }
-                    
-                    VStack (alignment: .leading){
-                        Text(product.name)
-                            .font(.system(size: 17, weight: .semibold))
-                        Text(product.shade)
-                            .foregroundColor(Color(.lightGray))
-                        Text(product.brand)
-                    }
-                    Spacer ()
-                    
-                    
-                    // Edit icon for each product with a navigation link to EditInventoryProduct and provides the view with the productID
-                    NavigationLink(destination: NewEditInventoryProductView(productID: product.id)) {
-                        Image(systemName: "square.and.pencil")
-                            .font(.system(size: 20))
-                        .foregroundColor(Color(.label))
-                    }
-                    
-                }
+                .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
-                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
                 
-                Divider().padding(.vertical, 2)
+                Spacer()
+                
+                VStack {
+                    ForEach(vm.products) { product in
+                        if product.category == category.categoryName {
+                            ProductRow(product: product)
+                        }
+                    }
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
+                //.navigationViewStyle(.stack)
+                
             }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
-        .navigationViewStyle(.stack)
-        .padding(.horizontal)
-        
     }
 }
+
 
 // This struct is passed a product which is a list, and using the ProductDetails struct it uses a variable to access the data. Is displays the product image, along with product name, shade and brand if avaliable. It has an Edit icon which redirects the user to EditView
 struct ProductRow: View {
@@ -242,15 +163,26 @@ struct ProductRow: View {
                 NavigationLink(destination: NewEditInventoryProductView(productID: product.id)) {
                     Image(systemName: "square.and.pencil")
                         .font(.system(size: 20))
-                    .foregroundColor(Color(.label)) }
+                    .foregroundColor(Color(.label))
+                    
+                }
+                .navigationViewStyle(StackNavigationViewStyle())
     
             }
+            //.navigationViewStyle(StackNavigationViewStyle())
+            
             Divider().padding(.vertical, 2)
             
-        }.padding(.horizontal)
+        }
+        .padding(.horizontal)
+        .navigationViewStyle(StackNavigationViewStyle())
+        //.navigationViewStyle(.stack)
     }
 }
-
+    
+    
+    
+    
 struct InventoryView_Previews: PreviewProvider {
     static var previews: some View {
         Group {

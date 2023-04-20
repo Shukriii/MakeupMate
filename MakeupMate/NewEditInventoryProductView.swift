@@ -98,6 +98,7 @@ struct NewEditInventoryProductView: View {
                             }
                         }
                     }
+                    .navigationViewStyle(StackNavigationViewStyle())
                     
                     Section(header: Text("Product Stock"), footer: Text("How many items of the product you own")){
                         
@@ -223,16 +224,20 @@ struct NewEditInventoryProductView: View {
                     }
                 }
             }
+            //.navigationViewStyle(StackNavigationViewStyle())
             .navigationTitle("Edit Product")
-            .onAppear {
-                // Load the product details from Firestore
-                ef.fetchProduct(fromCollection: "inventory", productID: productID)
-            }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
+        //.navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {
             // Displays the users photo library to select an image
             ImagePicker(image: $image)
         }
+        .onAppear {
+            // Load the product details from Firestore
+            ef.fetchProduct(fromCollection: "inventory", productID: productID)
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 }
 
