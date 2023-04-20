@@ -34,6 +34,7 @@ struct NewEditInventoryProductView: View {
     @State var shouldShowImagePicker = false
     @State var goesToCategories = false
     @State private var dateSet = false
+    @State private var dataFetched = false
 
     @Environment(\.presentationMode) var presentationMode
     
@@ -242,7 +243,13 @@ struct NewEditInventoryProductView: View {
             }
             .onAppear {
                 // Load the product details from Firestore
-                ef.fetchProduct(fromCollection: "inventory", productID: productID)
+                //ef.fetchProduct(fromCollection: "inventory", productID: productID)
+                
+                if !dataFetched {
+                    ef.fetchProduct(fromCollection: "inventory", productID: productID)
+                    print("data has been fetched")
+                    dataFetched = true
+                }
             }
             //.navigationViewStyle(StackNavigationViewStyle())
             .navigationTitle("Edit Product")

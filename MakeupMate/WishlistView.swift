@@ -16,6 +16,7 @@ import SDWebImageSwiftUI
 struct WishlistView: View {
     
     @State var shouldShowLogOutOptions = false
+    @State var productsForCategory = [ProductDetails]()
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "wishlist")
     @ObservedObject private var am = AccountFunctionalityViewModel()
@@ -23,25 +24,31 @@ struct WishlistView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
-                
-                //delete later on, for testing purposes
-                //Text ("Current User ID: \(am.currentUser?.email ?? "")")
-                
-                //topNavigationBar
-                TopNavigationBar(navigationName: "Your Wishlist")
-                    .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
-                        LoginView(didCompleteLoginProcess: {
-                            self.am.isUserCurrentlyLoggedOut = false
-                            self.am.fetchCurrentUser()
-                            self.vm.removeProducts()
-                            self.vm.fetchProducts(fromCollection: "wishlist")
-                            self.af.fetchCategories()
-                        })
+            ScrollView {
+                VStack {
+                    
+                    TopNavigationBar(navigationName: "Your Wishlist")
+                        .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
+                            LoginView(didCompleteLoginProcess: {
+                                self.am.isUserCurrentlyLoggedOut = false
+                                self.am.fetchCurrentUser()
+                                self.vm.removeProducts()
+                                self.vm.fetchProducts(fromCollection: "wishlist")
+                                self.af.fetchCategories()
+                            })
+                        }
+                    
+                    ForEach(af.categories) { category in
+                        let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
+                        
+                        let productsForCategory = vm.products.filter { $0.category == category.categoryName }
+                        
+                        // if the category has products
+                        if hasProducts {
+                            WishlistCategoryRow(category: category, categoryProducts: productsForCategory) }
                     }
-                
-                productListView
 
+                }
             }
             // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddWishlistProductView
             .overlay(
@@ -61,110 +68,86 @@ struct WishlistView: View {
         }
         .navigationViewStyle(.stack)
     }
-
-    private var productListView: some View {
-        ScrollView {
-            ForEach(af.categories) { category in
-                WishlistCategoryRow(category: category)
-            }.padding(.bottom, 50)
-        }
-        .navigationViewStyle(.stack)
-    }
     
-}
-
-struct WishlistCategoryRow: View {
-    
-    @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "wishlist")
-    
-    let category: CategoryDetails
-    
-    var hasProducts: Bool {
-            vm.products.contains(where: { $0.category == category.categoryName })
-        }
-    
-    var body: some View {
+    struct WishlistCategoryRow: View {
         
-        if hasProducts {
+        let category: CategoryDetails
+        let categoryProducts: [ProductDetails]
+        
+        var body: some View {
             VStack {
-                VStack {
-                    HStack {
-                        Text("\(category.categoryName)")
-                            .font(.system(size: 18, weight: .semibold))
-                        Spacer()
-                    }
-                    .padding(.horizontal)
+                HStack {
+                    Text("\(category.categoryName)")
+                        .font(.system(size: 18, weight: .semibold))
+                    Spacer()
                 }
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
-                
-                Spacer()
-                
-                VStack {
-                    ForEach(vm.products) { product in
-                        if product.category == category.categoryName {
-                            WishlistRow(product: product)
-                        }
-                    }
-                }
-                //.navigationViewStyle(StackNavigationViewStyle())
-                //.navigationViewStyle(.stack)
-                
+                .padding(.horizontal)
             }
-            .navigationViewStyle(.stack)
-            //.navigationViewStyle(StackNavigationViewStyle())
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
+            
+            Spacer()
+            
+            VStack {
+                ForEach(categoryProducts) { product in
+                    if product.category == category.categoryName {
+                        WishlistRow(product: product)
+                    }
+                }
+            }
         }
     }
-}
-
-struct WishlistRow: View {
     
-    let product: ProductDetails
-    
-    var body: some View {
-        VStack{
-            HStack {
-                
-                if !product.image.isEmpty {
-                    WebImage(url: URL(string: product.image))
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 70, height: 70)
-                        .clipped()
-                } else {
-                    Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
-                }
-
-                VStack (alignment: .leading){
-                    Text(product.name)
-                        .font(.system(size: 17, weight: .semibold))
-                    Text(product.shade)
-                        .foregroundColor(Color(.lightGray))
-                    Text(product.brand)
-                }
-                Spacer ()
-                
-                if (!product.webLink.isEmpty) {
-                    Image(systemName: "safari")
-                        .font(.system(size: 20))
-                        .onTapGesture {
-                            if let url = URL(string: product.webLink) {
-                                UIApplication.shared.open(url)
+    struct WishlistRow: View {
+        
+        let product: ProductDetails
+        
+        var body: some View {
+            VStack{
+                HStack {
+                    
+                    if !product.image.isEmpty {
+                        WebImage(url: URL(string: product.image))
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 70, height: 70)
+                            .clipped()
+                    } else {
+                        Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
+                    }
+                    
+                    VStack (alignment: .leading){
+                        Text(product.name)
+                            .font(.system(size: 17, weight: .semibold))
+                        Text(product.shade)
+                            .foregroundColor(Color(.lightGray))
+                        Text(product.brand)
+                    }
+                    
+                    Spacer ()
+                    
+                    if (!product.webLink.isEmpty) {
+                        Image(systemName: "safari")
+                            .font(.system(size: 20))
+                            .onTapGesture {
+                                if let url = URL(string: product.webLink) {
+                                    UIApplication.shared.open(url)
+                                }
                             }
-                        }
+                    }
+                    
+                    NavigationLink(destination: NewEditWishlistProductView(productID: product.id)) {
+                        Image(systemName: "square.and.pencil")
+                            .font(.system(size: 20))
+                        .foregroundColor(Color(.label)) }
+                    
                 }
-
-                NavigationLink(destination: NewEditWishlistProductView(productID: product.id)) {
-                    Image(systemName: "square.and.pencil")
-                        .font(.system(size: 20))
-                    .foregroundColor(Color(.label)) }
-    
-            }
-            Divider()
-                .padding(.vertical, 2)
-        }.padding(.horizontal)
-        .navigationViewStyle(.stack)
+                Divider()
+                    .padding(.vertical, 2)
+            }.padding(.horizontal)
+            
+        }
     }
 }
 
