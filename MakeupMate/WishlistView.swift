@@ -24,30 +24,32 @@ struct WishlistView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack {
-                    
-                    TopNavigationBar(navigationName: "Your Wishlist")
-                        .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
-                            LoginView(didCompleteLoginProcess: {
-                                self.am.isUserCurrentlyLoggedOut = false
-                                self.am.fetchCurrentUser()
-                                self.vm.removeProducts()
-                                self.vm.fetchProducts(fromCollection: "wishlist")
-                                self.af.fetchCategories()
-                            })
-                        }
-                    
-                    ForEach(af.categories) { category in
-                        let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
-                        
-                        let productsForCategory = vm.products.filter { $0.category == category.categoryName }
-                        
-                        // if the category has products
-                        if hasProducts {
-                            WishlistCategoryRow(category: category, categoryProducts: productsForCategory) }
+            VStack {
+                
+                TopNavigationBar(navigationName: "Your Wishlist")
+                    .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
+                        LoginView(didCompleteLoginProcess: {
+                            self.am.isUserCurrentlyLoggedOut = false
+                            self.am.fetchCurrentUser()
+                            self.vm.removeProducts()
+                            self.vm.fetchProducts(fromCollection: "wishlist")
+                            self.af.fetchCategories()
+                        })
                     }
-
+                
+                VStack {
+                    ScrollView {
+                        ForEach(af.categories) { category in
+                            let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
+                            
+                            let productsForCategory = vm.products.filter { $0.category == category.categoryName }
+                            
+                            // if the category has products
+                            if hasProducts {
+                                WishlistCategoryRow(category: category, categoryProducts: productsForCategory) }
+                        }
+                        .padding(.bottom, 50)
+                    }
                 }
             }
             // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddWishlistProductView
@@ -128,13 +130,13 @@ struct WishlistView: View {
                     Spacer ()
                     
                     if (!product.webLink.isEmpty) {
-                        Image(systemName: "safari")
-                            .font(.system(size: 20))
-                            .onTapGesture {
-                                if let url = URL(string: product.webLink) {
+                        if let url = URL(string: product.webLink), UIApplication.shared.canOpenURL(url) {
+                            Image(systemName: "safari")
+                                .font(.system(size: 20))
+                                .onTapGesture{
                                     UIApplication.shared.open(url)
                                 }
-                            }
+                        }
                     }
                     
                     NavigationLink(destination: NewEditWishlistProductView(productID: product.id)) {

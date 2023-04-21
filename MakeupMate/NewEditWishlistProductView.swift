@@ -22,7 +22,7 @@ struct NewEditWishlistProductView: View {
     @State private var name = ""
     @State private var brand = ""
     @State private var category = ""
-    //@State private var categoryField = ""
+    @State private var categoryField = ""
     @State private var shade = ""
     @State private var note = ""
     @State private var webLink = ""
@@ -31,6 +31,8 @@ struct NewEditWishlistProductView: View {
     @State var shouldShowImagePicker = false
     @State var goesToCategories = false
     @State var editURL = false
+    @State var dataFetched = false
+    @State var displayInvalidURL = false
 
     @Environment(\.presentationMode) var presentationMode
     
@@ -87,43 +89,53 @@ struct NewEditWishlistProductView: View {
 
                     Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                         NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
-                            if let selectedCategory = selectedCategory {
-                                Text(selectedCategory.categoryName)
-                                    
+                            HStack {
+                                Text(categoryField.isEmpty ? "E.g. Powder Blushes" : categoryField)
+                                    .foregroundColor(categoryField.isEmpty ? Color(red: 0.784, green: 0.784, blue: 0.793) : Color.black)
                             }
-                            else if !product.category.isEmpty {
-                                Text(product.category)
+                            .onAppear {
+                                if let category = selectedCategory {
+                                    categoryField = category.categoryName
+                                } else if !product.category.isEmpty {
+                                    categoryField = product.category
+                                }
                             }
                         }
                     }
                     
-                    Section(header: Text("Product URL")){
+                    Section(header: Text("Product URL"), footer: displayInvalidURL ? Text("This URL is not valid").foregroundColor(.red) : Text("")){
+
                         // editUrl is false, and product.weblink is not empty
                         if (!product.webLink.isEmpty && !editURL) {
                             HStack {
-                                    if let url = URL(string: product.webLink) {
-                                        Text("\(product.webLink)")
-                                            .foregroundColor(.blue)
-                                            .onTapGesture{
-                                                UIApplication.shared.open(url)
-                                            }
-                                        
-                                    } else {
-                                        Text("Invalid URL")
-                                            .foregroundColor(.red)
-                                    }
+                                // if url is valid
+                                if let url = URL(string: product.webLink), UIApplication.shared.canOpenURL(url) {
+                                    Text("\(product.webLink)")
+                                        .foregroundColor(.blue)
+                                        .onTapGesture{
+                                            UIApplication.shared.open(url)
+                                        }
+                                } else {
+                                    // The URL is not valid or cannot be opened
+                                    Text("\(product.webLink)")
+                                        .foregroundColor(.blue)
+                                        .onAppear() {
+                                            displayInvalidURL.toggle()
+                                        }
                                     
-                                    Spacer()
-                                    
-                                    Button {
-                                        editURL.toggle()
-                                        print("product.webLink date has been removed")
-                                    } label: {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .frame(width: 20, height: 20, alignment: .center)
-                                            .foregroundColor(Color.gray)
-                                    }
                                 }
+                        
+                                Spacer()
+                                
+                                Button {
+                                    editURL.toggle()
+                                    print("product.webLink date has been removed")
+                                } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .frame(width: 20, height: 20, alignment: .center)
+                                        .foregroundColor(Color.gray)
+                                }
+                            }
                             // product.weblink is emptty or editUrl is true
                         } else if (product.webLink.isEmpty || editURL){
                             HStack {
@@ -133,7 +145,7 @@ struct NewEditWishlistProductView: View {
                             }
                         }
                     }
-
+                    
                     Section(header: Text("Note")){
                         EditTextFieldView(listKey: product.note, displayName: "Note", variableName: $note)
                     }
@@ -149,7 +161,7 @@ struct NewEditWishlistProductView: View {
                         
                         // DELETE
                         Button {
-                            ef.deleteProduct(fromCollection: "inventory", productID: productID, presentationMode: presentationMode)
+                            ef.deleteProduct(fromCollection: "wishlist", productID: productID, presentationMode: presentationMode)
                         } label: {
                             Text("Delete Product")
                         }
@@ -157,24 +169,12 @@ struct NewEditWishlistProductView: View {
                         
                         // SAVE
                         Button{
-                            // for category
-                            if let product = ef.product {
-                                
-                                // if a category has been picked from the dropdown then category = selectedCategory
-                                if let selectedCategory = selectedCategory {
-                                    self.category = selectedCategory.categoryName
-                                // if a category hasn't been chosen then category = product.category
-                                } else if !product.category.isEmpty {
-                                    self.category = product.category
-                                }
-                            }
-                            
                             // webLink has not been edited
                             if(!product.webLink.isEmpty && !editURL) {
                                 webLink = product.webLink
                             }
                             
-                            ef.uploadImageToStorage(fromCollection: "wishlist", productID: productID, name: name, brand: brand, categoryField: category, shade: shade, webLink: webLink, note: note, image: image, presentationMode: presentationMode)
+                            ef.uploadImageToStorage(fromCollection: "wishlist", productID: productID, name: name, brand: brand, categoryField: categoryField, shade: shade, webLink: webLink, note: note, image: image, presentationMode: presentationMode)
                             
                         } label: {
                             Text("Save Product")
@@ -186,7 +186,11 @@ struct NewEditWishlistProductView: View {
             .navigationTitle("Edit Product")
             .onAppear {
                 // Load the product details from Firestore
-                ef.fetchProduct(fromCollection: "wishlist", productID: productID)
+                if !dataFetched {
+                    ef.fetchProduct(fromCollection: "wishlist", productID: productID)
+                    print("data has been fetched")
+                    dataFetched = true
+                }
             }
         }
         .sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {

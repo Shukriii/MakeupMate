@@ -105,18 +105,6 @@ struct NewEditInventoryProductView: View {
                         }
                     }
                     
-//                    Section(header: Text("Product Category"), footer: Text("Click to select a category")){
-//                        NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
-//                            if let selectedCategory = selectedCategory {
-//                                Text(selectedCategory.categoryName)
-//                            }
-//                            else if !product.category.isEmpty {
-//                                Text(product.category)
-//                            }
-//                        }
-//                    }
-//                    .navigationViewStyle(StackNavigationViewStyle())
-                    
                     Section(header: Text("Product Stock"), footer: Text("How many items of the product you own")){
                         
                         Stepper(value: $stockInt, in: 1...100){
@@ -207,16 +195,6 @@ struct NewEditInventoryProductView: View {
                         
                         // SAVE
                         Button{
-//                            // for category
-//                            if let product = ef.product {
-//                                // if a category has been picked from the dropdown then category = selectedCategory
-//                                if let selectedCategory = selectedCategory {
-//                                    self.category = selectedCategory.categoryName
-//                                // if a category hasn't been chosen then category = product.category
-//                                } else if !product.category.isEmpty {
-//                                    self.category = product.category
-//                                }
-//                            }
                             
                             // for stock
                             let stock = String(stockInt)

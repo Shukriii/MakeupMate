@@ -34,14 +34,16 @@ struct CompareView: View {
     
     var body: some View {
         NavigationView {
-            VStack (alignment: .leading, spacing: 15){
+            VStack {
                 
                 TopNavigationBar(navigationName: "Compare")
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
                         })
-                    }.padding(.vertical)
+                    }
+                
+                Divider().padding(.vertical, 2)
                 
                 displayView
                 
@@ -78,6 +80,7 @@ struct CompareView: View {
                 .padding()
                 .background(Color(red: 0.914, green: 0.914, blue: 0.914))
                 .cornerRadius(8)
+                
                 
             }
             .padding(.horizontal)
@@ -226,6 +229,9 @@ struct ProductListing: View {
         VStack {
             Text(columnTitle)
                 .font(.system(size: 20, weight: .bold))
+            
+            Divider().padding(.vertical, 2)
+            
             ScrollView {
                 VStack {
                     ForEach (productType) { product in

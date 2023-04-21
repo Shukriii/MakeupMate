@@ -30,30 +30,32 @@ struct InventoryView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack {
-
-                    TopNavigationBar(navigationName: "Your Makeup Collection")
-                        .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
-                            LoginView(didCompleteLoginProcess: {
-                                self.am.isUserCurrentlyLoggedOut = false
-                                self.am.fetchCurrentUser()
-                                self.vm.removeProducts()
-                                self.vm.fetchProducts(fromCollection: "inventory")
-                                self.af.fetchCategories()
-                            })
-                        }
-
-                    ForEach(af.categories) { category in
-                        let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
-                        
-                        let productsForCategory = vm.products.filter { $0.category == category.categoryName }
-                        
-                        // if the category has products
-                        if hasProducts {
-                            CategoryRow(category: category, categoryProducts: productsForCategory) }
+            VStack {
+                
+                TopNavigationBar(navigationName: "Your Makeup Collection")
+                    .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
+                        LoginView(didCompleteLoginProcess: {
+                            self.am.isUserCurrentlyLoggedOut = false
+                            self.am.fetchCurrentUser()
+                            self.vm.removeProducts()
+                            self.vm.fetchProducts(fromCollection: "inventory")
+                            self.af.fetchCategories()
+                        })
                     }
-                    
+                
+                VStack {
+                    ScrollView {
+                        ForEach(af.categories) { category in
+                            let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
+                            
+                            let productsForCategory = vm.products.filter { $0.category == category.categoryName }
+                            
+                            // if the category has products
+                            if hasProducts {
+                                CategoryRow(category: category, categoryProducts: productsForCategory) }
+                        }
+                        .padding(.bottom, 50)
+                    }
                 }
             }
             // An overlay of a HStack, which displays "New Product" which is a Navigation link to AddInventoryProductView
@@ -81,30 +83,30 @@ struct InventoryView: View {
         let categoryProducts: [ProductDetails]
         
         var body: some View {
-            VStack {
-                HStack {
-                    Text("\(category.categoryName)")
-                        .font(.system(size: 18, weight: .semibold))
-                    Spacer()
+                VStack {
+                    HStack {
+                        Text("\(category.categoryName)")
+                            .font(.system(size: 18, weight: .semibold))
+                        Spacer()
+                    }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 8)
-            .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
-            
-            Spacer()
-            
-            VStack {
-                ForEach(categoryProducts) { product in
-                    if product.category == category.categoryName {
-                        ProductRow(product: product)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 8)
+                .background(Color(red: 0.784, green: 0.784, blue: 0.793, opacity: 0.369))
+                
+                Spacer()
+                
+                VStack {
+                    ForEach(categoryProducts) { product in
+                        if product.category == category.categoryName {
+                            ProductRow(product: product)
+                        }
                     }
                 }
-            }
+
         }
     }
-    
     
     // This struct is passed a product which is a list, and using the ProductDetails struct it uses a variable to access the data. Is displays the product image, along with product name, shade and brand if avaliable. It has an Edit icon which redirects the user to EditView
     struct ProductRow: View {

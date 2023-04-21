@@ -30,7 +30,6 @@
 		A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A2134829BA3B1D007B3625 /* ImagePicker.swift */; };
 		A6A8E9D329B4E1F70082B1D7 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */; };
 		A6BF475829C2028E001940A7 /* BottomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BF475729C2028E001940A7 /* BottomNavigationBar.swift */; };
-		A6CB36A329F02A3100DF9822 /* CategoryFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CB36A229F02A3000DF9822 /* CategoryFunctionality.swift */; };
 		A6CC288E29CF3C41009044B9 /* EditTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC288D29CF3C41009044B9 /* EditTextFieldView.swift */; };
 		A6CC289029CF4362009044B9 /* TopNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC288F29CF4362009044B9 /* TopNavigationBar.swift */; };
 		A6CC289329CF43CC009044B9 /* AddTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289229CF43CC009044B9 /* AddTextFieldView.swift */; };
@@ -85,7 +84,6 @@
 		A6A2134829BA3B1D007B3625 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		A6A8E9D229B4E1F70082B1D7 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
 		A6BF475729C2028E001940A7 /* BottomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavigationBar.swift; sourceTree = "<group>"; };
-		A6CB36A229F02A3000DF9822 /* CategoryFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryFunctionality.swift; sourceTree = "<group>"; };
 		A6CC288D29CF3C41009044B9 /* EditTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldView.swift; sourceTree = "<group>"; };
 		A6CC288F29CF4362009044B9 /* TopNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavigationBar.swift; sourceTree = "<group>"; };
 		A6CC289229CF43CC009044B9 /* AddTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTextFieldView.swift; sourceTree = "<group>"; };
@@ -159,7 +157,6 @@
 				A6CC289C29D0F7FA009044B9 /* FetchFunctionality.swift */,
 				A6CC289629CF5EF1009044B9 /* AddFunctionality.swift */,
 				A6CC289829CF70A0009044B9 /* EditFunctionality.swift */,
-				A6CB36A229F02A3000DF9822 /* CategoryFunctionality.swift */,
 				A6CC289129CF439F009044B9 /* Utilities */,
 				A614CB9A2992863A005087C9 /* WalkthroughView.swift */,
 				A631EAC9299E7DB900D9E1DD /* LoginView.swift */,
@@ -384,7 +381,6 @@
 				A6CC289329CF43CC009044B9 /* AddTextFieldView.swift in Sources */,
 				A614CB992992863A005087C9 /* MakeupMateApp.swift in Sources */,
 				A6BF475829C2028E001940A7 /* BottomNavigationBar.swift in Sources */,
-				A6CB36A329F02A3100DF9822 /* CategoryFunctionality.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
