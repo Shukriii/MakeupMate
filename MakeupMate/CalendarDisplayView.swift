@@ -15,6 +15,7 @@ struct CalendarDisplayView: View {
     
     // Update month when arrow is clicked
     @State var currentMonth: Int = 0
+    @State var stringProducts = ""
     
     var body: some View {
         VStack(spacing: 20){
@@ -93,34 +94,40 @@ struct CalendarDisplayView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     //.padding(.vertical,20)
                 
-                if let product = ep.expiredProducts.first(where: { product in
+                if let productList = ep.expiredProducts.filter({ product in
                     return isSameDay(date1: product.expireDate, date2: currentDate)
                 }){
-                    ForEach(product.expiryProduct){ product in
-                        VStack(alignment: .leading, spacing: 10){
-                            Text(product.name)
-                                .font(.system(size: 19, weight: .semibold))
-                            Text(product.shade)
-                                .foregroundColor(Color(.gray))
-                                .fontWeight(.semibold)
-                            Text(product.brand)
-                                .fontWeight(.semibold)
+                    ForEach(productList) { productInfo in
+
+                        ForEach(productInfo.expiryProduct){ product in
+
+                            NavigationLink(destination: NewEditInventoryProductView(productID: product.productID)) {
+                                
+                                VStack(alignment: .leading, spacing: 10){
+                                    
+                                    Text(product.name)
+                                        .font(.system(size: 19, weight: .semibold))
+                                    Text(product.shade)
+                                        .foregroundColor(Color(.gray))
+                                        .fontWeight(.semibold)
+                                    Text(product.brand)
+                                        .fontWeight(.semibold)
+                                }
+                                .padding(.vertical, 10)
+                                .padding(.horizontal)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(
+                                    Color("Colour5")
+                                        .opacity(0.3)
+                                        .cornerRadius(10))
+                            }
                         }
-                        .padding(.vertical, 10)
-                        .padding(.horizontal)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(
-                            Color("Colour5")
-                                .opacity(0.3)
-                                .cornerRadius(10))
                     }
-                    
                 } else {
                     Text("No product found")
                 }
             }
             .padding(.horizontal)
-
         }
         .onChange(of: currentMonth){ newValue in
             //update the month
@@ -130,7 +137,7 @@ struct CalendarDisplayView: View {
     
     // Purple dot if date has an expired product
     @ViewBuilder
-    func CardView(value: DateValue)->some View{
+    func CardView(value: CalendarFunctionality)->some View{
         VStack{
             if value.day != -1 {
                 
@@ -186,14 +193,14 @@ struct CalendarDisplayView: View {
         return currentMonth
     }
     
-    func extractDate()->[DateValue]{
+    func extractDate()->[CalendarFunctionality]{
         let calendar = Calendar.current
         let currentMonth = getCurrentMonth()
         
-        var days = currentMonth.getAllDates().compactMap{ date -> DateValue
+        var days = currentMonth.getAllDates().compactMap{ date -> CalendarFunctionality
             in
             let day = calendar.component(.day, from: date)
-            return DateValue(day: day, date: date)
+            return CalendarFunctionality(day: day, date: date)
             
         }
         
@@ -201,7 +208,7 @@ struct CalendarDisplayView: View {
         let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
         
         for _ in 0..<firstWeekday - 1 {
-            days.insert(DateValue(day: -1, date: Date()), at: 0)
+            days.insert(CalendarFunctionality(day: -1, date: Date()), at: 0)
         }
         return days
     }

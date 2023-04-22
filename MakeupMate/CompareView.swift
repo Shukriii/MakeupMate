@@ -34,7 +34,7 @@ struct CompareView: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            VStack (spacing: 15){
                 
                 TopNavigationBar(navigationName: "Compare")
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
@@ -47,14 +47,19 @@ struct CompareView: View {
                 
                 displayView
                 
-            }.navigationBarHidden(true)
+            }
+            .navigationBarHidden(true)
         }
+        
     }
     
     private var displayView: some View {
         ScrollView {
             VStack {
-                Text("Select a category below").padding()
+                Text("Select a category below")
+                    .font(.headline)
+                    .fontWeight(.regular)
+                    .padding(.horizontal)
                 
                 // The dropdown which uses fetches the categories and displays them, uses selectedCategory to store the category chosen byt the user)
                 DisclosureGroup("\(selectedCategory)", isExpanded: $isExpanded) {
@@ -68,7 +73,6 @@ struct CompareView: View {
                                         self.selectedCategory = category.categoryName //The category picked name
                                         withAnimation {
                                             self.isExpanded .toggle()
-                                            //fetchCategoryProducts()
                                             findCategoryInventoryProducts()
                                             findCategoryWishlistProducts()
                                         }
@@ -219,6 +223,8 @@ struct CompareView: View {
     }
 }
 
+// https://stackoverflow.com/questions/57606290/change-navigationlink-destination-conditionally-in-swiftui
+
 // This view is used to display the products 
 struct ProductListing: View {
     
@@ -231,10 +237,20 @@ struct ProductListing: View {
                 .font(.system(size: 20, weight: .bold))
             
             Divider().padding(.vertical, 2)
-            
+
             ScrollView {
                 VStack {
                     ForEach (productType) { product in
+                        
+                        NavigationLink(destination:
+                                        VStack{
+                            if columnTitle == "Inventory" {
+                                NewEditInventoryProductView(productID: product.id)
+                            } else {
+                                NewEditWishlistProductView(productID: product.id)
+                            }
+                        }) {
+                            
                         HStack {
                             if !product.image.isEmpty {
                                 WebImage(url: URL(string: product.image))
@@ -243,7 +259,9 @@ struct ProductListing: View {
                                     .frame(width: 50, height: 50)
                                     .clipped()
                             } else {
-                                Image(systemName: "photo.on.rectangle.angled").font(.system(size:30))
+                                Image(systemName: "photo.on.rectangle.angled")
+                                    .font(.system(size: 35))
+                                    .frame(width: 50, height: 50)
                             }
                             
                             VStack (alignment: .leading){
@@ -257,10 +275,10 @@ struct ProductListing: View {
                         }
                         .padding(.vertical, 8)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
                 }
             }
-            .padding()
         }
     }
 }

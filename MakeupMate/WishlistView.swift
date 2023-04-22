@@ -22,9 +22,11 @@ struct WishlistView: View {
     @ObservedObject private var am = AccountFunctionalityViewModel()
     @ObservedObject private var af = AddFunctionalityViewModel()
     
+    @State private var searchText = ""
+    
     var body: some View {
         NavigationView {
-            VStack {
+            VStack (spacing: 15) {
                 
                 TopNavigationBar(navigationName: "Your Wishlist")
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
@@ -37,18 +39,33 @@ struct WishlistView: View {
                         })
                     }
                 
+                SearchBarView(searchText: $searchText)
+                    .frame(width: 370, height: 10, alignment: .center)
+                    .padding()
+                
                 VStack {
                     ScrollView {
-                        ForEach(af.categories) { category in
-                            let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
-                            
-                            let productsForCategory = vm.products.filter { $0.category == category.categoryName }
-                            
-                            // if the category has products
-                            if hasProducts {
-                                WishlistCategoryRow(category: category, categoryProducts: productsForCategory) }
+                        if searchText == "" {
+                            VStack {
+                                ForEach(af.categories) { category in
+                                    let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
+                                    
+                                    let productsForCategory = vm.products.filter { $0.category == category.categoryName }
+                                    
+                                    // if the category has products
+                                    if hasProducts {
+                                        WishlistCategoryRow(category: category, categoryProducts: productsForCategory) }
+                                }
+                            }
+                            .padding(.bottom, 50)
+                        } else {
+                            VStack {
+                                ForEach(arrayOfProducts) { product in
+                                    WishlistRow(product: product)
+                                }
+                            }
+                            .padding(.bottom, 50)
                         }
-                        .padding(.bottom, 50)
                     }
                 }
             }
@@ -64,11 +81,17 @@ struct WishlistView: View {
                         .padding(.vertical)
                         .background(Color("Colour5"))
                         .cornerRadius(32)
-                        .padding(.horizontal, 120)
+                        .frame(width: 170)
                 }, alignment: .bottom)
             .navigationBarHidden(true)
         }
         .navigationViewStyle(.stack)
+    }
+    
+    var arrayOfProducts: [ProductDetails] {
+        return searchText == "" ? vm.products : vm.products.filter {
+            $0.name.lowercased().contains(searchText.lowercased())
+        }
     }
     
     struct WishlistCategoryRow: View {

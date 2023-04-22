@@ -24,6 +24,7 @@
 		A63685CF29BD1D86008C17B9 /* DecodeFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63685CE29BD1D86008C17B9 /* DecodeFunctions.swift */; };
 		A652405529E2DC5B00768D46 /* NewAddInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A652405429E2DC5B00768D46 /* NewAddInventoryProductView.swift */; };
 		A652405B29E590FB00768D46 /* NewEditInventoryProductView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A652405A29E590FA00768D46 /* NewEditInventoryProductView.swift */; };
+		A6586F7C29F3EEAD0052FD9A /* SearchBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6586F7B29F3EEAD0052FD9A /* SearchBarView.swift */; };
 		A67D601629BF5994003EEBB7 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A67D601529BF5994003EEBB7 /* SDWebImageSwiftUI */; };
 		A68A30E1299E757F00E01C84 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */; };
 		A69379E929D492FD000312EF /* AccountFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A69379E829D492FD000312EF /* AccountFunctionality.swift */; };
@@ -39,7 +40,7 @@
 		A6CC289F29D0F9F5009044B9 /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289E29D0F9F5009044B9 /* CompareView.swift */; };
 		A6D69B4B29E02CF500BA19A6 /* ExpiryCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D69B4A29E02CF500BA19A6 /* ExpiryCalendarView.swift */; };
 		A6D69B4D29E033F000BA19A6 /* CalendarDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D69B4C29E033F000BA19A6 /* CalendarDisplayView.swift */; };
-		A6D69B4F29E0440F00BA19A6 /* DateValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D69B4E29E0440E00BA19A6 /* DateValue.swift */; };
+		A6D69B4F29E0440F00BA19A6 /* CalendarFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D69B4E29E0440E00BA19A6 /* CalendarFunctionality.swift */; };
 		A6EB990829CDE1F8003AA975 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EB990729CDE1F8003AA975 /* CategoryView.swift */; };
 		A6F877D029CA226D0010A8A9 /* WishlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F877CF29CA226D0010A8A9 /* WishlistView.swift */; };
 /* End PBXBuildFile section */
@@ -79,6 +80,7 @@
 		A63685CE29BD1D86008C17B9 /* DecodeFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodeFunctions.swift; sourceTree = "<group>"; };
 		A652405429E2DC5B00768D46 /* NewAddInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddInventoryProductView.swift; sourceTree = "<group>"; };
 		A652405A29E590FA00768D46 /* NewEditInventoryProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewEditInventoryProductView.swift; sourceTree = "<group>"; };
+		A6586F7B29F3EEAD0052FD9A /* SearchBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarView.swift; sourceTree = "<group>"; };
 		A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A69379E829D492FD000312EF /* AccountFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountFunctionality.swift; sourceTree = "<group>"; };
 		A6A2134829BA3B1D007B3625 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
@@ -93,7 +95,7 @@
 		A6CC289E29D0F9F5009044B9 /* CompareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareView.swift; sourceTree = "<group>"; };
 		A6D69B4A29E02CF500BA19A6 /* ExpiryCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiryCalendarView.swift; sourceTree = "<group>"; };
 		A6D69B4C29E033F000BA19A6 /* CalendarDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDisplayView.swift; sourceTree = "<group>"; };
-		A6D69B4E29E0440E00BA19A6 /* DateValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateValue.swift; sourceTree = "<group>"; };
+		A6D69B4E29E0440E00BA19A6 /* CalendarFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarFunctionality.swift; sourceTree = "<group>"; };
 		A6EB990729CDE1F8003AA975 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		A6F877CF29CA226D0010A8A9 /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -157,6 +159,7 @@
 				A6CC289C29D0F7FA009044B9 /* FetchFunctionality.swift */,
 				A6CC289629CF5EF1009044B9 /* AddFunctionality.swift */,
 				A6CC289829CF70A0009044B9 /* EditFunctionality.swift */,
+				A6D69B4E29E0440E00BA19A6 /* CalendarFunctionality.swift */,
 				A6CC289129CF439F009044B9 /* Utilities */,
 				A614CB9A2992863A005087C9 /* WalkthroughView.swift */,
 				A631EAC9299E7DB900D9E1DD /* LoginView.swift */,
@@ -210,7 +213,7 @@
 				A6CC289229CF43CC009044B9 /* AddTextFieldView.swift */,
 				A6CC288D29CF3C41009044B9 /* EditTextFieldView.swift */,
 				A6A2134829BA3B1D007B3625 /* ImagePicker.swift */,
-				A6D69B4E29E0440E00BA19A6 /* DateValue.swift */,
+				A6586F7B29F3EEAD0052FD9A /* SearchBarView.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				A6CC289929CF70A0009044B9 /* EditFunctionality.swift in Sources */,
 				A652405529E2DC5B00768D46 /* NewAddInventoryProductView.swift in Sources */,
 				A61D710629B3789B0082258E /* InventoryView.swift in Sources */,
+				A6586F7C29F3EEAD0052FD9A /* SearchBarView.swift in Sources */,
 				A6CC289729CF5EF1009044B9 /* AddFunctionality.swift in Sources */,
 				A6EB990829CDE1F8003AA975 /* CategoryView.swift in Sources */,
 				A652405B29E590FB00768D46 /* NewEditInventoryProductView.swift in Sources */,
@@ -376,7 +380,7 @@
 				A6CC289D29D0F7FA009044B9 /* FetchFunctionality.swift in Sources */,
 				A6F877D029CA226D0010A8A9 /* WishlistView.swift in Sources */,
 				A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */,
-				A6D69B4F29E0440F00BA19A6 /* DateValue.swift in Sources */,
+				A6D69B4F29E0440F00BA19A6 /* CalendarFunctionality.swift in Sources */,
 				A631EACA299E7DB900D9E1DD /* LoginView.swift in Sources */,
 				A6CC289329CF43CC009044B9 /* AddTextFieldView.swift in Sources */,
 				A614CB992992863A005087C9 /* MakeupMateApp.swift in Sources */,

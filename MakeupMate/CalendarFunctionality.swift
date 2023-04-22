@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DateValue: Identifiable{
+struct CalendarFunctionality: Identifiable{
     var id = UUID().uuidString
     var day: Int
     var date: Date
@@ -16,6 +16,7 @@ struct DateValue: Identifiable{
 // A expiry product has an Id, name and date
 struct ExpiryProduct: Identifiable{
     var id = UUID().uuidString
+    var productID: String
     var name: String
     var shade: String
     var brand: String
@@ -79,10 +80,25 @@ class ExpiryProductViewModel: ObservableObject {
                         let data = change.document.data()
                         self.products.append(.init(documentID: change.document.documentID, data: data))
                     }
+                    
+                    //if product is deleted
+                    if change.type == .removed {
+                        if let index = self.products.firstIndex(where: { $0.documentID == change.document.documentID }) {
+                            self.products.remove(at: index)
+                        }
+                    }
+                    // if a product is modified
+                    if change.type == .modified {
+                        if let index = self.products.firstIndex(where: { $0.documentID == change.document.documentID }) {
+                            let data = change.document.data()
+                            self.products[index] = .init(documentID:change.document.documentID, data: data)
+                            }
+                        }
                 })
                 self.statusMessage = "Fetched expired products successfully"
                 print (self.statusMessage)
                 
+                // if product has no expire date, remove it from the list
                 for product in self.products {
                     if product.expiryDate.isEmpty {
                         if let index = self.products.firstIndex(where: { $0.documentID == product.documentID }) {
@@ -92,12 +108,15 @@ class ExpiryProductViewModel: ObservableObject {
                     }
                 }
                 
-                print("products with expiry date \(self.products)")
-
+                //print("products with expiry date \(self.products)")
+                self.expiredProducts = []
+                
+                // place the prodcuts into the expiredProducts array
                 self.products.forEach { product in
                     self.expiredProducts.append(ExpiryProductMetaData(expiryProduct: [
-                        ExpiryProduct(name: product.name, shade: product.shade, brand: product.brand),
+                        ExpiryProduct(productID: product.id, name: product.name, shade: product.shade, brand: product.brand),
                     ], expireDate: getSampleDateFromDateString(dateString: product.expiryDate)))
+                    //print("expiredProductsList \(self.expiredProducts)")
                 }
 
             }
