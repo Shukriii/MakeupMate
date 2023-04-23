@@ -8,11 +8,16 @@
  /*
    To create the custom Calednar view the code was reused and edited from: https://www.youtube.com/watch?v=UZI2dvLoPr8&ab_channel=Kavsoft
 
+   Code from this source was adapted to create the notification: https://www.youtube.com/watch?v=XnnDHDlPwLw&t=204s&ab_channel=PaulHudson
+  
    The code was adpated to iterate through ep.expiredProducts, and to display the product details when the its expire date is selected
+  
+  The user can select to revieve a notification for when a product expires
   */
 
 import SwiftUI
 import simd
+import UserNotifications
 
 struct CalendarDisplayView: View {
     
@@ -101,27 +106,80 @@ struct CalendarDisplayView: View {
                 Text("Products")
                     .font(.title2.bold())
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    //.padding(.vertical,20)
+                //.padding(.vertical,20)
                 
                 if let productList = ep.expiredProducts.filter({ product in
                     return isSameDay(date1: product.expireDate, date2: currentDate)
                 }){
                     ForEach(productList) { productInfo in
-
+                        
                         ForEach(productInfo.expiryProduct){ product in
-
-                            NavigationLink(destination: NewEditInventoryProductView(productID: product.productID)) {
-                                
-                                VStack(alignment: .leading, spacing: 10){
+                            
+                            VStack{
+                                HStack {
+                                    NavigationLink(destination: NewEditInventoryProductView(productID: product.productID)) {
+                                        VStack (alignment: .leading, spacing: 10) {
+                                            Text(product.name)
+                                                .font(.system(size: 19, weight: .semibold))
+                                            Text(product.shade)
+                                                .foregroundColor(Color(.gray))
+                                                .fontWeight(.semibold)
+                                            Text(product.brand)
+                                                .fontWeight(.semibold)
+                                        }
+                                    }
                                     
-                                    Text(product.name)
-                                        .font(.system(size: 19, weight: .semibold))
-                                    Text(product.shade)
-                                        .foregroundColor(Color(.gray))
-                                        .fontWeight(.semibold)
-                                    Text(product.brand)
-                                        .fontWeight(.semibold)
+                                    Spacer()
+                                    
+                                    // Bell icon
+                                    Button {
+                                        // request premission to display an alert, badge and sound
+                                        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+                                            if success {
+                                                print("premission given")
+                                                
+                                                // productInfo.expireDate is in format "dd MMM yyyy 'at' HH:mm:ss zzz", changing it to dd MMMM yyyy
+                                                //let dateFormatter = DateFormatter()
+                                                //dateFormatter.dateFormat = "dd MMMM yyyy"
+                                                //let productExpireDate = dateFormatter.string(from: productInfo.expireDate)
+                                                
+                                                let content = UNMutableNotificationContent()
+                                                
+                                                content.title = "Product Expired Notification"
+                                                content.subtitle = "\(product.name) from \(product.brand) will expire today" // unable to make the nofitication badge bigger, so minimal info
+                                                content.sound = UNNotificationSound.default
+                                                
+                                                // used for the trigger
+                                                let expireDate = productInfo.expireDate
+                                                var dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: expireDate)
+                                                dateComponents.hour = 23
+                                                dateComponents.minute = 01
+                                                
+                                                // FOR USER VERSION, notification is sent 9am on day that it will expire
+                                                //dateComponents.hour = 9
+                                                //dateComponents.minute = 00
+                                                
+                                                let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
+                                                //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+                                                
+                                                let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+                                                
+                                                UNUserNotificationCenter.current().add(request)
+                                                
+                                            }
+                                            else if let error = error {
+                                                print(error.localizedDescription)
+                                            }
+                                            
+                                        }
+                                        
+                                    } label: {
+                                        Image(systemName: "bell.circle.fill")
+                                            .font(.system(size: 40))
+                                            .foregroundColor(Color("Colour5"))
+                                    }
                                 }
+                            }
                                 .padding(.vertical, 10)
                                 .padding(.horizontal)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -129,7 +187,7 @@ struct CalendarDisplayView: View {
                                     Color("Colour5")
                                         .opacity(0.3)
                                         .cornerRadius(10))
-                            }
+                            
                         }
                     }
                 } else {

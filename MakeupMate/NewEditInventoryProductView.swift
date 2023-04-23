@@ -215,7 +215,7 @@ struct NewEditInventoryProductView: View {
                             dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
                             
                             // If dataSet is true, then <tap to set> is being displayed i.e. no date picked
-                            if (!dateSet) {
+                            if (dateSet) {
                                 expiryDateString = ""
                             } else {
                                 expiryDateString = dateFormatter.string(from: expiryDate)
