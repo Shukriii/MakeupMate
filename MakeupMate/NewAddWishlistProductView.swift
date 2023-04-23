@@ -5,6 +5,11 @@
 //  Created by Shukri  Ahmed on 14/04/2023.
 //
 
+/*
+  The file is the authors' own code . It provides the user with the view to add a wishlist product.
+  Sections have been used to create the design of the view.
+ */
+ 
 import SwiftUI
 
 struct NewAddWishlistProductView: View {
@@ -23,6 +28,7 @@ struct NewAddWishlistProductView: View {
     
     @State private var selectedCategory: CategoryDetails?
     @ObservedObject private var af = AddFunctionalityViewModel()
+    @ObservedObject private var cf = CategoryFunctionalityViewModel()
     
     var body: some View {
         VStack {
@@ -51,22 +57,28 @@ struct NewAddWishlistProductView: View {
                 
                 Section(header: Text("Product Name")){
                     TextField("E.g. Concealer", text: $name)
+                        .disableAutocorrection(true)
                 }
                 
                 Section(header: Text("Product Brand")){
                     TextField("E.g. Too Faced", text: $brand)
+                        .disableAutocorrection(true)
                 }
                 
                 Section(header: Text("Product Shade")){
                     TextField("E.g. Chestnut", text: $shade)
+                        .disableAutocorrection(true)
                 }
                 
+                // NavigationLink to CategoryView
                 Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                     NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                         HStack {
+                            //displays categoryField if it is not empty, or the placeholder text
                             Text(categoryField.isEmpty ? "E.g. Powder Blushes" : categoryField)
                                 .foregroundColor(categoryField.isEmpty ? Color(red: 0.784, green: 0.784, blue: 0.793) : Color.black)
                         }
+                        // the categoryField being displayed is set to the category.categoryName, if a category has been selected
                         .onAppear {
                             if let category = selectedCategory {
                                 categoryField = category.categoryName
@@ -75,17 +87,18 @@ struct NewAddWishlistProductView: View {
                     }
                 }
                 
-                //try to make bigger
                 Section(header: Text("Product URL")){
                     TextField("https://www.boots.com", text: $webLink)
+                        .disableAutocorrection(true)
                 }
                 
-                //try to make bigger
                 Section(header: Text("Note")){
                     TextField("Note", text: $note)
+                        .disableAutocorrection(true)
                 }
                 
                 Section{
+                    // remove photo button
                     Button {
                         image = nil
                     } label: {
@@ -93,9 +106,19 @@ struct NewAddWishlistProductView: View {
                     }
                     .foregroundColor(.red)
                     
+                    // save product button
                     Button{
-                        // uses variable af to access the class and passes the varibles into addProduct
-                        af.uploadProduct(fromCollection: "wishlist", name: name, brand: brand, categoryField: categoryField, shade: shade, webLink: webLink, note: note, image: image, presentationMode: presentationMode)
+                        // if product name is emoty display the alert
+                        if (name == "") {
+                            cf.displayMessage(title: "Add Name", message: "A product must have a name.")
+                        // if product category is empty display the alert
+                        } else if (categoryField == "") {
+                            cf.displayMessage(title: "Add Category", message: "A product must have a category.")
+                        // save the product
+                        } else {
+                            // uses variable af to access the class and passes the varibles into addProduct
+                            af.uploadProduct(fromCollection: "wishlist", name: name, brand: brand, categoryField: categoryField, shade: shade, webLink: webLink, note: note, image: image, presentationMode: presentationMode)
+                        }
                     } label: {
                         Text("Save Product")
                     }

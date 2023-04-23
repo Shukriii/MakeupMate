@@ -5,8 +5,11 @@
 //  Created by Shukri  Ahmed on 09/04/2023.
 //
 
-// Stepper https://www.youtube.com/watch?v=jrAA9Gt-jqw&t=300s&ab_channel=DesignCode
-// Hidden expiry date https://www.youtube.com/watch?v=Utkdlpo8T6w&ab_channel=GoingWalkabout
+/*
+  The file is the authors' own code other than where specificed. It provides the user with the view to add an inventory product.
+  Sections have been used to create the design of the view.
+ */
+
 import SwiftUI
 import SDWebImageSwiftUI
 
@@ -30,6 +33,7 @@ struct NewAddInventoryProductView: View {
     
     @State private var selectedCategory: CategoryDetails?
     @ObservedObject private var af = AddFunctionalityViewModel()
+    @ObservedObject private var cf = CategoryFunctionalityViewModel()
     
     var body: some View {
         VStack {
@@ -58,22 +62,28 @@ struct NewAddInventoryProductView: View {
                 
                 Section(header: Text("Product Name")){
                     TextField("E.g. Blush", text: $name)
+                        .disableAutocorrection(true)
                 }
                 
                 Section(header: Text("Product Brand")){
                     TextField("E.g. MAC", text: $brand)
+                        .disableAutocorrection(true)
                 }
                 
                 Section(header: Text("Product Shade")){
                     TextField("E.g. News Flash", text: $shade)
+                        .disableAutocorrection(true)
                 }
                 
+                // NavigationLink to CategoryView
                 Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                     NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                         HStack {
+                            //displays categoryField if it is not empty, or the placeholder text
                             Text(categoryField.isEmpty ? "E.g. Powder Blushes" : categoryField)
                                 .foregroundColor(categoryField.isEmpty ? Color(red: 0.784, green: 0.784, blue: 0.793) : Color.black)
                         }
+                        // the categoryField being displayed is set to the category.categoryName, if a category has been selected
                         .onAppear {
                             if let category = selectedCategory {
                                 categoryField = category.categoryName
@@ -82,14 +92,16 @@ struct NewAddInventoryProductView: View {
                     }
                 }
                 
+                // Souce for Stepper (has been adpated) - https://www.youtube.com/watch?v=jrAA9Gt-jqw&t=300s&ab_channel=DesignCode
                 Section(header: Text("Product Stock"), footer: Text("How many items of the product you own")){
                     Stepper(value: $stockInt, in: 1...100){
                         Text("\(stockInt) item\(stockInt > 1 ? "s" : "")")
                     }
                 }
                 
+                // Source for Hidden expiry date - https://www.youtube.com/watch?v=Utkdlpo8T6w&ab_channel=GoingWalkabout
                 Section(header: Text("Product Expiry Date"), footer: Text("The date the product will expire")){
-                    // True display expiry date
+                    // If <tap to set> clicked, display DatePciker
                     if(dateSet){
                         HStack {
                             DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
@@ -98,8 +110,6 @@ struct NewAddInventoryProductView: View {
                             //Button to get rid of date
                             Button {
                                 dateSet.toggle()
-                                //expiryDateString = ""
-                                print("expiry date has been removed")
                             } label: {
                                 Image(systemName: "xmark.circle.fill")
                                     .frame(width: 20, height: 20, alignment: .center)
@@ -107,9 +117,9 @@ struct NewAddInventoryProductView: View {
                             }
                         }
                     }
+                    // If xmark button is clicked for dataSet is false
                     else {
                         Button {
-                            print("expiry date picked")
                             dateSet.toggle()
                         } label : {
                             HStack {
@@ -123,12 +133,14 @@ struct NewAddInventoryProductView: View {
                     
                 }
                 
-                //try to make bigger
                 Section(header: Text("Note")){
                     TextField("E.g. Running out soon", text: $note)
+                        .disableAutocorrection(true)
                 }
                 
+                // Buttons
                 Section{
+                    // Remove photo button
                     Button {
                         image = nil
                     } label: {
@@ -136,26 +148,31 @@ struct NewAddInventoryProductView: View {
                     }
                     .foregroundColor(.red)
                     
+                    // Save product button
                     Button{
+                        // used to format the expiry date selected so it can be saved as a String
                         let dateFormatter = DateFormatter()
                         dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
 
-                        // if false no date has been picked
+                        // if false no date has been picked, empty string is saved
                         if (!dateSet) {
                             expiryDateString = ""
-                            print("in if")
                         } else {
+                            // else, the expiryDate is formatted into String
                             expiryDateString = dateFormatter.string(from: expiryDate)
-                            print("in else")
                         }
                         
+                        // The stepper uses an Integer variable, transofmring the Int into a String to save
                         let stock = String(stockInt)
                         
+                        // Display an alert if the product name is empty
                         if (name == "") {
-                            af.displayMessage(title: "Add Name", message: "A product must have a name.")
-                        } else if (categoryField == "") {
-                            af.displayMessage(title: "Add Category", message: "A product must have a category.")
-                        } else {
+                            cf.displayMessage(title: "Add Name", message: "A product must have a name.") }
+                        // Display an alert if the product category is empty
+                        else if (categoryField == "") {
+                            cf.displayMessage(title: "Add Category", message: "A product must have a category.") }
+                        // Else save the product
+                        else {
                             // uses variable af to access the class and passes the varibles into addProduct
                             af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
                         }
@@ -169,8 +186,8 @@ struct NewAddInventoryProductView: View {
             .navigationBarTitle("New Product")
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        // Displays the users photo library to select an image
         .sheet(isPresented: $shouldShowImagePicker, onDismiss: nil){
-            // Displays the users photo library to select an image
             ImagePicker(image: $image)
         }
     }

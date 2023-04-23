@@ -6,7 +6,10 @@
 //
 
 /*
- Code has been adapted from InvenotryView, displays the users Wishlist products
+  Code has been adapted from InvenotryView, displays the users Wishlist products
+ 
+ View of the Wishlist, it displays categories and the associated products in Firestore. Has navigation links to NewAddWishlistProduct and NewEditWishilstProduct.
+    If the user is not logged in, a fullScreenCover of LoginView will appear
  */
 
 import SwiftUI
@@ -20,7 +23,7 @@ struct WishlistView: View {
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "wishlist")
     @ObservedObject private var am = AccountFunctionalityViewModel()
-    @ObservedObject private var af = AddFunctionalityViewModel()
+    @ObservedObject private var cf = CategoryFunctionalityViewModel()
     
     @State private var searchText = ""
     
@@ -28,6 +31,7 @@ struct WishlistView: View {
         NavigationView {
             VStack (spacing: 15) {
                 
+                // calls TopNavigationBar and provides it with the navigationName, displays a full screen cover if variable isUserCurrentlyLoggedOut is true
                 TopNavigationBar(navigationName: "Your Wishlist")
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
@@ -35,30 +39,36 @@ struct WishlistView: View {
                             self.am.fetchCurrentUser()
                             self.vm.removeProducts()
                             self.vm.fetchProducts(fromCollection: "wishlist")
-                            self.af.fetchCategories()
+                            self.cf.fetchCategories()
                         })
                     }
                 
+                // Search bar, with binding variable of searchText
                 SearchBarView(searchText: $searchText)
                     .frame(width: 370, height: 10, alignment: .center)
                     .padding()
                 
                 VStack {
                     ScrollView {
+                        // if search is not be used, displays the categorys and products
                         if searchText == "" {
                             VStack {
-                                ForEach(af.categories) { category in
+                                ForEach(cf.categories) { category in
+                                    // if that category has products
                                     let hasProducts = vm.products.contains(where: { $0.category == category.categoryName })
                                     
+                                    // products where the product.category matches the categoryName
                                     let productsForCategory = vm.products.filter { $0.category == category.categoryName }
                                     
-                                    // if the category has products
+                                    // if the category has products, call CategoryRow on each of the productsForCategory
                                     if hasProducts {
                                         WishlistCategoryRow(category: category, categoryProducts: productsForCategory) }
                                 }
                             }
                             .padding(.bottom, 50)
-                        } else {
+                        }
+                        // if search is being used only display the products that statify arrayOfProducts
+                         else {
                             VStack {
                                 ForEach(arrayOfProducts) { product in
                                     WishlistRow(product: product)
@@ -88,12 +98,14 @@ struct WishlistView: View {
         .navigationViewStyle(.stack)
     }
     
+    // products that match the string being searched
     var arrayOfProducts: [ProductDetails] {
         return searchText == "" ? vm.products : vm.products.filter {
             $0.name.lowercased().contains(searchText.lowercased())
         }
     }
     
+    // displays the categoryName and calls WihlistRow for each categoryProduct
     struct WishlistCategoryRow: View {
         
         let category: CategoryDetails
@@ -124,6 +136,7 @@ struct WishlistView: View {
         }
     }
     
+    // This struct is passed a product and uses the ProductDetails struct it uses a variable to access the data. Is displays the product image, along with product name, shade and brand if avaliable. It has an Edit icon which redirects the user to EditView
     struct WishlistRow: View {
         
         let product: ProductDetails
@@ -152,6 +165,7 @@ struct WishlistView: View {
                     
                     Spacer ()
                     
+                    // if the product has webLink display the safari image
                     if (!product.webLink.isEmpty) {
                         if let url = URL(string: product.webLink), UIApplication.shared.canOpenURL(url) {
                             Image(systemName: "safari")
@@ -162,6 +176,7 @@ struct WishlistView: View {
                         }
                     }
                     
+                    // Call to Edit view to edit the product details, it passed product.id so the view can fetch the product
                     NavigationLink(destination: NewEditWishlistProductView(productID: product.id)) {
                         Image(systemName: "square.and.pencil")
                             .font(.system(size: 20))

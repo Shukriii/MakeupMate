@@ -5,6 +5,12 @@
 //  Created by Shukri  Ahmed on 07/04/2023.
 //
 
+ /*
+   To create the custom Calednar view the code was reused and edited from: https://www.youtube.com/watch?v=UZI2dvLoPr8&ab_channel=Kavsoft
+
+   The code was adpated to iterate through ep.expiredProducts, and to display the product details when the its expire date is selected
+  */
+
 import SwiftUI
 import simd
 
@@ -20,23 +26,26 @@ struct CalendarDisplayView: View {
     var body: some View {
         VStack(spacing: 20){
             
-            //Days
+            // Calendar days
             let days: [String] = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
             
             // Month display and arrows
             HStack(spacing: 20){
                 VStack(alignment: .leading, spacing: 10){
                     
+                    // Displays calendar year
                     Text(extraDate()[0])
                         .font(.caption)
                         .fontWeight(.semibold)
                     
+                    // Displays calendar motnh
                     Text(extraDate()[1])
                         .font(.title.bold())
                 }
                 
                 Spacer(minLength: 0)
                 
+                // Back button, goes to the previous month
                 Button {
                     withAnimation{
                         currentMonth -= 1
@@ -46,6 +55,7 @@ struct CalendarDisplayView: View {
                         .font(.title2)
                 }
                 
+                // Forward button, goes to the next month
                 Button {
                     withAnimation{
                         currentMonth += 1
@@ -57,7 +67,7 @@ struct CalendarDisplayView: View {
             }
             .padding(.horizontal)
             
-            // Days display
+            // Displays calendar days
             HStack(spacing: 0){
                 ForEach(days, id: \.self) { day in
                     Text(day)
@@ -67,15 +77,14 @@ struct CalendarDisplayView: View {
                 }
             }
             
-            // Dates display using LazyGrid
+            // Date columns displayed using LazyGrid
             let columns = Array(repeating: GridItem(.flexible()), count: 7)
             
-            // Purple circle for when a day is selected
+            // Purple circle shown when a day is selected, the default is the current date
             LazyVGrid(columns: columns, spacing: 15){
                 ForEach(extractDate()){ value in
                     CardView(value: value)
                         .background(
-                            // when a day is selected
                             Capsule()
                                 .fill(Color("Colour5"))
                                 .padding(.horizontal,8)
@@ -87,7 +96,7 @@ struct CalendarDisplayView: View {
                 }
             }
             
-            // Displays the expired product
+            // Displays the expired product, a NavigationLink to NewEditInventoryProductView wraps the VStack.
             VStack(spacing: 10){
                 Text("Products")
                     .font(.title2.bold())
@@ -137,7 +146,7 @@ struct CalendarDisplayView: View {
     
     // Purple dot if date has an expired product
     @ViewBuilder
-    func CardView(value: CalendarFunctionality)->some View{
+    func CardView(value: DateValue)->some View{
         VStack{
             if value.day != -1 {
                 
@@ -169,6 +178,8 @@ struct CalendarDisplayView: View {
         .frame(height: 60, alignment: .top)
     }
     
+// START - The following functions have been reused from the tutorial - https://www.youtube.com/watch?v=UZI2dvLoPr8&ab_channel=Kavsoft
+    
     //checking to see if same day
     func isSameDay(date1: Date, date2: Date)->Bool{
         let calendar = Calendar.current
@@ -183,6 +194,7 @@ struct CalendarDisplayView: View {
         return date.components(separatedBy: " ")
     }
     
+    // returns the current month
     func getCurrentMonth()->Date{
         let calendar = Calendar.current
         
@@ -193,14 +205,15 @@ struct CalendarDisplayView: View {
         return currentMonth
     }
     
-    func extractDate()->[CalendarFunctionality]{
+    // extracts the date from the DateValue Struct
+    func extractDate()->[DateValue]{
         let calendar = Calendar.current
         let currentMonth = getCurrentMonth()
         
-        var days = currentMonth.getAllDates().compactMap{ date -> CalendarFunctionality
+        var days = currentMonth.getAllDates().compactMap{ date -> DateValue
             in
             let day = calendar.component(.day, from: date)
-            return CalendarFunctionality(day: day, date: date)
+            return DateValue(day: day, date: date)
             
         }
         
@@ -208,7 +221,7 @@ struct CalendarDisplayView: View {
         let firstWeekday = calendar.component(.weekday, from: days.first?.date ?? Date())
         
         for _ in 0..<firstWeekday - 1 {
-            days.insert(CalendarFunctionality(day: -1, date: Date()), at: 0)
+            days.insert(DateValue(day: -1, date: Date()), at: 0)
         }
         return days
     }
@@ -228,6 +241,7 @@ extension Date{
     }
 }
 
+// END
 
 struct CalendarDisplayView_Previews: PreviewProvider {
     static var previews: some View {

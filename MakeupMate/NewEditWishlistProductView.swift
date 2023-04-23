@@ -5,6 +5,12 @@
 //  Created by Shukri  Ahmed on 14/04/2023.
 //
 
+/*
+ This view has been created by the auhtor, it is passed in a productID which is then used to fetch the product from Firestore.
+ 
+ The fetched data populates the view, if the variable is not empty
+ */
+
 import SwiftUI
 import SDWebImageSwiftUI
 
@@ -14,6 +20,8 @@ struct NewEditWishlistProductView: View {
     @State var product: ProductDetails?
     let productID: String
 
+    // The initialiser init takes a parameter of productID (provided by InventoryView) and sets it to productID (the string created). The initial value of product is set to nil to be later changed.
+    
     init(productID: String) {
         self.productID = productID
         self._product = State(initialValue: nil)
@@ -26,7 +34,7 @@ struct NewEditWishlistProductView: View {
     @State private var shade = ""
     @State private var note = ""
     @State private var webLink = ""
-    @State var image: UIImage?
+    @State private var image: UIImage?
     
     @State var shouldShowImagePicker = false
     @State var goesToCategories = false
@@ -86,7 +94,8 @@ struct NewEditWishlistProductView: View {
                     Section(header: Text("Product Shade")){
                         EditTextFieldView(listKey: product.shade, displayName: "Shade", variableName: $shade)
                     }
-
+                    
+                    // Navigation link to CategoryView and displays either product.category or the selected category
                     Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                         NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                             HStack {
@@ -103,30 +112,35 @@ struct NewEditWishlistProductView: View {
                         }
                     }
                     
+                    // Hyperlink found her  - https://stackoverflow.com/questions/48048651/difference-between-openurl-canopenurl
                     Section(header: Text("Product URL"), footer: displayInvalidURL ? Text("This URL is not valid").foregroundColor(.red) : Text("")){
 
-                        // editUrl is false, and product.weblink is not empty
+                        // if editUrl is false, and product.weblink is not empty, displays the URL as Text and on tap open the url
                         if (!product.webLink.isEmpty && !editURL) {
                             HStack {
                                 // if url is valid
-                                if let url = URL(string: product.webLink), UIApplication.shared.canOpenURL(url) {
+                                if let url = URL(string: product.webLink),
+                                   // a boolean that check if the url can open
+                                    UIApplication.shared.canOpenURL(url) {
                                     Text("\(product.webLink)")
                                         .foregroundColor(.blue)
                                         .onTapGesture{
+                                            //opens the url
                                             UIApplication.shared.open(url)
                                         }
-                                } else {
-                                    // The URL is not valid or cannot be opened
+                                }
+                                // The URL is not valid, display it as a Textfield and the boolean displayInvalidURL is set to true, displaying the footer error message
+                                else {
                                     Text("\(product.webLink)")
                                         .foregroundColor(.blue)
                                         .onAppear() {
                                             displayInvalidURL.toggle()
                                         }
-                                    
                                 }
                         
                                 Spacer()
                                 
+                                // a button to remove the url
                                 Button {
                                     editURL.toggle()
                                     print("product.webLink date has been removed")
@@ -136,7 +150,7 @@ struct NewEditWishlistProductView: View {
                                         .foregroundColor(Color.gray)
                                 }
                             }
-                            // product.weblink is emptty or editUrl is true
+                            // product.weblink is empty or editUrl is true, a TextiField is dislpayed
                         } else if (product.webLink.isEmpty || editURL){
                             HStack {
                                 TextField("https://www.boots.com", text: $webLink)
@@ -151,7 +165,7 @@ struct NewEditWishlistProductView: View {
                     }
                     
                     Section{
-                        // IMAGE
+                        // IMAGE button
                         Button {
                             image = nil
                             ef.product?.image = ""
@@ -159,7 +173,7 @@ struct NewEditWishlistProductView: View {
                             Text("Remove Photo")
                         }
                         
-                        // DELETE
+                        // DELETE button
                         Button {
                             ef.deleteProduct(fromCollection: "wishlist", productID: productID, presentationMode: presentationMode)
                         } label: {
@@ -167,9 +181,9 @@ struct NewEditWishlistProductView: View {
                         }
                         .foregroundColor(.red)
                         
-                        // SAVE
+                        // SAVE button
                         Button{
-                            // webLink has not been edited
+                            // if webLink has not been edited, keep it the same
                             if(!product.webLink.isEmpty && !editURL) {
                                 webLink = product.webLink
                             }

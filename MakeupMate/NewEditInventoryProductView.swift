@@ -5,6 +5,12 @@
 //  Created by Shukri  Ahmed on 11/04/2023.
 //
 
+/*
+ This view has been created by the auhtor, it is passed in a productID which is then used to fetch the product from Firestore.
+ 
+ The fetched data populates the view, if the variable is not empty
+ */
+
 import SwiftUI
 import SDWebImageSwiftUI
 
@@ -13,7 +19,8 @@ struct NewEditInventoryProductView: View {
     @State private var selectedCategory: CategoryDetails?
     @State var product: ProductDetails?
     let productID: String
-
+    
+    // The initialiser init takes a parameter of productID (provided by InventoryView) and sets it to productID (the string created). The initial value of product is set to nil to be later changed.
     init(productID: String) {
         self.productID = productID
         self._product = State(initialValue: nil)
@@ -29,10 +36,10 @@ struct NewEditInventoryProductView: View {
     @State private var expiryDate = Date.now
     @State private var expiryDateString = ""
     @State private var note = ""
-    @State var image: UIImage?
+    @State private var image: UIImage?
     
-    @State var shouldShowImagePicker = false
-    @State var goesToCategories = false
+    @State private var shouldShowImagePicker = false
+    @State private var goesToCategories = false
     @State private var dateSet = false
     @State private var dataFetched = false
 
@@ -51,18 +58,19 @@ struct NewEditInventoryProductView: View {
                     } label: {
                         VStack {
                             if let product = ef.product {
+                                // Display image chosen from photo album
                                 if let image = image {
                                     Image(uiImage: image)
                                         .resizable()
                                         .frame(width: 180, height: 180)
                                         .scaledToFill()
-                                    // if product.image is not empty display the products image
+                                // if product.image is not empty display the products image
                                 } else if !product.image.isEmpty {
                                     WebImage(url: URL(string: product.image))
                                         .resizable()
                                         .frame(width: 180, height: 180)
                                         .scaledToFill()
-                                    // else display the photo
+                                // else display the photo
                                 } else {
                                     Image(systemName: "photo.on.rectangle.angled").font(.system(size:120))
                                 }
@@ -74,7 +82,7 @@ struct NewEditInventoryProductView: View {
                 .listRowInsets(EdgeInsets())
                 .background(Color(red: 0.949, green: 0.949, blue: 0.97))
                 
-                
+                // Displays theStrings stored in the ef.product using PrdocutDetails
                 if let product = ef.product {
                     
                     Section(header: Text("Product Name")){
@@ -89,12 +97,15 @@ struct NewEditInventoryProductView: View {
                         EditTextFieldView(listKey: product.shade, displayName: "Shade", variableName: $shade)
                     }
                     
+                    // NavigationLink to CategoryView
                     Section(header: Text("Product Category"), footer: Text("Click to select a category")){
                         NavigationLink(destination: CategoryView(selectedCategory: $selectedCategory)) {
                             HStack {
-                                Text(categoryField.isEmpty ? "E.g. Powder Blushes" : categoryField)
+                                //displays categoryField if it is not empty, or the placeholder text
+                                Text(categoryField.isEmpty ? "Category" : categoryField)
                                     .foregroundColor(categoryField.isEmpty ? Color(red: 0.784, green: 0.784, blue: 0.793) : Color.black)
                             }
+                            // Sets categoryField to the selectedCategory or product.category
                             .onAppear {
                                 if let category = selectedCategory {
                                     categoryField = category.categoryName
@@ -106,11 +117,11 @@ struct NewEditInventoryProductView: View {
                     }
                     
                     Section(header: Text("Product Stock"), footer: Text("How many items of the product you own")){
-                        
                         Stepper(value: $stockInt, in: 1...100){
                             Text("\(stockInt) item\(stockInt > 1 ? "s" : "")")
                         }
                         .onAppear() {
+                            // stockInt is set to product.stock which is trandformed into an Int
                             stockInt = Int(product.stock) ?? 0
                         }
                     }
@@ -177,7 +188,7 @@ struct NewEditInventoryProductView: View {
                     }
                     
                     Section{
-                        // IMAGE
+                        // button to remove image
                         Button {
                             image = nil
                             ef.product?.image = ""
@@ -185,7 +196,7 @@ struct NewEditInventoryProductView: View {
                             Text("Remove Photo")
                         }
                         
-                        // DELETE
+                        // button to delete product
                         Button {
                             ef.deleteProduct(fromCollection: "inventory", productID: productID, presentationMode: presentationMode)
                         } label: {
@@ -193,7 +204,7 @@ struct NewEditInventoryProductView: View {
                         }
                         .foregroundColor(.red)
                         
-                        // SAVE
+                        // button to save product
                         Button{
                             
                             // for stock
@@ -204,7 +215,7 @@ struct NewEditInventoryProductView: View {
                             dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
                             
                             // If dataSet is true, then <tap to set> is being displayed i.e. no date picked
-                            if (dateSet) {
+                            if (!dateSet) {
                                 expiryDateString = ""
                             } else {
                                 expiryDateString = dateFormatter.string(from: expiryDate)
@@ -229,9 +240,7 @@ struct NewEditInventoryProductView: View {
                     dataFetched = true
                 }
             }
-            //.navigationViewStyle(StackNavigationViewStyle())
             .navigationTitle("Edit Product")
-            //.navigationViewStyle(StackNavigationViewStyle())
         }
         .navigationViewStyle(StackNavigationViewStyle())
         .sheet(isPresented: $shouldShowImagePicker, onDismiss: nil) {

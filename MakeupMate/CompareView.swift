@@ -6,11 +6,11 @@
 //
 
 /*
-  This view fetches all the categories for the user to chose from, once pciked it displays the products that are associated to the category
+  This view fetches all the categories for the user to chose from, once picked it displays the products that are associated to the category
  
-  No code has been copied directly but the auhtor adpated code form the follloing tutorials:
-  dropdown - https://www.youtube.com/watch?v=0LrP6dv8tHY&ab_channel=JamesHaville
-  delete mehtod learnt from - https://www.youtube.com/watch?v=2g1t15bwX44&ab_channel=PaulHudson
+  This file is the authors own code, created with knowledge learnt from building other views
+ 
+  How to use scrollview to create a drop down - https://www.youtube.com/watch?v=0LrP6dv8tHY&ab_channel=JamesHaville
  */
 
 import SwiftUI
@@ -24,7 +24,7 @@ struct CompareView: View {
     @State var shouldShowLogOutOptions = false
     
     @ObservedObject private var am = AccountFunctionalityViewModel()
-    @ObservedObject private var af = AddFunctionalityViewModel()
+    @ObservedObject private var cf = CategoryFunctionalityViewModel()
     
     @State private var categories = [CategoryDetails]()
     @State private var category: CategoryDetails?
@@ -65,14 +65,17 @@ struct CompareView: View {
                 DisclosureGroup("\(selectedCategory)", isExpanded: $isExpanded) {
                     ScrollView {
                         VStack {
-                            ForEach(af.categories) { category in
+                            // For each category display its name
+                            ForEach(cf.categories) { category in
                                 Text("\(category.categoryName)")
                                     .frame(maxWidth: .infinity)
                                     .padding()
                                     .onTapGesture {
-                                        self.selectedCategory = category.categoryName //The category picked name
+                                        //selectedCategory stores the chosen category
+                                        self.selectedCategory = category.categoryName
                                         withAnimation {
                                             self.isExpanded .toggle()
+                                            // fins the products in both categories
                                             findCategoryInventoryProducts()
                                             findCategoryWishlistProducts()
                                         }
@@ -90,34 +93,15 @@ struct CompareView: View {
             .padding(.horizontal)
             
             HStack{
+                // provides ProductLsiting with array inventory products that belong to the category
                 ProductListing(columnTitle: "Inventory", productType: $inventoryProducts)
                     .frame(width: 190)
                 Divider()
+                // provides ProductLsiting with array wishlist products that belong to the category
                 ProductListing(columnTitle: "Wishlist", productType: $wishlistProducts)
                     .frame(width: 190)
             }
             .padding()
-        }
-    }
-    
-    private func fetchCategoryProducts() {
-        FirebaseManager.shared.firestore.collection("categories").getDocuments { documentsSnapshot,
-            error in
-            if let error = error {
-                self.statusMessage = "Failed to fetch inventory product: \(error)"
-                print(statusMessage)
-                return
-            }
-            
-            documentsSnapshot?.documents.forEach({ snapshot in
-                let data = snapshot.data()
-                print("data")
-                self.categories.append(.init(documentID: snapshot.documentID, data: data))
-                print(categories)
-            })
-            self.statusMessage = "Fetched products successfully"
-            print(statusMessage)
-            
         }
     }
     
@@ -158,6 +142,7 @@ struct CompareView: View {
                 self.statusMessage = "Fetched products successfully"
                 print (self.statusMessage)
                 
+                // removes the products not part of the category into inventoryProducts
                 for product in self.inventoryProducts {
                     if product.category != self.selectedCategory {
                         if let index = self.inventoryProducts.firstIndex(where: { $0.documentID == product.documentID }) {
@@ -207,8 +192,7 @@ struct CompareView: View {
                 self.statusMessage = "Fetched products successfully"
                 print (self.statusMessage)
                 
-                print("original Products: \(wishlistProducts)")
-                
+                // removes the products not part of the category into wishlistProducts
                 for product in self.wishlistProducts {
                     if product.category != self.selectedCategory {
                         if let index = self.wishlistProducts.firstIndex(where: { $0.documentID == product.documentID }) {
@@ -217,13 +201,10 @@ struct CompareView: View {
                         }
                     }
                 }
-                
-                print("wishlistProducts: \(wishlistProducts)")
+            
             }
     }
 }
-
-// https://stackoverflow.com/questions/57606290/change-navigationlink-destination-conditionally-in-swiftui
 
 // This view is used to display the products 
 struct ProductListing: View {
@@ -242,6 +223,7 @@ struct ProductListing: View {
                 VStack {
                     ForEach (productType) { product in
                         
+                        // Conditional navigatoin link found here - https://stackoverflow.com/questions/57606290/change-navigationlink-destination-conditionally-in-swiftui
                         NavigationLink(destination:
                                         VStack{
                             if columnTitle == "Inventory" {

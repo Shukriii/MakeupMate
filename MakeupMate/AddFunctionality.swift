@@ -5,33 +5,29 @@
 //  Created by Shukri  Ahmed on 25/03/2023.
 //
 
-import Foundation
-import UIKit
-import SwiftUI
-
 /*
+  This observable object is used to add products to the inventory and wishlist views. Uses Firebase Storage to create a upload an image to Storage and uses a reference of the products' productID. The functions have been paramterised, some parameteres are optional e.g. expiryDate. So the function can be reused
+ 
   No code has been copied directly, only adapted from tutorials
  
   Storing product into Firestore: https://www.youtube.com/watch?v=dA_Ve-9gizQ&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=12&ab_channel=LetsBuildThatApp
-  Storing image to Firebase Storage: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
+  Storing image to Firebase Storage: https://www.letsbuildthatapp.com/videos/7125
  */
+
+import Foundation
+import SwiftUI
 
 class AddFunctionalityViewModel: ObservableObject {
     
     @Published var statusMessage = ""
-    @Published var categories = [CategoryDetails]()
-    
-    init(){
-        fetchCategories()
-    }
     
     // This function creates a documents and a reference to store the product using the unique documentID
-    // calls storeProduct either witha url or the url set to nil
+    // calls storeProduct either with a url or a url set to nil
     func uploadProduct(fromCollection collectionName: String, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, webLink: String? = nil, note: String, image: UIImage?, presentationMode: Binding<PresentationMode>? = nil) {
         
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
        
-        // Create a document, in the collection passed in
+        // Create a document in the collection passed in
         let document = FirebaseManager.shared.firestore.collection("products")
             .document(uid)
             .collection(collectionName)
@@ -52,6 +48,7 @@ class AddFunctionalityViewModel: ObservableObject {
                     return
                 }
             
+                // download the url of the image
                 reference.downloadURL { url, err in
                     if let err = err {
                         self.statusMessage = "Failed to retrieve downloadURL: \(err)"
@@ -76,6 +73,7 @@ class AddFunctionalityViewModel: ObservableObject {
     func storeProduct(fromCollection collectionName: String, productID: String, imageProfileUrl: URL?, name: String, brand: String, categoryField: String, shade: String, stock: String? = nil, expiryDateString: String? = nil, webLink: String? = nil, note: String, presentationMode: Binding<PresentationMode>? = nil) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
+        // uses productID to find the document
         let document = FirebaseManager.shared.firestore.collection("products")
             .document(uid)
             .collection(collectionName)
@@ -84,11 +82,13 @@ class AddFunctionalityViewModel: ObservableObject {
         //dictionary of data to be stored, common to both Inventory and Wishlist
         var productData = ["uid": uid, "name": name, "brand": brand, "category": categoryField, "shade": shade, "note": note] as [String : Any]
         
+        // stock and expiryDate only exlcusive to Inventory
         if collectionName == "inventory" {
             productData["stock"] = stock
             productData["expiryDate"] = expiryDateString
         }
-        
+         
+        // webLink only exlcusive to Wishlist
         if collectionName == "wishlist" {
             productData["webLink"] = webLink
         }
@@ -112,59 +112,7 @@ class AddFunctionalityViewModel: ObservableObject {
         
         presentationMode?.wrappedValue.dismiss()
     }
-    
-    func fetchCategories() {
-        guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
-        
-        FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories")
-            .order(by: "name")
-            .addSnapshotListener{ querySnapshot, error in
-                if let error = error {
-                    self.statusMessage = "Failed to fetch category: \(error)"
-                    print("Failed to fetch category: \(error)")
-                    return
-                }
-                
-                // The snapshot listener querySnapshot listens for changes
-                querySnapshot?.documentChanges.forEach( { change in
-                    // if a category is added
-                    if change.type == .added {
-                        let data = change.document.data()
-                        self.categories.append(.init(documentID: change.document.documentID, data: data))
-                    }
-                    //if a category is deleted
-                    if change.type == .removed {
-                        if let index = self.categories.firstIndex(where: { $0.documentID == change.document.documentID }) {
-                            self.categories.remove(at: index)
-                        }
-                    }
-                    // if a product is modified
-                    if change.type == .modified {
-                        if let index = self.categories.firstIndex(where: { $0.documentID == change.document.documentID }) {
-                            let data = change.document.data()
-                            self.categories[index] = .init(documentID:change.document.documentID, data: data)
-                            }
-                        }
-                })
-                self.statusMessage = "AF - Fetched categories successfully"
-                print (self.statusMessage)
-                
-            }
-    }
-    
-    func displayMessage(title: String, message: String) {
-        
-        let alert = UIAlertController(title: "\(title)", message: "\(message)", preferredStyle: .alert)
-        
-        //Buttons
-        let dismiss = UIAlertAction(title: "Dismiss", style: .default) { (_) in
-        }
-        
-        alert.addAction(dismiss)
-        
-        UIApplication.shared.windows.first?.rootViewController?.present(alert, animated: true, completion: {
-        })
-    }
+
 }
 
 

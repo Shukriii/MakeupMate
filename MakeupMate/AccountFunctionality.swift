@@ -5,15 +5,17 @@
 //  Created by Shukri  Ahmed on 29/03/2023.
 //
 
+/*
+  No code has been directly copied but has been adapted from the following tutorials.
+ 
+  This Observable object has been crated so when either the details of the current user changes or the user signed out, the instance of the object is updated. 
+  
+  To fetch the current user from Firestore: https://www.letsbuildthatapp.com/videos/7165
+  Sign out functionality: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
+ */
+
 import Foundation
 
-/*
-  No code has been directly copied but has been adapted from the following tutorials
-  
-  To fetch the current user from Firestore: https://www.youtube.com/watch?v=yHngqpFpVZU&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=7&ab_channel=LetsBuildThatApp
-  Sign out functionality: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
-
- */
 class AccountFunctionalityViewModel: ObservableObject {
     
     @Published var currentUser: CurrentUser?
@@ -22,9 +24,9 @@ class AccountFunctionalityViewModel: ObservableObject {
     @Published var isUserCurrentlyLoggedOut = false
     
     init() {
-        /* If the user is logged out set the uid to nil,
+        // If the user is logged out set the uid to nil,
         DispatchQueue.main.async {
-            self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil } */
+            self.isUserCurrentlyLoggedOut = FirebaseManager.shared.auth.currentUser?.uid == nil } 
         fetchCurrentUser()
     }
     
@@ -44,6 +46,7 @@ class AccountFunctionalityViewModel: ObservableObject {
                 return
             }
             
+            // places the data in the snapshot into data
             guard let data = snapshot?.data() else {
                 self.errorMessage = "No data found"
                 print(self.errorMessage)

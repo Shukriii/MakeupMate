@@ -8,10 +8,11 @@
 import SwiftUI
 
 /*
- - Displays title of view and an icon to logout
- - Uses the boolean isUserCurrentlyLoggedOut to check wether the user is logged in. If not it uses the closure didCompleteLoginProcess to all the functions to populate the view.
+ - Displays title of the view and an icon to logout
+ - Uses the boolean isUserCurrentlyLoggedOut to check wether the user is logged in. If not it uses the closure didCompleteLoginProcess to display the LoginView as well as call functions to populate the view.
  
- -  Adapted from this video: https://www.youtube.com/watch?v=pPsKTTd55xI&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=6&ab_channel=LetsBuildThatApp
+ -  Reused + Edited from this video: https://www.youtube.com/watch?v=pPsKTTd55xI&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=6&ab_channel=LetsBuildThatApp
+ - Source code: https://www.letsbuildthatapp.com/videos/7155
  */
 
 struct TopNavigationBar: View {

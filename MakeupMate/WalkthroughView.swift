@@ -10,15 +10,14 @@
  This file is a walkthrough that provides the users with instructions on how to use the app.
  It is only displayed when the app is first downloaded.
  
- I reused the code from this video: https://www.youtube.com/watch?v=HVAMShhJOUo&ab_channel=Kavsoft
+ I reused and edited the code from this video: https://www.youtube.com/watch?v=HVAMShhJOUo&ab_channel=Kavsoft
  
- Replaced the tutorial code with my own images, information and colour scheme. 
+ Replaced the tutorial code with my own images, text and colour scheme.
  */
-
 
 import SwiftUI
 
-// Once walkthrough is complete redirects to NavigationBar
+// This struct uses cuurentPage to decide what view to display, once the walkthough is complete it redirects the user to BottomNavigationBar()
 struct WalkthroughView: View {
     
     @AppStorage("currentPage") var currentPage = 1
@@ -27,8 +26,6 @@ struct WalkthroughView: View {
         
         if currentPage > totalPages {
             BottomNavigationBar()
-            //InventoryView()
-            //LoginView (didCompleteLoginProcess: {})
         }
         else {
             Walkthrough()
@@ -38,7 +35,7 @@ struct WalkthroughView: View {
 
 var totalPages = 3
 
-// Class that provides ScreenView with parameters for each view
+// Provides Struct ScreenView with parameters for each view
 struct Walkthrough: View {
     
     @AppStorage("currentPage") var currentPage = 1
@@ -64,7 +61,7 @@ struct Walkthrough: View {
             
         }
         .overlay(
-            
+            // Circle button to change view being displayed
             Button (action: {
                 withAnimation(.easeInOut){
                     
@@ -82,8 +79,6 @@ struct Walkthrough: View {
                     .frame(width: 60, height: 100, alignment: .center)
                     .background(Color(red: 0.213, green: 0.279, blue: 0.824, opacity: 0.525))
                     .clipShape(Circle())
-                
-                // For circular slider
                     .overlay(
                         ZStack{
                             Circle()
@@ -104,7 +99,7 @@ struct Walkthrough: View {
     }
 }
 
-// The design of each view
+// The design of each view, the image, title, detail and bgColor are provided as parameters
 struct ScreenView: View {
     
     var image: String
@@ -181,7 +176,6 @@ struct ScreenView: View {
     }
 }
 
-//Connects content previewer
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         Group {

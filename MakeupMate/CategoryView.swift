@@ -8,7 +8,10 @@
 /*
   This view displays all the categories and gives users the option to add and delete a category
  
+  Other than the alertView this is all the auhtors code
+ 
   The code for alertView has been reused from: https://www.youtube.com/watch?v=NJDBb4sOfNE&ab_channel=Kavsoft
+    delete method learnt from - https://www.youtube.com/watch?v=2g1t15bwX44&ab_channel=PaulHudson
  */
 
 import SwiftUI
@@ -20,14 +23,15 @@ struct CategoryView: View {
     
     @Environment(\.presentationMode) var presentationMode
 
-    @ObservedObject private var af = AddFunctionalityViewModel()
+    @ObservedObject private var cf = CategoryFunctionalityViewModel()
     @ObservedObject private var vim = FetchFunctionalityViewModel(collectionName: "inventory")
     @ObservedObject private var vwm = FetchFunctionalityViewModel(collectionName: "wishlist")
     
     var body: some View {
         VStack {
             Form {
-                ForEach (af.categories) { category in
+                // Displays all the category, if a category is picked it is stored in selectedCategory and the view is dismissed
+                ForEach (cf.categories) { category in
                     Button(action: {
                         withAnimation {
                             selectedCategory = category
@@ -36,11 +40,12 @@ struct CategoryView: View {
                     }) {
                         Text(category.categoryName)
                     }
-                }.onDelete(perform: delete)
+                }.onDelete(perform: delete) // deletes a category
             }
             .padding(.top, 0.3)
             .navigationBarTitle("Pick a Category")
             .navigationBarItems(trailing: Button(action: {
+                // alert that lets user add a category
                 alertView()
             }, label: {
                 Image(systemName: "plus.circle.fill")
@@ -48,8 +53,8 @@ struct CategoryView: View {
                     .imageScale(.large)
             }))
             .onAppear{
-                // calls the fethcCategory funtion
-                af.fetchCategories()
+                // calls the fethcCategory function
+                cf.fetchCategories()
             }
             
             Text("Swipe a category to delete it")
@@ -75,12 +80,12 @@ struct CategoryView: View {
         }
     }
     
-    // This function removes the document from Firestore and remove the category from the array of categories
+    // This function removes the category document from Firestore and remove the category from the array of categories. But before checks if the category has any products
     private func delete(at offsets: IndexSet) {
         guard let uid = FirebaseManager.shared.auth.currentUser?.uid else { return }
         
         offsets.forEach { index in
-            let category = af.categories[index]
+            let category = cf.categories[index]
             
             // if the category has products
             var hasInventoryProducts: Bool {
@@ -91,9 +96,11 @@ struct CategoryView: View {
                 vwm.products.contains(where: { $0.category == category.categoryName })
             }
             
+            // if category has prodcuts displays alert
             if (hasInventoryProducts || hasWishlistProducts){
-                af.displayMessage(title: "Error: Category Deletion Failed", message: "This cateory has products in it.")
+                cf.displayMessage(title: "Error: Category Deletion Failed", message: "This category has products in it.")
             } else {
+                // else delete the category
                 FirebaseManager.shared.firestore.collection("categories").document(uid).collection("categories").document(category.id).delete { error in
                     if let error = error {
                         print("Failed to delete:", error)
@@ -102,13 +109,14 @@ struct CategoryView: View {
                         print("Category deleted")
                     }
                 }
-                af.categories.remove(atOffsets: offsets)
+                // remove from array
+                cf.categories.remove(atOffsets: offsets)
             }
            
         }
     }
     
-    // This fucntion displays an alert on screen and calls the storeCategory function
+    // This fucntion displays an alert on screen, that allows the user to enter in a category and calls the storeCategory function
     private func alertView() {
         let alert = UIAlertController(title: "Add Category", message: "Enter the name of the new category:", preferredStyle: .alert)
         

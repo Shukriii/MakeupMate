@@ -5,6 +5,10 @@
 //  Created by Shukri  Ahmed on 07/04/2023.
 //
 
+/*
+  The expiry Calendar view, it displays the top navigation bar and calles CalendarDisplayView to display the caleddar, with the parameter currentDate
+ */
+
 import SwiftUI
 
 struct ExpiryCalendarView: View {
@@ -15,7 +19,8 @@ struct ExpiryCalendarView: View {
     var body: some View {
         NavigationView {
             VStack (alignment: .leading, spacing: 15) {
-            
+                
+                // top navigation bar
                 TopNavigationBar(navigationName: "Expiry Calendar")
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
@@ -23,7 +28,7 @@ struct ExpiryCalendarView: View {
                             self.am.fetchCurrentUser()
                         })
                     }
-            
+                
                 ScrollView(.vertical, showsIndicators: false){
                     
                     // The calendar will appear here

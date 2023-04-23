@@ -10,6 +10,8 @@
  and implements a Coordinator class to handle image selection and cancellation events.
  
  Reused code from tutorial: https://www.youtube.com/watch?v=5inXE5d2MUM&ab_channel=LetsBuildThatApp
+
+ Link to souce code: https://www.letsbuildthatapp.com/videos/7125
  */
 
 import Foundation

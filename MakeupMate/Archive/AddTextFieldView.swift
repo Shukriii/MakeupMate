@@ -5,6 +5,10 @@
 //  Created by Shukri  Ahmed on 25/03/2023.
 //
 
+
+// THIS CODE IS NOT BEING USED BY THE APPLICATION
+// HAS BEEN ARCHIVED, WAS CREATED DURING THE DEVLEOPMENT OF MAKEUPMATE
+
 /*
   Displays a Textfield to enter a products details
  
