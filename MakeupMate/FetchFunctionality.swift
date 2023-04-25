@@ -6,8 +6,8 @@
 //
 
 /*
- 
- This observable object is used to populate the Inventory and Wishlist views, the instance of the object updates when a products is added, deleted or edited. CategoryView uses this OO to check if a category has products in it before deleting it.
+  This observable object is used to populate the Inventory and Wishlist views, the instance of the object updates when a products is added, deleted or edited.
+  CategoryView uses this OO to check if a category has products in it before deleting it.
  
   No code has been copied directly, but the querySnapshot used in fetchProduct function has been addpated from this tutorial: https://www.letsbuildthatapp.com/videos/7874
  */
@@ -32,7 +32,7 @@ class FetchFunctionalityViewModel: ObservableObject {
             print ("fetchProducts(): Could not find firebase uid")
             return
         }
-        
+ 
         //uses the uid and collection name to access the collection
         FirebaseManager.shared.firestore.collection("products").document(uid).collection(collectionName)
             .order(by: "name")

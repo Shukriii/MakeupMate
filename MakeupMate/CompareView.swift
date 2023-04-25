@@ -21,7 +21,6 @@ struct CompareView: View {
     @State private var isExpanded = false
     @State private var selectedCategory = ""
     @State private var statusMessage = ""
-    @State var shouldShowLogOutOptions = false
     
     @ObservedObject private var am = AccountFunctionalityViewModel()
     @ObservedObject private var cf = CategoryFunctionalityViewModel()
@@ -40,6 +39,7 @@ struct CompareView: View {
                     .fullScreenCover(isPresented: $am.isUserCurrentlyLoggedOut, onDismiss: nil){
                         LoginView(didCompleteLoginProcess: {
                             self.am.isUserCurrentlyLoggedOut = false
+                            self.am.fetchCurrentUser()
                         })
                     }
                 

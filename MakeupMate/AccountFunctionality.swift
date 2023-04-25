@@ -6,9 +6,9 @@
 //
 
 /*
+  This Observable object has been created so when the users logs in or log out, the instance of the object is updated.
+  
   No code has been directly copied but has been adapted from the following tutorials.
- 
-  This Observable object has been crated so when either the details of the current user changes or the user signed out, the instance of the object is updated. 
   
   To fetch the current user from Firestore: https://www.letsbuildthatapp.com/videos/7165
   Sign out functionality: https://www.youtube.com/watch?v=NLOKRKvnHCo&list=PL0dzCUj1L5JEN2aWYFCpqfTBeVHcGZjGw&index=8&ab_channel=LetsBuildThatApp
@@ -60,6 +60,7 @@ class AccountFunctionalityViewModel: ObservableObject {
     // Signs the user out, and updates the boolean value to true
     func handleSignOut() {
         isUserCurrentlyLoggedOut.toggle()
+        print("isUserCurrentlyLoggedOut is - \(isUserCurrentlyLoggedOut)")
         try? FirebaseManager.shared.auth.signOut()
         print("Current user has been signed out")
     }

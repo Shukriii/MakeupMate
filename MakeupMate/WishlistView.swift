@@ -18,7 +18,6 @@ import SDWebImageSwiftUI
 // Logout only works on InventoryView 
 struct WishlistView: View {
     
-    @State var shouldShowLogOutOptions = false
     @State var productsForCategory = [ProductDetails]()
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "wishlist")

@@ -6,7 +6,7 @@
 //
 
 /*
- This file contains various Structs that are used to decode decodes a dictionary of data, and places them into variable to they can be easily accessed
+ This file contains various Structs that are used to decode a dictionary of data, and places the data into variable to they can be easily accessed
  
  The CurrentUser Struct is used to decode data fetched from the "users" collection in Firestore
  The FirebaseConstant creates variable to prevent accidental spelling mistakes when fetching

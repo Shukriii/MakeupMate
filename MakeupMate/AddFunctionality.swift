@@ -6,7 +6,9 @@
 //
 
 /*
-  This observable object is used to add products to the inventory and wishlist views. Uses Firebase Storage to create a upload an image to Storage and uses a reference of the products' productID. The functions have been paramterised, some parameteres are optional e.g. expiryDate. So the function can be reused
+  This observable object is used to add products to the inventory and wishlist views.
+  Uses Firebase Storage to upload an image to Storage and with a reference of the products' productID.
+  The functions have been paramterised and some parameteres are optional e.g. expiryDate, so the function can be reused
  
   No code has been copied directly, only adapted from tutorials
  

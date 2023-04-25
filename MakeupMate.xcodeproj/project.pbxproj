@@ -11,9 +11,6 @@
 		A614CB9B2992863A005087C9 /* WalkthroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A614CB9A2992863A005087C9 /* WalkthroughView.swift */; };
 		A614CB9D29928640005087C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A614CB9C29928640005087C9 /* Assets.xcassets */; };
 		A614CBA029928640005087C9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A614CB9F29928640005087C9 /* Preview Assets.xcassets */; };
-		A614CBAA29928640005087C9 /* MakeupMateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A614CBA929928640005087C9 /* MakeupMateTests.swift */; };
-		A614CBB429928640005087C9 /* MakeupMateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A614CBB329928640005087C9 /* MakeupMateUITests.swift */; };
-		A614CBB629928640005087C9 /* MakeupMateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A614CBB529928640005087C9 /* MakeupMateUITestsLaunchTests.swift */; };
 		A61D710629B3789B0082258E /* InventoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61D710529B3789B0082258E /* InventoryView.swift */; };
 		A631EACA299E7DB900D9E1DD /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A631EAC9299E7DB900D9E1DD /* LoginView.swift */; };
 		A631EACF299FB54700D9E1DD /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A631EACE299FB54700D9E1DD /* FirebaseAuth */; };
@@ -34,7 +31,6 @@
 		A6BF475829C2028E001940A7 /* BottomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6BF475729C2028E001940A7 /* BottomNavigationBar.swift */; };
 		A6CC288E29CF3C41009044B9 /* EditTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC288D29CF3C41009044B9 /* EditTextFieldView.swift */; };
 		A6CC289029CF4362009044B9 /* TopNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC288F29CF4362009044B9 /* TopNavigationBar.swift */; };
-		A6CC289329CF43CC009044B9 /* AddTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289229CF43CC009044B9 /* AddTextFieldView.swift */; };
 		A6CC289729CF5EF1009044B9 /* AddFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289629CF5EF1009044B9 /* AddFunctionality.swift */; };
 		A6CC289929CF70A0009044B9 /* EditFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289829CF70A0009044B9 /* EditFunctionality.swift */; };
 		A6CC289D29D0F7FA009044B9 /* FetchFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289C29D0F7FA009044B9 /* FetchFunctionality.swift */; };
@@ -70,10 +66,7 @@
 		A614CB9C29928640005087C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A614CB9F29928640005087C9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A614CBA529928640005087C9 /* MakeupMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MakeupMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A614CBA929928640005087C9 /* MakeupMateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateTests.swift; sourceTree = "<group>"; };
 		A614CBAF29928640005087C9 /* MakeupMateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MakeupMateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A614CBB329928640005087C9 /* MakeupMateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateUITests.swift; sourceTree = "<group>"; };
-		A614CBB529928640005087C9 /* MakeupMateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A61D710529B3789B0082258E /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		A631EAC9299E7DB900D9E1DD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A6351AF529E992E700C807A3 /* NewAddWishlistProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddWishlistProductView.swift; sourceTree = "<group>"; };
@@ -90,7 +83,6 @@
 		A6BF475729C2028E001940A7 /* BottomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomNavigationBar.swift; sourceTree = "<group>"; };
 		A6CC288D29CF3C41009044B9 /* EditTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTextFieldView.swift; sourceTree = "<group>"; };
 		A6CC288F29CF4362009044B9 /* TopNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopNavigationBar.swift; sourceTree = "<group>"; };
-		A6CC289229CF43CC009044B9 /* AddTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTextFieldView.swift; sourceTree = "<group>"; };
 		A6CC289629CF5EF1009044B9 /* AddFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFunctionality.swift; sourceTree = "<group>"; };
 		A6CC289829CF70A0009044B9 /* EditFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFunctionality.swift; sourceTree = "<group>"; };
 		A6CC289C29D0F7FA009044B9 /* FetchFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchFunctionality.swift; sourceTree = "<group>"; };
@@ -135,8 +127,6 @@
 			isa = PBXGroup;
 			children = (
 				A614CB972992863A005087C9 /* MakeupMate */,
-				A614CBA829928640005087C9 /* MakeupMateTests */,
-				A614CBB229928640005087C9 /* MakeupMateUITests */,
 				A614CB962992863A005087C9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -176,7 +166,6 @@
 				A6CC289E29D0F9F5009044B9 /* CompareView.swift */,
 				A6D69B4A29E02CF500BA19A6 /* ExpiryCalendarView.swift */,
 				A6D69B4C29E033F000BA19A6 /* CalendarDisplayView.swift */,
-				A6586F7D29F489420052FD9A /* Archive */,
 				A614CB9C29928640005087C9 /* Assets.xcassets */,
 				A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */,
 				A614CB9E29928640005087C9 /* Preview Content */,
@@ -190,31 +179,6 @@
 				A614CB9F29928640005087C9 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		A614CBA829928640005087C9 /* MakeupMateTests */ = {
-			isa = PBXGroup;
-			children = (
-				A614CBA929928640005087C9 /* MakeupMateTests.swift */,
-			);
-			path = MakeupMateTests;
-			sourceTree = "<group>";
-		};
-		A614CBB229928640005087C9 /* MakeupMateUITests */ = {
-			isa = PBXGroup;
-			children = (
-				A614CBB329928640005087C9 /* MakeupMateUITests.swift */,
-				A614CBB529928640005087C9 /* MakeupMateUITestsLaunchTests.swift */,
-			);
-			path = MakeupMateUITests;
-			sourceTree = "<group>";
-		};
-		A6586F7D29F489420052FD9A /* Archive */ = {
-			isa = PBXGroup;
-			children = (
-				A6CC289229CF43CC009044B9 /* AddTextFieldView.swift */,
-			);
-			path = Archive;
 			sourceTree = "<group>";
 		};
 		A6CC289129CF439F009044B9 /* Utilities */ = {
@@ -394,7 +358,6 @@
 				A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */,
 				A6D69B4F29E0440F00BA19A6 /* CalendarFunctionality.swift in Sources */,
 				A631EACA299E7DB900D9E1DD /* LoginView.swift in Sources */,
-				A6CC289329CF43CC009044B9 /* AddTextFieldView.swift in Sources */,
 				A614CB992992863A005087C9 /* MakeupMateApp.swift in Sources */,
 				A6BF475829C2028E001940A7 /* BottomNavigationBar.swift in Sources */,
 			);
@@ -404,7 +367,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A614CBAA29928640005087C9 /* MakeupMateTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -412,8 +374,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A614CBB629928640005087C9 /* MakeupMateUITestsLaunchTests.swift in Sources */,
-				A614CBB429928640005087C9 /* MakeupMateUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

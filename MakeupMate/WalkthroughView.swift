@@ -33,7 +33,7 @@ struct WalkthroughView: View {
     }
 }
 
-var totalPages = 3
+var totalPages = 4
 
 // Provides Struct ScreenView with parameters for each view
 struct Walkthrough: View {
@@ -45,17 +45,22 @@ struct Walkthrough: View {
         ZStack {
             
             if currentPage == 1 {
-                ScreenView(image: "image1", title: "Step 1", detail: "Create an account", bgColor: Color(red: 0.744, green: 0.502, blue: 0.552, opacity: 0.473))
+                ScreenView(image: "image3", title: "Create an account", detail: "How To Get Started!", bgColor: Color(red: 0.213, green: 0.28, blue: 0.823, opacity: 0.217))
                     .transition(.scale)
             }
             
             if currentPage == 2 {
-                ScreenView(image: "image2", title: "Step 2", detail: "Add your makeup inventory and wish list", bgColor: Color(red: 0.998, green: 0.703, blue: 0.637, opacity: 0.592))
+                ScreenView(image: "image2", title: "Add Products To Your Makeup Collection and Wishlist", detail: "", bgColor: Color(red: 0.213, green: 0.28, blue: 0.823, opacity: 0.217))
                     .transition(.scale)
             }
             
             if currentPage == 3 {
-                ScreenView(image: "image3", title: "Step 3", detail: "Enjoy MakeupMate features!", bgColor: Color(red: 0.997, green: 0.803, blue: 0.699, opacity: 0.601))
+                ScreenView(image: "image1", title: "Compare Your Makeup Collection and Wishlist", detail: "", bgColor: Color(red: 0.213, green: 0.28, blue: 0.823, opacity: 0.217))
+                    .transition(.scale)
+            }
+            
+            if currentPage == 4 {
+                ScreenView(image: "image4", title: "Set Expiration Notifications For Products", detail: "", bgColor: Color(red: 0.213, green: 0.28, blue: 0.823, opacity: 0.217))
                     .transition(.scale)
             }
             
@@ -140,7 +145,7 @@ struct ScreenView: View {
                 
                 Button(action: {
                     withAnimation(.easeInOut){
-                        currentPage = 4
+                        currentPage = 5
                     }
                 }, label: {
                     Text("Skip")
@@ -153,22 +158,21 @@ struct ScreenView: View {
             
             Spacer(minLength: 0)
             
+            Text(detail)
+                .font(.system(size: 25, weight: .semibold))
+                .foregroundColor(Color.black)
+                .kerning(1.3)
+                .padding(.bottom, 22.0)
+            
             Image(image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
             
             Text(title)
-                .font(.title)
-                .fontWeight(.bold)
+                .font(.system(size: 30, weight: .regular))
                 .foregroundColor(.black)
-                .padding(.top)
-            
-            Text(detail)
-                .font(.system(size: 20, weight: .semibold))
-                //.fontWeight(.bold)
-                .foregroundColor(Color.black)
-                .kerning(1.3)
                 .multilineTextAlignment(.center)
+                .padding()
             
             Spacer(minLength: 120)
         }

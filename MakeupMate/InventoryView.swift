@@ -19,7 +19,6 @@ import SDWebImageSwiftUI
 
 struct InventoryView: View {
     
-    @State var shouldShowLogOutOptions = false
     @State var productsForCategory = [ProductDetails]()
     
     @ObservedObject private var vm = FetchFunctionalityViewModel(collectionName: "inventory")

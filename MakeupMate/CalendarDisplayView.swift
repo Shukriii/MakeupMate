@@ -138,29 +138,20 @@ struct CalendarDisplayView: View {
                                             if success {
                                                 print("premission given")
                                                 
-                                                // productInfo.expireDate is in format "dd MMM yyyy 'at' HH:mm:ss zzz", changing it to dd MMMM yyyy
-                                                //let dateFormatter = DateFormatter()
-                                                //dateFormatter.dateFormat = "dd MMMM yyyy"
-                                                //let productExpireDate = dateFormatter.string(from: productInfo.expireDate)
-                                                
                                                 let content = UNMutableNotificationContent()
                                                 
                                                 content.title = "Product Expired Notification"
-                                                content.subtitle = "\(product.name) from \(product.brand) will expire today" // unable to make the nofitication badge bigger, so minimal info
+                                                content.subtitle = "\(product.name) from \(product.brand) will expire today"
                                                 content.sound = UNNotificationSound.default
                                                 
                                                 // used for the trigger
                                                 let expireDate = productInfo.expireDate
-                                                var dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: expireDate)
-                                                dateComponents.hour = 23
-                                                dateComponents.minute = 01
-                                                
                                                 // FOR USER VERSION, notification is sent 9am on day that it will expire
-                                                //dateComponents.hour = 9
-                                                //dateComponents.minute = 00
+                                                var dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: expireDate)
+                                                dateComponents.hour = 9
+                                                dateComponents.minute = 00
                                                 
                                                 let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: false)
-                                                //let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
                                                 
                                                 let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
                                                 

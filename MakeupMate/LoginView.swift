@@ -105,7 +105,7 @@ struct LoginView: View {
             print ("Successfully logged in user as: \(result?.user.uid ?? "")")
             self.loginStatusMessage = "Successfully logged in user as: \(result?.user.uid ?? "")"
             
-            self.didCompleteLoginProcess()
+            self.didCompleteLoginProcess() //sets to true 
         }
     }
     
@@ -138,7 +138,7 @@ struct LoginView: View {
             }
             print ("success")
             
-            self.didCompleteLoginProcess()
+            self.didCompleteLoginProcess() //sets to true
         }
     }
 }
