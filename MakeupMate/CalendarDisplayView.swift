@@ -108,9 +108,11 @@ struct CalendarDisplayView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 //.padding(.vertical,20)
                 
-                if let productList = ep.expiredProducts.filter({ product in
+                let productList = ep.expiredProducts.filter({ product in
                     return isSameDay(date1: product.expireDate, date2: currentDate)
-                }){
+                })
+                
+                if productList.isEmpty {
                     ForEach(productList) { productInfo in
                         
                         ForEach(productInfo.expiryProduct){ product in
