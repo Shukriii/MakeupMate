@@ -2,12 +2,12 @@
 //  MakeupMateUITestsLaunchTests.swift
 //  MakeupMateUITests
 //
-//  Created by Shukri  Ahmed on 07/02/2023.
+//  Created by Ahmed, Shukri on 25/06/2024.
 //
 
 import XCTest
 
-class MakeupMateUITestsLaunchTests: XCTestCase {
+final class MakeupMateUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

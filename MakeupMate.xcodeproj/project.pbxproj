@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E6233522C2AF9C4002918D9 /* MakeupMateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6233512C2AF9C4002918D9 /* MakeupMateTests.swift */; };
+		1E62335F2C2AF9E5002918D9 /* MakeupMateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E62335E2C2AF9E5002918D9 /* MakeupMateUITests.swift */; };
+		1E6233612C2AF9E5002918D9 /* MakeupMateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E6233602C2AF9E5002918D9 /* MakeupMateUITestsLaunchTests.swift */; };
 		A614CB992992863A005087C9 /* MakeupMateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A614CB982992863A005087C9 /* MakeupMateApp.swift */; };
 		A614CB9B2992863A005087C9 /* WalkthroughView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A614CB9A2992863A005087C9 /* WalkthroughView.swift */; };
 		A614CB9D29928640005087C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A614CB9C29928640005087C9 /* Assets.xcassets */; };
@@ -43,14 +46,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		A614CBA629928640005087C9 /* PBXContainerItemProxy */ = {
+		1E6233532C2AF9C4002918D9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A614CB8D2992863A005087C9 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = A614CB942992863A005087C9;
 			remoteInfo = MakeupMate;
 		};
-		A614CBB029928640005087C9 /* PBXContainerItemProxy */ = {
+		1E6233622C2AF9E5002918D9 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A614CB8D2992863A005087C9 /* Project object */;
 			proxyType = 1;
@@ -60,13 +63,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E62334F2C2AF9C4002918D9 /* MakeupMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MakeupMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E6233512C2AF9C4002918D9 /* MakeupMateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateTests.swift; sourceTree = "<group>"; };
+		1E62335C2C2AF9E4002918D9 /* MakeupMateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MakeupMateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E62335E2C2AF9E5002918D9 /* MakeupMateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateUITests.swift; sourceTree = "<group>"; };
+		1E6233602C2AF9E5002918D9 /* MakeupMateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A614CB952992863A005087C9 /* MakeupMate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MakeupMate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A614CB982992863A005087C9 /* MakeupMateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeupMateApp.swift; sourceTree = "<group>"; };
 		A614CB9A2992863A005087C9 /* WalkthroughView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkthroughView.swift; sourceTree = "<group>"; };
 		A614CB9C29928640005087C9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A614CB9F29928640005087C9 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		A614CBA529928640005087C9 /* MakeupMateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MakeupMateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A614CBAF29928640005087C9 /* MakeupMateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MakeupMateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A61D710529B3789B0082258E /* InventoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryView.swift; sourceTree = "<group>"; };
 		A631EAC9299E7DB900D9E1DD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		A6351AF529E992E700C807A3 /* NewAddWishlistProductView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewAddWishlistProductView.swift; sourceTree = "<group>"; };
@@ -95,6 +101,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		1E62334C2C2AF9C4002918D9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E6233592C2AF9E4002918D9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A614CB922992863A005087C9 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -106,27 +126,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A614CBA229928640005087C9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A614CBAC29928640005087C9 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1E6233502C2AF9C4002918D9 /* MakeupMateTests */ = {
+			isa = PBXGroup;
+			children = (
+				1E6233512C2AF9C4002918D9 /* MakeupMateTests.swift */,
+			);
+			path = MakeupMateTests;
+			sourceTree = "<group>";
+		};
+		1E62335D2C2AF9E5002918D9 /* MakeupMateUITests */ = {
+			isa = PBXGroup;
+			children = (
+				1E62335E2C2AF9E5002918D9 /* MakeupMateUITests.swift */,
+				1E6233602C2AF9E5002918D9 /* MakeupMateUITestsLaunchTests.swift */,
+			);
+			path = MakeupMateUITests;
+			sourceTree = "<group>";
+		};
 		A614CB8C2992863A005087C9 = {
 			isa = PBXGroup;
 			children = (
 				A614CB972992863A005087C9 /* MakeupMate */,
+				1E6233502C2AF9C4002918D9 /* MakeupMateTests */,
+				1E62335D2C2AF9E5002918D9 /* MakeupMateUITests */,
 				A614CB962992863A005087C9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -135,8 +160,8 @@
 			isa = PBXGroup;
 			children = (
 				A614CB952992863A005087C9 /* MakeupMate.app */,
-				A614CBA529928640005087C9 /* MakeupMateTests.xctest */,
-				A614CBAF29928640005087C9 /* MakeupMateUITests.xctest */,
+				1E62334F2C2AF9C4002918D9 /* MakeupMateTests.xctest */,
+				1E62335C2C2AF9E4002918D9 /* MakeupMateUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -196,6 +221,42 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		1E62334E2C2AF9C4002918D9 /* MakeupMateTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E6233552C2AF9C4002918D9 /* Build configuration list for PBXNativeTarget "MakeupMateTests" */;
+			buildPhases = (
+				1E62334B2C2AF9C4002918D9 /* Sources */,
+				1E62334C2C2AF9C4002918D9 /* Frameworks */,
+				1E62334D2C2AF9C4002918D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E6233542C2AF9C4002918D9 /* PBXTargetDependency */,
+			);
+			name = MakeupMateTests;
+			productName = MakeupMateTests;
+			productReference = 1E62334F2C2AF9C4002918D9 /* MakeupMateTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		1E62335B2C2AF9E4002918D9 /* MakeupMateUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E6233642C2AF9E5002918D9 /* Build configuration list for PBXNativeTarget "MakeupMateUITests" */;
+			buildPhases = (
+				1E6233582C2AF9E4002918D9 /* Sources */,
+				1E6233592C2AF9E4002918D9 /* Frameworks */,
+				1E62335A2C2AF9E4002918D9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				1E6233632C2AF9E5002918D9 /* PBXTargetDependency */,
+			);
+			name = MakeupMateUITests;
+			productName = MakeupMateUITests;
+			productReference = 1E62335C2C2AF9E4002918D9 /* MakeupMateUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		A614CB942992863A005087C9 /* MakeupMate */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A614CBB929928640005087C9 /* Build configuration list for PBXNativeTarget "MakeupMate" */;
@@ -219,42 +280,6 @@
 			productReference = A614CB952992863A005087C9 /* MakeupMate.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A614CBA429928640005087C9 /* MakeupMateTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A614CBBC29928640005087C9 /* Build configuration list for PBXNativeTarget "MakeupMateTests" */;
-			buildPhases = (
-				A614CBA129928640005087C9 /* Sources */,
-				A614CBA229928640005087C9 /* Frameworks */,
-				A614CBA329928640005087C9 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A614CBA729928640005087C9 /* PBXTargetDependency */,
-			);
-			name = MakeupMateTests;
-			productName = MakeupMateTests;
-			productReference = A614CBA529928640005087C9 /* MakeupMateTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		A614CBAE29928640005087C9 /* MakeupMateUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = A614CBBF29928640005087C9 /* Build configuration list for PBXNativeTarget "MakeupMateUITests" */;
-			buildPhases = (
-				A614CBAB29928640005087C9 /* Sources */,
-				A614CBAC29928640005087C9 /* Frameworks */,
-				A614CBAD29928640005087C9 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A614CBB129928640005087C9 /* PBXTargetDependency */,
-			);
-			name = MakeupMateUITests;
-			productName = MakeupMateUITests;
-			productReference = A614CBAF29928640005087C9 /* MakeupMateUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -262,19 +287,19 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1320;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1320;
 				TargetAttributes = {
+					1E62334E2C2AF9C4002918D9 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A614CB942992863A005087C9;
+					};
+					1E62335B2C2AF9E4002918D9 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A614CB942992863A005087C9;
+					};
 					A614CB942992863A005087C9 = {
 						CreatedOnToolsVersion = 13.2.1;
-					};
-					A614CBA429928640005087C9 = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = A614CB942992863A005087C9;
-					};
-					A614CBAE29928640005087C9 = {
-						CreatedOnToolsVersion = 13.2.1;
-						TestTargetID = A614CB942992863A005087C9;
 					};
 				};
 			};
@@ -296,13 +321,27 @@
 			projectRoot = "";
 			targets = (
 				A614CB942992863A005087C9 /* MakeupMate */,
-				A614CBA429928640005087C9 /* MakeupMateTests */,
-				A614CBAE29928640005087C9 /* MakeupMateUITests */,
+				1E62334E2C2AF9C4002918D9 /* MakeupMateTests */,
+				1E62335B2C2AF9E4002918D9 /* MakeupMateUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		1E62334D2C2AF9C4002918D9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E62335A2C2AF9E4002918D9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A614CB932992863A005087C9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -313,23 +352,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A614CBA329928640005087C9 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A614CBAD29928640005087C9 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		1E62334B2C2AF9C4002918D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E6233522C2AF9C4002918D9 /* MakeupMateTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E6233582C2AF9E4002918D9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E6233612C2AF9E5002918D9 /* MakeupMateUITestsLaunchTests.swift in Sources */,
+				1E62335F2C2AF9E5002918D9 /* MakeupMateUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A614CB912992863A005087C9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -363,36 +405,118 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A614CBA129928640005087C9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A614CBAB29928640005087C9 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		A614CBA729928640005087C9 /* PBXTargetDependency */ = {
+		1E6233542C2AF9C4002918D9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A614CB942992863A005087C9 /* MakeupMate */;
-			targetProxy = A614CBA629928640005087C9 /* PBXContainerItemProxy */;
+			targetProxy = 1E6233532C2AF9C4002918D9 /* PBXContainerItemProxy */;
 		};
-		A614CBB129928640005087C9 /* PBXTargetDependency */ = {
+		1E6233632C2AF9E5002918D9 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A614CB942992863A005087C9 /* MakeupMate */;
-			targetProxy = A614CBB029928640005087C9 /* PBXContainerItemProxy */;
+			targetProxy = 1E6233622C2AF9E5002918D9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		1E6233562C2AF9C4002918D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KSD5HX93Y4;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Testing.MakeupMateTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MakeupMate.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MakeupMate";
+			};
+			name = Debug;
+		};
+		1E6233572C2AF9C4002918D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KSD5HX93Y4;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Testing.MakeupMateTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MakeupMate.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MakeupMate";
+			};
+			name = Release;
+		};
+		1E6233652C2AF9E5002918D9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KSD5HX93Y4;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Testing.MakeupMateUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MakeupMate;
+			};
+			name = Debug;
+		};
+		1E6233662C2AF9E5002918D9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KSD5HX93Y4;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Testing.MakeupMateUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MakeupMate;
+			};
+			name = Release;
+		};
 		A614CBB729928640005087C9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -573,85 +697,27 @@
 			};
 			name = Release;
 		};
-		A614CBBD29928640005087C9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85ZGLCPBCR;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = city.individual.project.MakeupMateTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MakeupMate.app/MakeupMate";
-			};
-			name = Debug;
-		};
-		A614CBBE29928640005087C9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85ZGLCPBCR;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.2;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = city.individual.project.MakeupMateTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MakeupMate.app/MakeupMate";
-			};
-			name = Release;
-		};
-		A614CBC029928640005087C9 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85ZGLCPBCR;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = city.individual.project.MakeupMateUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MakeupMate;
-			};
-			name = Debug;
-		};
-		A614CBC129928640005087C9 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85ZGLCPBCR;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = city.individual.project.MakeupMateUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MakeupMate;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		1E6233552C2AF9C4002918D9 /* Build configuration list for PBXNativeTarget "MakeupMateTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E6233562C2AF9C4002918D9 /* Debug */,
+				1E6233572C2AF9C4002918D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E6233642C2AF9E5002918D9 /* Build configuration list for PBXNativeTarget "MakeupMateUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E6233652C2AF9E5002918D9 /* Debug */,
+				1E6233662C2AF9E5002918D9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A614CB902992863A005087C9 /* Build configuration list for PBXProject "MakeupMate" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -666,24 +732,6 @@
 			buildConfigurations = (
 				A614CBBA29928640005087C9 /* Debug */,
 				A614CBBB29928640005087C9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A614CBBC29928640005087C9 /* Build configuration list for PBXNativeTarget "MakeupMateTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A614CBBD29928640005087C9 /* Debug */,
-				A614CBBE29928640005087C9 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A614CBBF29928640005087C9 /* Build configuration list for PBXNativeTarget "MakeupMateUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A614CBC029928640005087C9 /* Debug */,
-				A614CBC129928640005087C9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

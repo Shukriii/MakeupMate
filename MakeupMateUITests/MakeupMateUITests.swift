@@ -2,12 +2,12 @@
 //  MakeupMateUITests.swift
 //  MakeupMateUITests
 //
-//  Created by Shukri  Ahmed on 07/02/2023.
+//  Created by Ahmed, Shukri on 25/06/2024.
 //
 
 import XCTest
 
-class MakeupMateUITests: XCTestCase {
+final class MakeupMateUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -27,7 +27,6 @@ class MakeupMateUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }
 

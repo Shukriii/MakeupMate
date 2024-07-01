@@ -2,13 +2,12 @@
 //  MakeupMateTests.swift
 //  MakeupMateTests
 //
-//  Created by Shukri  Ahmed on 07/02/2023.
+//  Created by Ahmed, Shukri on 25/06/2024.
 //
 
 import XCTest
-@testable import MakeupMate
 
-class MakeupMateTests: XCTestCase {
+final class MakeupMateTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -28,7 +27,7 @@ class MakeupMateTests: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        self.measure {
+        measure {
             // Put the code you want to measure the time of here.
         }
     }
