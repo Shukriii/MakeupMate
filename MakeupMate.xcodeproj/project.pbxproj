@@ -38,9 +38,6 @@
 		A6CC289929CF70A0009044B9 /* EditFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289829CF70A0009044B9 /* EditFunctionality.swift */; };
 		A6CC289D29D0F7FA009044B9 /* FetchFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289C29D0F7FA009044B9 /* FetchFunctionality.swift */; };
 		A6CC289F29D0F9F5009044B9 /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CC289E29D0F9F5009044B9 /* CompareView.swift */; };
-		A6D69B4B29E02CF500BA19A6 /* ExpiryCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D69B4A29E02CF500BA19A6 /* ExpiryCalendarView.swift */; };
-		A6D69B4D29E033F000BA19A6 /* CalendarDisplayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D69B4C29E033F000BA19A6 /* CalendarDisplayView.swift */; };
-		A6D69B4F29E0440F00BA19A6 /* CalendarFunctionality.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D69B4E29E0440E00BA19A6 /* CalendarFunctionality.swift */; };
 		A6EB990829CDE1F8003AA975 /* CategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6EB990729CDE1F8003AA975 /* CategoryView.swift */; };
 		A6F877D029CA226D0010A8A9 /* WishlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F877CF29CA226D0010A8A9 /* WishlistView.swift */; };
 /* End PBXBuildFile section */
@@ -93,9 +90,6 @@
 		A6CC289829CF70A0009044B9 /* EditFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFunctionality.swift; sourceTree = "<group>"; };
 		A6CC289C29D0F7FA009044B9 /* FetchFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchFunctionality.swift; sourceTree = "<group>"; };
 		A6CC289E29D0F9F5009044B9 /* CompareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareView.swift; sourceTree = "<group>"; };
-		A6D69B4A29E02CF500BA19A6 /* ExpiryCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpiryCalendarView.swift; sourceTree = "<group>"; };
-		A6D69B4C29E033F000BA19A6 /* CalendarDisplayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarDisplayView.swift; sourceTree = "<group>"; };
-		A6D69B4E29E0440E00BA19A6 /* CalendarFunctionality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarFunctionality.swift; sourceTree = "<group>"; };
 		A6EB990729CDE1F8003AA975 /* CategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryView.swift; sourceTree = "<group>"; };
 		A6F877CF29CA226D0010A8A9 /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -177,7 +171,6 @@
 				A6CC289629CF5EF1009044B9 /* AddFunctionality.swift */,
 				A6CC289829CF70A0009044B9 /* EditFunctionality.swift */,
 				A64955C729F5411E0034528E /* CategoryFunctionality.swift */,
-				A6D69B4E29E0440E00BA19A6 /* CalendarFunctionality.swift */,
 				A6CC289129CF439F009044B9 /* Utilities */,
 				A614CB9A2992863A005087C9 /* WalkthroughView.swift */,
 				A631EAC9299E7DB900D9E1DD /* LoginView.swift */,
@@ -189,8 +182,6 @@
 				A6351AF729E9945D00C807A3 /* NewEditWishlistProductView.swift */,
 				A6EB990729CDE1F8003AA975 /* CategoryView.swift */,
 				A6CC289E29D0F9F5009044B9 /* CompareView.swift */,
-				A6D69B4A29E02CF500BA19A6 /* ExpiryCalendarView.swift */,
-				A6D69B4C29E033F000BA19A6 /* CalendarDisplayView.swift */,
 				A614CB9C29928640005087C9 /* Assets.xcassets */,
 				A68A30E0299E757F00E01C84 /* GoogleService-Info.plist */,
 				A614CB9E29928640005087C9 /* Preview Content */,
@@ -378,8 +369,6 @@
 			files = (
 				A69379E929D492FD000312EF /* AccountFunctionality.swift in Sources */,
 				A6CC289029CF4362009044B9 /* TopNavigationBar.swift in Sources */,
-				A6D69B4D29E033F000BA19A6 /* CalendarDisplayView.swift in Sources */,
-				A6D69B4B29E02CF500BA19A6 /* ExpiryCalendarView.swift in Sources */,
 				A63685CF29BD1D86008C17B9 /* DecodeFunctions.swift in Sources */,
 				A6CC288E29CF3C41009044B9 /* EditTextFieldView.swift in Sources */,
 				A6CC289F29D0F9F5009044B9 /* CompareView.swift in Sources */,
@@ -398,7 +387,6 @@
 				A6CC289D29D0F7FA009044B9 /* FetchFunctionality.swift in Sources */,
 				A6F877D029CA226D0010A8A9 /* WishlistView.swift in Sources */,
 				A6A2134929BA3B1D007B3625 /* ImagePicker.swift in Sources */,
-				A6D69B4F29E0440F00BA19A6 /* CalendarFunctionality.swift in Sources */,
 				A631EACA299E7DB900D9E1DD /* LoginView.swift in Sources */,
 				A614CB992992863A005087C9 /* MakeupMateApp.swift in Sources */,
 				A6BF475829C2028E001940A7 /* BottomNavigationBar.swift in Sources */,

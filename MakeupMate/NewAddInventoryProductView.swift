@@ -20,10 +20,6 @@ struct NewAddInventoryProductView: View {
     @State private var brand = ""
     @State private var categoryField = ""
     @State private var shade = ""
-    @State private var stock = ""
-    @State private var stockInt = 1
-    @State private var expiryDate = Date.now
-    @State private var expiryDateString = ""
     @State private var note = ""
     @State private var dateSet = false
     
@@ -92,47 +88,6 @@ struct NewAddInventoryProductView: View {
                     }
                 }
                 
-                // Souce for Stepper (has been adpated) - https://www.youtube.com/watch?v=jrAA9Gt-jqw&t=300s&ab_channel=DesignCode
-                Section(header: Text("Product Stock"), footer: Text("How many items of the product you own")){
-                    Stepper(value: $stockInt, in: 1...100){
-                        Text("\(stockInt) item\(stockInt > 1 ? "s" : "")")
-                    }
-                }
-                
-                // Source for Hidden expiry date - https://www.youtube.com/watch?v=Utkdlpo8T6w&ab_channel=GoingWalkabout
-                Section(header: Text("Product Expiry Date"), footer: Text("The date the product will expire")){
-                    // If <tap to set> clicked, display DatePciker
-                    if(dateSet){
-                        HStack {
-                            DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
-                                Text("Expiry Date")
-                            }
-                            //Button to get rid of date
-                            Button {
-                                dateSet.toggle()
-                            } label: {
-                                Image(systemName: "xmark.circle.fill")
-                                    .frame(width: 20, height: 20, alignment: .center)
-                                    .foregroundColor(Color.gray)
-                            }
-                        }
-                    }
-                    // If xmark button is clicked for dataSet is false
-                    else {
-                        Button {
-                            dateSet.toggle()
-                        } label : {
-                            HStack {
-                                Text("Expiry Date")
-                                Spacer()
-                                Text("<tap to set>")
-                            }
-                            .padding(.vertical, 7)
-                        }
-                    }
-                    
-                }
-                
                 Section(header: Text("Note")){
                     TextField("E.g. Running out soon", text: $note)
                         .disableAutocorrection(true)
@@ -150,21 +105,6 @@ struct NewAddInventoryProductView: View {
                     
                     // Save product button
                     Button{
-                        // used to format the expiry date selected so it can be saved as a String
-                        let dateFormatter = DateFormatter()
-                        dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
-
-                        // if false no date has been picked, empty string is saved
-                        if (!dateSet) {
-                            expiryDateString = ""
-                        } else {
-                            // else, the expiryDate is formatted into String
-                            expiryDateString = dateFormatter.string(from: expiryDate)
-                        }
-                        
-                        // The stepper uses an Integer variable, transofmring the Int into a String to save
-                        let stock = String(stockInt)
-                        
                         // Display an alert if the product name is empty
                         if (name == "") {
                             cf.displayMessage(title: "Add Name", message: "A product must have a name.") }
@@ -174,7 +114,7 @@ struct NewAddInventoryProductView: View {
                         // Else save the product
                         else {
                             // uses variable af to access the class and passes the varibles into addProduct
-                            af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
+                            af.uploadProduct(fromCollection: "inventory", name: name, brand: brand, categoryField: categoryField, shade: shade, note: note, image: image, presentationMode: presentationMode)
                         }
 
                     } label: {

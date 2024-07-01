@@ -44,11 +44,6 @@ struct InventoryView: View {
                         })
                     }
                 
-                // Search bar, with binding variable of searchText
-                SearchBarView(searchText: $searchText)
-                    .frame(width: 370, height: 10, alignment: .center)
-                    .padding()
-                    
                 VStack {
                     ScrollView {
                         // if search is not be used, displays the categorys and products

@@ -31,18 +31,10 @@ struct NewEditInventoryProductView: View {
     @State private var category = ""
     @State private var categoryField = ""
     @State private var shade = ""
-    @State private var stock = ""
-    @State private var stockInt = 1
-    @State private var expiryDate = Date.now
-    @State private var expiryDateString = ""
-    @State private var expiryDateString2 = ""
     @State private var note = ""
     @State private var image: UIImage?
-    
     @State private var shouldShowImagePicker = false
     @State private var goesToCategories = false
-    @State private var dateSet = false
-    @State private var hideDate = false
     @State private var dataFetched = false
 
     @Environment(\.presentationMode) var presentationMode
@@ -118,101 +110,6 @@ struct NewEditInventoryProductView: View {
                         }
                     }
                     
-                    Section(header: Text("Product Stock"), footer: Text("How many items of the product you own")){
-                        Stepper(value: $stockInt, in: 1...100){
-                            Text("\(stockInt) item\(stockInt > 1 ? "s" : "")")
-                        }
-                        .onAppear() {
-                            // stockInt is set to product.stock which is trandformed into an Int
-                            stockInt = Int(product.stock) ?? 0
-                        }
-                    }
-                    
-                    Section(header: Text("Product Expiry Date"), footer: Text("The date the product will expire")){
-                        
-                        // PRODUCT HAS AN EXPIRE DATE
-                        if (!product.expiryDate.isEmpty){
-                            // CROSS CLICKED
-                            if (hideDate) {
-                                Button {
-                                    print("expiry date picked")
-                                    hideDate.toggle()
-                                } label : {
-                                    HStack {
-                                        Text("Expiry Date")
-                                        Spacer()
-                                        Text("<tap to set>")
-                                    }
-                                    .padding(.vertical, 7)
-                                }
-                            }
-                            // DEFAULT SHOW DATE PICKER WITH THE EPXIRE DATE
-                            else {
-                                HStack {
-                                    DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
-                                        Text("Expiry Date")
-                                    }
-                                    // set expiryDate to the products expire date
-                                    .onAppear {
-                                        let dateFormatter = DateFormatter()
-                                        dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
-                                        if let date = dateFormatter.date(from: product.expiryDate) {
-                                            expiryDate = date
-                                        }
-                                    }
-                                    
-                                    //Button to get rid of date
-                                    Button {
-                                        hideDate.toggle() // set to true
-                                        print("product.expiry date has been removed")
-                                    } label: {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .frame(width: 20, height: 20, alignment: .center)
-                                            .foregroundColor(Color.gray)
-                                    }
-                                }
-                            }
-                        }
-                    
-    
-                        // PRODUCT.EXPIRYDATE IS EMPTY
-                     else {
-                        HStack {
-                            // cliked to see date picker
-                            if (dateSet) {
-                                HStack {
-                                    DatePicker(selection: $expiryDate, in: ...Date.distantFuture, displayedComponents: .date) {
-                                        Text("Expiry Date")
-                                    }
-                                    //Button to get rid of date
-                                    Button {
-                                        dateSet.toggle()
-                                        print("expiry date has been removed")
-                                    } label: {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .frame(width: 20, height: 20, alignment: .center)
-                                            .foregroundColor(Color.gray)
-                                    }
-                                }
-                            }
-                            // DEFAULT NO DATE PICKER SHOWN
-                            else {
-                                Button {
-                                    print("expiry date picked")
-                                    dateSet.toggle() // set to true
-                                } label : {
-                                    HStack {
-                                        Text("Expiry Date")
-                                        Spacer()
-                                        Text("<tap to set>")
-                                    }
-                                    .padding(.vertical, 7)
-                                }
-                            }
-                        }
-                    }
-                    }
- 
                     Section(header: Text("Note")){
                         EditTextFieldView(listKey: product.note, displayName: "Note", variableName: $note)
                     }
@@ -236,38 +133,7 @@ struct NewEditInventoryProductView: View {
                         
                         // button to save product
                         Button{
-                            
-                            // for stock
-                            let stock = String(stockInt)
-  
-                            let dateFormatter = DateFormatter()
-                            dateFormatter.dateFormat = "dd MMM yyyy 'at' HH:mm:ss zzz"
-                            
-                            // date saved
-                            if (!product.expiryDate.isEmpty) {
-                                // user removed saved date
-                                if (hideDate) {
-                                    expiryDateString = ""
-                                }
-                                // user kept saved date
-                                else {
-                                    expiryDateString = dateFormatter.string(from: expiryDate)
-                                }
-                            }
-                            // no date saved
-                            else {
-                                // no date picked
-                                if (!dateSet) {
-                                    expiryDateString = ""
-                                }
-                                // date was picked
-                                else {
-                                    expiryDateString = dateFormatter.string(from: expiryDate)
-                                }
-                            }
-
-                            ef.uploadImageToStorage(fromCollection: "inventory", productID: productID, name: name, brand: brand, categoryField: categoryField, shade: shade, stock: stock, expiryDateString: expiryDateString, note: note, image: image, presentationMode: presentationMode)
-                            
+                            ef.uploadImageToStorage(fromCollection: "inventory", productID: productID, name: name, brand: brand, categoryField: categoryField, shade: shade, note: note, image: image, presentationMode: presentationMode)
                         } label: {
                             Text("Save Product")
                         }

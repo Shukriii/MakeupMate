@@ -18,7 +18,7 @@ struct BottomNavigationBar: View {
     @State var selectedIndex = 0
     
     // SF Symbols being used
-    let tabBarImageNames = ["bag", "wand.and.stars.inverse", "speedometer", "calendar"]
+    let tabBarImageNames = ["bag", "wand.and.stars.inverse", "speedometer"]
     
     var body: some View {
         VStack {
@@ -31,8 +31,6 @@ struct BottomNavigationBar: View {
                     WishlistView()
                 case 2:
                     CompareView()
-                case 3:
-                    ExpiryCalendarView()
                 default:
                     InventoryView()
                 }
@@ -42,7 +40,7 @@ struct BottomNavigationBar: View {
             
             Divider()
             HStack {
-                ForEach(0..<4) { num in
+                ForEach(0..<3) { num in
                     Button(action: {
                         selectedIndex = num
                     }, label: {
